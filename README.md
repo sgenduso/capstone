@@ -1,2 +1,1 @@
-# npm-package-algorithms
 # capstone
