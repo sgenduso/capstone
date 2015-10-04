@@ -7,18 +7,36 @@ var minifyCSS = require('gulp-minify-css');
 var rimraf = require('gulp-rimraf');
 var browserify = require('gulp-browserify');
 var concat = require('gulp-concat');
+var sass = require('gulp-sass');
 
-// //compile jade to html
-// var jadeFiles = './app/jade/*jade';
-// gulp.task('jadeFiles', function () {
-//   var YOUR_LOCALS = {};
-//
-//   gulp.src(jadeFiles)
-//     .pipe(jade({
-//       locals: YOUR_LOCALS
-//     }))
-//     .pipe(gulp.dest('./app/html'));
-// });
+var config = {
+    bootstrapDir: './app/bower_components/bootstrap-sass',
+    sassDir: './app/sass',
+    bowerDir: './app/bower_components',
+    publicDir: './app',
+};
+
+gulp.task('css', function () {
+  return gulp.src(config.sassDir + '/app.scss')
+  .pipe(sass({
+    includePaths: [
+      config.bootstrapDir + '/assets/stylesheets',
+      config.sassDir,
+      config.bowerDir + '/font-awesome/scss'
+    ],
+  }))
+  .pipe(gulp.dest(config.publicDir + '/css'));
+});
+
+gulp.task('fonts', function () {
+  return gulp.src(config.bootstrapDir + '/assets/fonts/**/*')
+  .pipe(gulp.dest(config.publicDir + '/fonts'));
+});
+
+gulp.task('icons', function () {
+  return gulp.src(config.bowerDir + '/font-awesome/fonts/**.*') 
+  .pipe(gulp.dest(config.publicDir + '/fonts')); 
+});
 
 //compile index.jade to index.html
 var jadeIndex = './app/jade/*jade';
@@ -107,9 +125,10 @@ gulp.task('connectDist', function () {
 gulp.task('watchout', function () {
   gulp.watch(jadeIndex, ['jadeIndex']);
   gulp.watch(jadePartials, ['jadePartials']);
+  gulp.watch(config.sassPath + '/**/*.scss', ['css']); 
 });
 
-gulp.task('default', ['watchout', 'jadeIndex', 'jadePartials', 'lint', 'connect']);
+gulp.task('default', ['watchout', 'css', 'fonts', 'icons', 'jadeIndex', 'jadePartials', 'lint', 'connect']);
 
 gulp.task('build', [
   'clean',
