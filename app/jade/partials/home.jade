@@ -5,4 +5,7 @@ h3 HOME TEMPLATE
   //-   div.board.row(ng-repeat='row in rows')
   //-     div.board.cell(ng-repeat='row in rows')
   //-       {{row}}
-  .myGrid(ui-grid ="{ data: myData }")
+  //- .myGrid(ui-grid ="gridOptions")
+  table
+    tr.board-row(ng-repeat='row in gridSize(10) track by $index')
+      td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index}}", data-y='{{$index}}') {{$parent.$index}}, {{$index}}

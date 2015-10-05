@@ -1,1 +1,1 @@
-<h3>HOME TEMPLATE</h3><div id="player1-board" ng-controller="player1Controller"><h4>Player 1 Board</h4><div ui-grid="{ data: myData }" class="myGrid"></div></div>
+<h3>HOME TEMPLATE</h3><div id="player1-board" ng-controller="player1Controller"><h4>Player 1 Board</h4><table><tr ng-repeat="row in gridSize(10) track by $index" class="board-row"><td ng-repeat="col in gridSize(10) track by $index" data-x="{{$parent.$index}}" data-y="{{$index}}" class="board-cell">{{$parent.$index}}, {{$index}}</td></tr></table></div>

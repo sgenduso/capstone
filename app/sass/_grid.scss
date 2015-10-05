@@ -1,13 +1,14 @@
 // .board.row{
 //   display: block;
 // }
-//
-// .board.cell{
-//   display: inline-block;
-//   border: 2px solid black;
-//
-// }
-//
+
+.board-cell{
+  // display: inline-block;
+  border: 2px solid black;
+  // padding: 10%;
+
+}
+
 // .board{
 // }
 //
@@ -17,6 +18,6 @@
 // }
 
 .grid {
-  width: 500px;
-  height: 250px;
+  // width: 500px;
+  // height: 250px;
 }
