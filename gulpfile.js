@@ -8,6 +8,7 @@ var rimraf = require('gulp-rimraf');
 var browserify = require('gulp-browserify');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
+var merge = require('merge-stream');
 
 var config = {
     bootstrapDir: './app/bower_components/bootstrap-sass',
@@ -60,6 +61,24 @@ gulp.task('jadePartials', function () {
       locals: YOUR_LOCALS
     }))
     .pipe(gulp.dest('./app/partials'));
+});
+
+//combine all js files into main.js
+gulp.task('scripts', function () {
+  // var app = gulp.src('./app/js/app.js')
+  //   .pipe(gulp.dest('./app/js/main.js'));
+  //
+  // var controllers = gulp.src('./app/js/controllers/*js')
+  //   .pipe(gulp.dest('./app/js/main.js'));
+  //
+  // var services = gulp.src('./app/js/services/*js')
+  //   .pipe(gulp.dest('./app/js/main.js'));
+
+  return gulp.src(['./app/js/app.js', './app/js/controllers/*js', './app/js/services/*js'])
+    .pipe(concat('main.js'))
+    .pipe(gulp.dest('./app/js/'));
+
+  // return merge(app, controllers, services);
 });
 
 //output errors in all js files to console if build fails
@@ -126,9 +145,10 @@ gulp.task('watchout', function () {
   gulp.watch(jadeIndex, ['jadeIndex']);
   gulp.watch(jadePartials, ['jadePartials']);
   gulp.watch(config.sassDir + '/**/*.scss', ['css']); 
+  gulp.watch('app/js/*js', ['scripts']); 
 });
 
-gulp.task('default', ['watchout', 'css', 'fonts', 'icons', 'jadeIndex', 'jadePartials', 'lint', 'connect']);
+gulp.task('default', ['watchout', 'css', 'fonts', 'icons', 'jadeIndex', 'jadePartials', 'scripts', 'lint', 'connect']);
 
 gulp.task('build', [
   'clean',
@@ -139,5 +159,6 @@ gulp.task('build', [
   'minify-js',
   'copy-html-files',
   'copy-bower-components',
+  'scripts',
   'connectDist'
 ]);

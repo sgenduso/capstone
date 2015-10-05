@@ -1,4 +1,4 @@
-app.controller('player1Controller', ['$scope', function ($scope) {
+app.controller('gridController', ['$scope', function ($scope) {
   $scope.gridSize=function (size) {
     return new Array(size);
   };
