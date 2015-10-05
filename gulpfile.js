@@ -22,7 +22,7 @@ gulp.task('css', function () {
     includePaths: [
       config.bootstrapDir + '/assets/stylesheets',
       config.sassDir,
-      config.bowerDir + '/font-awesome/scss'
+      config.bowerDir + '/font-awesome/scss',
     ],
   }))
   .pipe(gulp.dest(config.publicDir + '/css'));
@@ -125,7 +125,7 @@ gulp.task('connectDist', function () {
 gulp.task('watchout', function () {
   gulp.watch(jadeIndex, ['jadeIndex']);
   gulp.watch(jadePartials, ['jadePartials']);
-  gulp.watch(config.sassPath + '/**/*.scss', ['css']); 
+  gulp.watch(config.sassDir + '/**/*.scss', ['css']); 
 });
 
 gulp.task('default', ['watchout', 'css', 'fonts', 'icons', 'jadeIndex', 'jadePartials', 'lint', 'connect']);

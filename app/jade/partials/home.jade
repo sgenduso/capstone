@@ -1,1 +1,8 @@
-h1 HOME TEMPLATE
+h3 HOME TEMPLATE
+#player1-board(ng-controller='player1Controller')
+  h4 Player 1 Board
+  //- .board.full
+  //-   div.board.row(ng-repeat='row in rows')
+  //-     div.board.cell(ng-repeat='row in rows')
+  //-       {{row}}
+  .myGrid(ui-grid ="{ data: myData }")
