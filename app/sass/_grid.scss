@@ -13,6 +13,10 @@
    margin:1.66%;
    overflow:hidden;
 
+   &:hover{
+     cursor: pointer;
+   }
+
 }
 
 .content{
@@ -26,15 +30,21 @@
 }
 
 table{
+  width: 100%;
+}
+
+#player1-board, #opponent-board{
   width: 40%;
 }
-// .board{
-// }
-//
-// .board.full{
-//   border: 2px solid green;
-//   width: 40%;
-// }
+
+#player1-board{
+  float: left;
+}
+
+#opponent-board{
+  float: right;
+}
+
 
 .grid {
   // width: 500px;

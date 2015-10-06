@@ -1,7 +1,12 @@
-h3 HOME TEMPLATE
 #player1-board(ng-controller='gridController')
   h4 Player 1 Board
   table
     tr.board-row(ng-repeat='row in gridSize(10) track by $index')
-      td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index}}", data-y='{{$index}}' ng-click='') 
+      td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index}}", data-y='{{$index}}' ng-click='pushCoordinates($parent.$index, $index)') 
+        .content {{$parent.$index}}, {{$index}}
+#opponent-board(ng-controller='gridController')
+  h4 Opponent Board
+  table
+    tr.board-row(ng-repeat='row in gridSize(10) track by $index')
+      td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index}}", data-y='{{$index}}' ng-click='pushCoordinates($parent.$index, $index)') 
         .content {{$parent.$index}}, {{$index}}

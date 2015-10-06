@@ -9,6 +9,7 @@ var browserify = require('gulp-browserify');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var merge = require('merge-stream');
+var babel = require("gulp-babel");
 
 var config = {
     bootstrapDir: './app/bower_components/bootstrap-sass',
@@ -125,6 +126,13 @@ gulp.task('copy-html-files', function () {
     .pipe(gulp.dest('dist/'));
 });
 
+//compile es2015 to js
+gulp.task("babel", function () {
+  return gulp.src("./app/js/main.js")
+    .pipe(babel())
+    .pipe(gulp.dest("dist/"));
+});
+
 //serve app on port 8888
 gulp.task('connect', function () {
   connect.server({
@@ -145,7 +153,7 @@ gulp.task('watchout', function () {
   gulp.watch(jadeIndex, ['jadeIndex']);
   gulp.watch(jadePartials, ['jadePartials']);
   gulp.watch(config.sassDir + '/**/*.scss', ['css']); 
-  gulp.watch('app/js/*js', ['scripts']); 
+  gulp.watch('app/js/**/*js', ['scripts']); 
 });
 
 gulp.task('default', ['watchout', 'css', 'fonts', 'icons', 'jadeIndex', 'jadePartials', 'scripts', 'lint', 'connect']);

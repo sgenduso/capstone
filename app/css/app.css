@@ -8087,6 +8087,8 @@ button.close {
   /* = width for a 1:1 aspect ratio */
   margin: 1.66%;
   overflow: hidden; }
+  .board-cell:hover {
+    cursor: pointer; }
 
 .content {
   position: absolute;
@@ -8099,4 +8101,13 @@ button.close {
   top: 27%; }
 
 table {
+  width: 100%; }
+
+#player1-board, #opponent-board {
   width: 40%; }
+
+#player1-board {
+  float: left; }
+
+#opponent-board {
+  float: right; }
