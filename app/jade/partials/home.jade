@@ -2,11 +2,12 @@
   h4 Player 1 Board
   table
     tr.board-row(ng-repeat='row in gridSize(10) track by $index')
-      td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index}}", data-y='{{$index}}' ng-click='pushCoordinates($parent.$index, $index)') 
-        .content {{$parent.$index}}, {{$index}}
+      td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index + 1}}", data-y='{{$index + 1}}' data-coord='{{boardMapping[$parent.$index + 1]}}+$index + 1' ng-click='pushCoordinates($parent.$index + 1, $index + 1)') 
+        .content {{boardMapping[$parent.$index + 1]}}{{$index + 1}}
+        //- .content {{$parent.$index + 1}}, {{$index}}
 #opponent-board(ng-controller='gridController')
   h4 Opponent Board
   table
     tr.board-row(ng-repeat='row in gridSize(10) track by $index')
-      td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index}}", data-y='{{$index}}' ng-click='pushCoordinates($parent.$index, $index)') 
-        .content {{$parent.$index}}, {{$index}}
+      td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index + 1}}", data-y='{{$index + 1}}' ng-click='pushCoordinates($parent.$index + 1, $index + 1)') 
+        .content {{boardMapping[$parent.$index + 1]}}{{$index + 1}}
