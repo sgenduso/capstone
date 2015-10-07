@@ -8086,7 +8086,9 @@ button.close {
   padding-bottom: 10%;
   /* = width for a 1:1 aspect ratio */
   margin: 1.66%;
-  overflow: hidden; }
+  overflow: hidden;
+  text-align: center;
+  vertical-align: middle; }
   .board-cell:hover {
     cursor: pointer; }
 
@@ -8100,14 +8102,21 @@ button.close {
   vertical-align: middle;
   top: 27%; }
 
-table {
+.board-table {
   width: 100%; }
+  .board-table tr {
+    vertical-align: middle; }
 
-#player1-board, #opponent-board {
+.bship-cell {
+  border: 2px solid black;
+  position: relative;
+  width: 25%;
+  padding-bottom: 25%;
+  /* = width for a 1:1 aspect ratio */
+  margin: 1.66%;
+  overflow: hidden; }
+  .bship-cell:hover {
+    cursor: pointer; }
+
+.bship-table {
   width: 40%; }
-
-#player1-board {
-  float: left; }
-
-#opponent-board {
-  float: right; }
