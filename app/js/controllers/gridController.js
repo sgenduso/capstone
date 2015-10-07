@@ -30,8 +30,43 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.populateBoard(10);
 
 
-  $(function() {
-      $( ".draggable" ).draggable();
+  // $(function() {
+  //     $( ".draggable" ).draggable();
+  //   });
+
+  // $(function(){
+  //   var sPositions = localStorage.positions || "{}";
+  //   var positions = JSON.parse(sPositions);
+  //   $.each(positions, function (id, pos) {
+  //     $("#" + id).css(pos);
+  //   });
+  //   $(".draggable").draggable({
+  //     containment: "#containment-wrapper",
+  //     scroll: false,
+  //     stop: function (event, ui) {
+  //       positions[this.id] = ui.position;
+  //       localStorage.positions = JSON.stringify(positions);
+  //     }
+  //   });
+  // });
+
+  var positions = JSON.parse(localStorage.positions || "{}");
+$(function () {
+    var d = $("[id=draggable]").attr("id", function (i) {
+        return "draggable_" + i;
     });
+    $.each(positions, function (id, pos) {
+        $("#" + id).css(pos);
+    });
+
+    d.draggable({
+        containment: "#containment-wrapper",
+        scroll: false,
+        stop: function (event, ui) {
+            positions[this.id] = ui.position;
+            localStorage.positions = JSON.stringify(positions);
+        }
+    });
+});
 
 }]);

@@ -8107,6 +8107,9 @@ button.close {
   .board-table tr {
     vertical-align: middle; }
 
+.ships {
+  z-index: 1; }
+
 .carrier-cell {
   position: relative;
   width: 20%;
@@ -8160,4 +8163,4 @@ button.close {
   width: 17%; }
 
 #draggable {
-  z-index: 1; }
+  z-index: 2; }
