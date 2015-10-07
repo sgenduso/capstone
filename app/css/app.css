@@ -8108,7 +8108,6 @@ button.close {
     vertical-align: middle; }
 
 .carrier-cell {
-  border: 2px solid black;
   position: relative;
   width: 20%;
   margin: 1.66%;
@@ -8122,7 +8121,6 @@ button.close {
   width: 45%; }
 
 .battleship-cell {
-  border: 2px solid black;
   position: relative;
   width: 25%;
   margin: 1.66%;
@@ -8136,7 +8134,6 @@ button.close {
   width: 35%; }
 
 .destroyer-cell, .submarine-cell {
-  border: 2px solid black;
   position: relative;
   width: 30%;
   margin: 1.66%;
@@ -8150,7 +8147,6 @@ button.close {
   width: 27%; }
 
 .patrol-cell {
-  border: 2px solid black;
   position: relative;
   width: 50%;
   margin: 1.66%;
@@ -8162,3 +8158,6 @@ button.close {
 
 .patrol-table {
   width: 17%; }
+
+#draggable {
+  z-index: 1; }

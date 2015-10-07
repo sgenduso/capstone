@@ -1,6 +1,5 @@
 //AIRCRAFT CARRIER
 .carrier-cell{
-  border: 2px solid black;
   position: relative;
    width: 20%;
    margin:1.66%;
@@ -24,7 +23,6 @@
 
 //BATTLESHIP
 .battleship-cell{
-  border: 2px solid black;
   position: relative;
    width: 25%;
   //  padding-bottom: 25%; /* = width for a 1:1 aspect ratio */
@@ -49,7 +47,6 @@
 
 //DESTROYER AND SUBMARINE
 .destroyer-cell, .submarine-cell{
-  border: 2px solid black;
   position: relative;
    width: 30%;
   //  padding-bottom: 25%; /* = width for a 1:1 aspect ratio */
@@ -74,7 +71,6 @@
 
 //DESTROYER AND SUBMARINE
 .patrol-cell{
-  border: 2px solid black;
   position: relative;
    width: 50%;
   //  padding-bottom: 25%; /* = width for a 1:1 aspect ratio */
@@ -95,4 +91,8 @@
 .patrol-table{
   // margin-top: 20px;
   width: 17%;
+}
+
+#draggable{
+  z-index: 1;
 }

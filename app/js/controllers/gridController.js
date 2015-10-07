@@ -30,17 +30,8 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.populateBoard(10);
 
 
-//   $scope.gridOptions = {
-//     enableSorting: false,
-//     showHeader: false,
-//     data: [
-//     {
-//         pos: "Cox",
-//         "lastName": "Carney",
-//         "company": "Enormo",
-//         "employed": true
-//     },
-//
-// ]
-// };
+  $(function() {
+      $( ".draggable" ).draggable();
+    });
+
 }]);
