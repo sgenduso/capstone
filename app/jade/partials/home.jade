@@ -4,23 +4,26 @@
     tr.board-row(ng-repeat='row in gridSize(10) track by $index')
       td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index + 1}}", data-y='{{$index + 1}}' data-coord='{{boardMapping[$parent.$index + 1]}}+$index + 1' ng-click='pushCoordinates($parent.$index + 1, $index + 1)') 
         .content {{boardMapping[$parent.$index + 1]}}{{$index + 1}}
-        //- .content {{boardMapping[$parent.$index + 1]}}{{$index + 1}}
-        //- .content {{$parent.$index + 1}}, {{$index}}
-  img#p1-carrier.col-sm-5(src='../img/ships/carrier.png')
-  img#p1-battleship.col-sm-4(src='../img/ships/battleship.png')
-  img#p1-destroyer.col-sm-3(src='../img/ships/destroyer.png')
-  img#p1-submarine.col-sm-3(src='../img/ships/submarine.png')
-  img#p1-patrol.col-sm-2(src='../img/ships/patrol.png')
-  //- table.bship-table
-  //-   tr.boat.bship
-  //-     td.bship-cell
-  //-       .content
-  //-     td.bship-cell
-  //-       .content
-  //-     td.bship-cell
-  //-       .content
-  //-     td.bship-cell
-  //-       .content
+  table.carrier-table
+    tr.boat.carrier
+      td.carrier-cell(colspan='5')
+        img(src='../img/ships/carrier.png')
+  table.battleship-table
+    tr.boat.battleship
+      td.battleship-cell(colspan='4')
+        img(src='../img/ships/battleship.png')
+  table.destroyer-table
+    tr.boat.destroyer
+      td.destroyer-cell(colspan='4')
+        img(src='../img/ships/destroyer.png')
+  table.submarine-table
+    tr.boat.submarine
+      td.submarine-cell(colspan='4')
+        img(src='../img/ships/submarine.png')
+  table.patrol-table
+    tr.boat.patrol
+      td.patrol-cell(colspan='4')
+        img(src='../img/ships/patrol.png')
 #opponent-board.col-sm-5(ng-controller='gridController')
   h4 Opponent Board
   table.board-table

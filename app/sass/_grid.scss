@@ -39,25 +39,7 @@
   }
 }
 
-.bship-cell{
-  border: 2px solid black;
-  position: relative;
-   width: 25%;
-   padding-bottom: 25%; /* = width for a 1:1 aspect ratio */
-   margin:1.66%;
-   overflow:hidden;
 
-   &:hover{
-     cursor: pointer;
-   }
-
-}
-
-
-.bship-table{
-  // margin-top: 20px;
-  width: 40%;
-}
 
 #player1-board, #opponent-board{
   // width: 40%;

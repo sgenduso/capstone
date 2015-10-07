@@ -1,3 +1,98 @@
-#p1-patrol{
-  // height: 150%;
+//AIRCRAFT CARRIER
+.carrier-cell{
+  border: 2px solid black;
+  position: relative;
+   width: 20%;
+   margin:1.66%;
+   overflow:hidden;
+
+   &:hover{
+     cursor: pointer;
+   }
+
+   img{
+     width: 100%;
+    //  height: 25%;
+   }
+
+}
+
+.carrier-table{
+  width: 45%;
+}
+
+
+//BATTLESHIP
+.battleship-cell{
+  border: 2px solid black;
+  position: relative;
+   width: 25%;
+  //  padding-bottom: 25%; /* = width for a 1:1 aspect ratio */
+   margin:1.66%;
+   overflow:hidden;
+
+   &:hover{
+     cursor: pointer;
+   }
+
+   img{
+     width: 100%;
+    //  height: 100%;
+   }
+
+}
+
+.battleship-table{
+  // margin-top: 20px;
+  width: 35%;
+}
+
+//DESTROYER AND SUBMARINE
+.destroyer-cell, .submarine-cell{
+  border: 2px solid black;
+  position: relative;
+   width: 30%;
+  //  padding-bottom: 25%; /* = width for a 1:1 aspect ratio */
+   margin:1.66%;
+   overflow:hidden;
+
+   &:hover{
+     cursor: pointer;
+   }
+
+   img{
+     width: 100%;
+    //  height: 100%;
+   }
+
+}
+
+.destroyer-table, .submarine-table{
+  // margin-top: 20px;
+  width: 27%;
+}
+
+//DESTROYER AND SUBMARINE
+.patrol-cell{
+  border: 2px solid black;
+  position: relative;
+   width: 50%;
+  //  padding-bottom: 25%; /* = width for a 1:1 aspect ratio */
+   margin:1.66%;
+   overflow:hidden;
+
+   &:hover{
+     cursor: pointer;
+   }
+
+   img{
+     width: 100%;
+    //  height: 100%;
+   }
+
+}
+
+.patrol-table{
+  // margin-top: 20px;
+  width: 17%;
 }
