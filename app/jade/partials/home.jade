@@ -2,7 +2,7 @@
   h4 Player 1 Board
   table.board-table
     tr.board-row(ng-repeat='row in boardRows track by $index')
-      td.board-cell.snap-to-me(wb-drop-target='true' on-drop='dropped(dragEl, dropEl)' ng-repeat='col in boardCols track by $index' id="{{row}}{{col}}" data-x="{{$parent.$index + 1}}", data-y='{{$index + 1}}') 
+      td.board-cell.snap-to-me(wb-drop-target='true' on-drop='dropped(dragEl, dropEls)' ng-repeat='col in boardCols track by $index' id="{{row}}{{col}}" data-x="{{$index + 1}}", data-y='{{$parent.$index + 1}}')
         .content {{boardMapping[$parent.$index + 1]}}{{$index + 1}}
       //- td.board-cell.snap-to-me(wb-drop-target='true' on-drop='dropped(dragEl, dropEl)' ng-repeat='(key, value) in p1Board track by $index' id="{{key}}" data-x="{{value.x}}", data-y='{{value.y}}') 
 #opponent-board.col-sm-5(ng-controller='gridController')

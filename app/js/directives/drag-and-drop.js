@@ -33,14 +33,14 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
         },
         link: function (scope, element, attrs) {
           $timeout(function () {
+            getAttr = function (attr) {
+              return angular.element(element).attr(attr);
+            };
           // return scope.$evalAsync(function(){
-            var id = angular.element(element).attr("id");
-            // console.log(scope);
-            console.log(id);
-            var xVal = angular.element(element).attr("data-x");
-            var yVal = angular.element(element).attr("data-y");
-            console.log(xVal);
-            console.log(yVal);
+            var id = getAttr("id");
+            var xVal = getAttr("data-x");
+            var yVal = getAttr("data-y");
+            var extraCells;
 
             element.bind("dragover", function (e) {
                 if (e.preventDefault) {
@@ -69,19 +69,31 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
                     e.stopPropagation(); // Necessary. Allows us to drop.
                 }
                 var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
-                var dest = document.getElementById(id);
-                var src = document.getElementById(data.imgSrc);
+                var extraCells = data.size - 1;
+                var destCells = [];
+                destCells.push($('#' + id));
 
-                scope.onDrop({dragEl: data, dropEl: id});
+                var dropRowCells = $('#player1-board[data-y="' + yVal + '"]');
+                console.log(dropRowCells);
+                  // dropRowCells.forEach(function (cell) {
+                  //   if (cell.dataset.x > xVal && cell.dataset.x <= xVal + extraCells) {
+                  //     destCells.push(cell);
+                  //   }
+                  // });
+                // extraCells = data.size;
+
+                scope.onDrop({dragEl: data, dropEls: [destCells]});
+                // scope.onDrop({dragEl: data, dropEl: id});
             });
 
             $rootScope.$on("WB-DRAG-START", function () {
-                var el = document.getElementById(id);
+                var element = document.getElementById(id);
                 angular.element(element).addClass("wb-target");
             });
 
             $rootScope.$on("WB-DRAG-END", function () {
-                var el = document.getElementById(id);
+              // console.log(extraCells);
+                var element = document.getElementById(id);
                 angular.element(element).removeClass("wb-target");
                 angular.element(element).removeClass("wb-over");
             });

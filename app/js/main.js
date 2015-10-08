@@ -46,90 +46,18 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
     });
   };
 
-  $scope.setId = function (x,y) {
-    return gameService.boardMapping[x+1] + Number(y+1);
-  };
 
   $scope.populateBoard(10);
 
 
-  //
-  // $(function() {
-  //     $( ".draggable" ).draggable();
-  //   });
+$scope.dropped = function(dragEl, dropEls) {
 
-  // $(function(){
-  //   var sPositions = localStorage.positions || "{}";
-  //   var positions = JSON.parse(sPositions);
-  //   $.each(positions, function (id, pos) {
-  //     $("#" + id).css(pos);
-  //   });
-  //   $(".draggable").draggable({
-  //     containment: "#containment-wrapper",
-  //     scroll: false,
-  //     stop: function (event, ui) {
-  //       positions[this.id] = ui.position;
-  //       localStorage.positions = JSON.stringify(positions);
-  //     }
-  //   });
-  // });
-
-//   var positions = JSON.parse(localStorage.positions || "{}");
-// $(function () {
-//     var d = $("[id=draggable]").attr("id", function (i) {
-//         return "draggable_" + i;
-//     });
-//     $.each(positions, function (id, pos) {
-//         $("#" + id).css(pos);
-//     });
-//
-//     d.draggable({
-//         containment: "#containment-wrapper",
-//         scroll: false,
-//         cursor: 'move',
-//         snap: ".snap-to-me",
-//         snapMode: "inner",
-//         stop: function (event, ui) {
-//             positions[this.id] = ui.position;
-//             localStorage.positions = JSON.stringify(positions);
-//         }
-//     });
-// });
-
-
-//
-// $(function () {
-//             $("#ships img").draggable(
-//             {
-//                 appendTo: "body",
-//                 cursor: "move",
-//                 revert: "invalid"
-//             });
-//
-//             initDroppable($("#player1-board table td"));
-//             function initDroppable($elements) {
-//                 $elements.droppable({
-//                     activeClass: "ui-state-default",
-//                     hoverClass: "ui-drop-hover",
-//                     accept: ":not(.ui-sortable-helper)",
-//
-//                     over: function (event, ui) {
-//                         var $this = $(this);
-//                     },
-//                     drop: function (event, ui) {
-//                         var $this = $(this);
-//                         $(this).html('<img src="'+ui.draggable.attr("src")+'"/>');
-//                         // $("<span></span>").text(ui.draggable.text()).appendTo(this);
-//                         $("#ships img").find(":contains('" + ui.draggable.attr("src") + "')")[0].remove();
-//                     }
-//                 });
-//             }
-//         });
-$scope.dropped = function(dragEl, dropEl) {
       // this is your application logic, do whatever makes sense
       var drag = angular.element(dragEl);
-      var drop = angular.element(dropEl);
-      console.log(drag);
+      var drop = angular.element(dropEls);
+      // console.log(drag[0]);
+      // console.log(drag[0].size);
+      // console.log(drag[0].imgSrc);
       console.log(drop);
 
       // console.log("Ship with size " + drag.attr('data-size') + " has been dropped on cell " + drop.attr("data-x") + ", " + drop.attr("data-y") + "!");
@@ -219,14 +147,14 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
         },
         link: function (scope, element, attrs) {
           $timeout(function () {
+            getAttr = function (attr) {
+              return angular.element(element).attr(attr);
+            };
           // return scope.$evalAsync(function(){
-            var id = angular.element(element).attr("id");
-            // console.log(scope);
-            console.log(id);
-            var xVal = angular.element(element).attr("data-x");
-            var yVal = angular.element(element).attr("data-y");
-            console.log(xVal);
-            console.log(yVal);
+            var id = getAttr("id");
+            var xVal = getAttr("data-x");
+            var yVal = getAttr("data-y");
+            var extraCells;
 
             element.bind("dragover", function (e) {
                 if (e.preventDefault) {
@@ -255,19 +183,31 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
                     e.stopPropagation(); // Necessary. Allows us to drop.
                 }
                 var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
-                var dest = document.getElementById(id);
-                var src = document.getElementById(data.imgSrc);
+                var extraCells = data.size - 1;
+                var destCells = [];
+                destCells.push($('#' + id));
 
-                scope.onDrop({dragEl: data, dropEl: id});
+                var dropRowCells = $('#player1-board[data-y="' + yVal + '"]');
+                console.log(dropRowCells);
+                  // dropRowCells.forEach(function (cell) {
+                  //   if (cell.dataset.x > xVal && cell.dataset.x <= xVal + extraCells) {
+                  //     destCells.push(cell);
+                  //   }
+                  // });
+                // extraCells = data.size;
+
+                scope.onDrop({dragEl: data, dropEls: [destCells]});
+                // scope.onDrop({dragEl: data, dropEl: id});
             });
 
             $rootScope.$on("WB-DRAG-START", function () {
-                var el = document.getElementById(id);
+                var element = document.getElementById(id);
                 angular.element(element).addClass("wb-target");
             });
 
             $rootScope.$on("WB-DRAG-END", function () {
-                var el = document.getElementById(id);
+              // console.log(extraCells);
+                var element = document.getElementById(id);
                 angular.element(element).removeClass("wb-target");
                 angular.element(element).removeClass("wb-over");
             });
