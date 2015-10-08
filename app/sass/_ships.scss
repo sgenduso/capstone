@@ -4,9 +4,14 @@
 
 //AIRCRAFT CARRIER
 .carrier-cell{
+  border: 1px solid red;
+  // padding: 1% 10%;
+  // box-sizing: border-box;
+
   position: relative;
    width: 20%;
-   margin:1.66%;
+  //  padding-top: 20%;
+  //  margin:1.66%;
    overflow:hidden;
 
    &:hover{
@@ -21,7 +26,7 @@
 }
 
 .carrier-table{
-  width: 45%;
+  width: 50%;
 }
 
 
@@ -100,3 +105,16 @@
 #draggable{
   z-index: 2;
 }
+
+.wb-over {
+    border: 2px dashed black !important;
+  }
+
+  .wb-target {
+    background-color: #ddd; 
+    opacity: .5;
+  }
+
+  [draggable] {
+    cursor: move;
+  }

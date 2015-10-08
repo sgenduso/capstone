@@ -23,8 +23,8 @@ gulp.task('css', function () {
   .pipe(sass({
     includePaths: [
       config.bootstrapDir + '/assets/stylesheets',
-      config.sassDir,
       config.bowerDir + '/font-awesome/scss',
+      config.sassDir,
     ],
   }))
   .pipe(gulp.dest(config.publicDir + '/css'));
@@ -75,7 +75,7 @@ gulp.task('scripts', function () {
   // var services = gulp.src('./app/js/services/*js')
   //   .pipe(gulp.dest('./app/js/main.js'));
 
-  return gulp.src(['./app/js/app.js', './app/js/controllers/*js', './app/js/services/*js'])
+  return gulp.src(['./app/js/app.js', './app/js/controllers/*js', './app/js/services/*js', './app/js/directives/*js'])
     .pipe(concat('main.js'))
     .pipe(gulp.dest('./app/js/'));
 

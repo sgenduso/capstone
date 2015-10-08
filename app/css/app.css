@@ -8099,8 +8099,7 @@ button.close {
   width: 100%;
   /* = 100% - 2*5% padding */
   text-align: center;
-  vertical-align: middle;
-  top: 27%; }
+  vertical-align: middle; }
 
 .board-table {
   width: 100%; }
@@ -8111,9 +8110,9 @@ button.close {
   z-index: 1; }
 
 .carrier-cell {
+  border: 1px solid red;
   position: relative;
   width: 20%;
-  margin: 1.66%;
   overflow: hidden; }
   .carrier-cell:hover {
     cursor: pointer; }
@@ -8121,7 +8120,7 @@ button.close {
     width: 100%; }
 
 .carrier-table {
-  width: 45%; }
+  width: 50%; }
 
 .battleship-cell {
   position: relative;
@@ -8164,3 +8163,13 @@ button.close {
 
 #draggable {
   z-index: 2; }
+
+.wb-over {
+  border: 2px dashed black !important; }
+
+.wb-target {
+  background-color: #ddd;
+  opacity: .5; }
+
+[draggable] {
+  cursor: move; }
