@@ -40,6 +40,9 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
     });
   };
 
+  $scope.setId = function (x,y) {
+    return gameService.boardMapping[x+1] + Number(y+1);
+  };
 
   $scope.populateBoard(10);
 
@@ -120,6 +123,8 @@ $scope.dropped = function(dragEl, dropEl) {
       // this is your application logic, do whatever makes sense
       var drag = angular.element(dragEl);
       var drop = angular.element(dropEl);
+      console.log(drag);
+      console.log(drop);
 
       console.log("Ship with size " + drag.attr('data-size') + " has been dropped on cell " + drop.attr("data-x") + ", " + drop.attr("data-y") + "!");
     };
@@ -203,6 +208,8 @@ app.directive('wbDropTarget', ['$rootScope', function ($rootScope) {
         },
         link: function (scope, element, attrs) {
             var id = angular.element(element).attr("id");
+            var xVal = angular.element(element).attr("data-x");
+            var yVal = angular.element(element).attr("data-y");
 
             element.bind("dragover", function (e) {
                 if (e.preventDefault) {

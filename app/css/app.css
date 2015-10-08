@@ -8165,10 +8165,10 @@ button.close {
   z-index: 2; }
 
 .wb-over {
-  border: 2px dashed black !important; }
+  border: 2px dashed green !important;
+  background-color: #ddd; }
 
 .wb-target {
-  background-color: #ddd;
   opacity: .5; }
 
 [draggable] {

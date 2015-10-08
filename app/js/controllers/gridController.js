@@ -28,6 +28,9 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
     });
   };
 
+  $scope.setId = function (x,y) {
+    return gameService.boardMapping[x+1] + Number(y+1);
+  };
 
   $scope.populateBoard(10);
 
@@ -108,6 +111,8 @@ $scope.dropped = function(dragEl, dropEl) {
       // this is your application logic, do whatever makes sense
       var drag = angular.element(dragEl);
       var drop = angular.element(dropEl);
+      console.log(drag);
+      console.log(drop);
 
       console.log("Ship with size " + drag.attr('data-size') + " has been dropped on cell " + drop.attr("data-x") + ", " + drop.attr("data-y") + "!");
     };

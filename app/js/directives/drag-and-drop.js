@@ -28,6 +28,8 @@ app.directive('wbDropTarget', ['$rootScope', function ($rootScope) {
         },
         link: function (scope, element, attrs) {
             var id = angular.element(element).attr("id");
+            var xVal = angular.element(element).attr("data-x");
+            var yVal = angular.element(element).attr("data-y");
 
             element.bind("dragover", function (e) {
                 if (e.preventDefault) {
