@@ -1,9 +1,10 @@
 #player1-board.col-sm-5(ng-controller='gridController')
   h4 Player 1 Board
   table.board-table
-    tr.board-row(ng-repeat='row in gridSize(10) track by $index')
-      td.board-cell.snap-to-me(wb-drop-target='true' on-drop='dropped(dragEl, dropEl)' ng-repeat='(key, value) in p1Board track by $index' id="{{key}}" data-x="{{value.x}}", data-y='{{value.y}}') 
+    tr.board-row(ng-repeat='row in boardRows track by $index')
+      td.board-cell.snap-to-me(wb-drop-target='true' on-drop='dropped(dragEl, dropEl)' ng-repeat='col in boardCols track by $index' id="{{row}}{{col}}" data-x="{{$parent.$index + 1}}", data-y='{{$index + 1}}') 
         .content {{boardMapping[$parent.$index + 1]}}{{$index + 1}}
+      //- td.board-cell.snap-to-me(wb-drop-target='true' on-drop='dropped(dragEl, dropEl)' ng-repeat='(key, value) in p1Board track by $index' id="{{key}}" data-x="{{value.x}}", data-y='{{value.y}}') 
 #opponent-board.col-sm-5(ng-controller='gridController')
   h4 Opponent Board
   table.board-table
@@ -12,10 +13,10 @@
         .content {{boardMapping[$parent.$index + 1]}}{{$index + 1}}
 #ships.col-sm-5
   img(wb-draggable='true' src='../img/ships/carrier.png' width='200px' data-size="5")
-  img(wb-draggable='true' src='../img/ships/battleship.png' width='200px' data-size="4")
-  img(wb-draggable='true' src='../img/ships/destroyer.png' width='200px' data-size="3")
-  img(wb-draggable='true' src='../img/ships/submarine.png' width='200px' data-size="3")
-  img(wb-draggable='true' src='../img/ships/patrol.png' width='200px' data-size="2")
+  img(wb-draggable='true' src='../img/ships/battleship.png' width='160px' data-size="4")
+  img(wb-draggable='true' src='../img/ships/destroyer.png' width='120px' data-size="3")
+  img(wb-draggable='true' src='../img/ships/submarine.png' width='120px' data-size="3")
+  img(wb-draggable='true' src='../img/ships/patrol.png' width='80px' data-size="2")
   //- table#draggable.draggable.carrier-table
   //-   tr.boat.carrier
   //-     td.carrier-cell(colspan='5')

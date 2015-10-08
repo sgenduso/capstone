@@ -7,12 +7,18 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   };
 
   $scope.p1Board = gameService.gameObject;
+  $scope.boardRows = [];
+  $scope.boardCols = [];
   $scope.boardMapping = gameService.boardMapping;
 
   $scope.populateBoard = function (size) {
     $scope.p1Board.$loaded().then(function () {
       for (var i = 0; i < size; i++) {
+        $scope.boardRows.push(gameService.boardMapping[i+1]);
         for (var j = 0; j < size; j++) {
+          if (i === 0) {
+            $scope.boardCols.push(Number(j+1));
+          }
           var cell = gameService.boardMapping[i+1] + Number(j+1);
           var cellObj = gameService.gameRef.child(cell);
           cellObj.set({
@@ -33,6 +39,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   };
 
   $scope.populateBoard(10);
+
 
   //
   // $(function() {
@@ -77,7 +84,6 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 //     });
 // });
 
-$("table.board-table td").css("color", 'red');
 
 //
 // $(function () {
@@ -114,7 +120,7 @@ $scope.dropped = function(dragEl, dropEl) {
       console.log(drag);
       console.log(drop);
 
-      console.log("Ship with size " + drag.attr('data-size') + " has been dropped on cell " + drop.attr("data-x") + ", " + drop.attr("data-y") + "!");
+      // console.log("Ship with size " + drag.attr('data-size') + " has been dropped on cell " + drop.attr("data-x") + ", " + drop.attr("data-y") + "!");
     };
 
 }]);
