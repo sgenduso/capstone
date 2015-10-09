@@ -15,6 +15,7 @@ app.directive('wbDraggable', ['$rootScope', function ($rootScope) {
             element.bind("dragstart", function (e) {
                 this.style.opacity = '.2';
                 e.originalEvent.dataTransfer.setData('text', dataToSend);
+                e.originalEvent.dataTransfer.setData(size, '');
                 $rootScope.$emit("WB-DRAG-START");
             });
 
@@ -37,8 +38,7 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
             getAttr = function (attr) {
               return angular.element(element).attr(attr);
             };
-            getDestCells = function (data, xVal) {
-              var extraCells = data.size - 1;
+            getDestCells = function (extraCells, xVal, yVal) {
               var destCells = [];
               // Populate array of destination cells (all drop cells) and send as data transfer
               var dropRowCells = $('#player1-board [data-y="' + yVal + '"]');
@@ -49,6 +49,31 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
                   }
                 });
                 return destCells;
+            };
+            destCellsHover = function (destCells) {
+                $.each(destCells,function (index, cell) {
+                  // var thisXVal = $(this).attr('data-x');
+                  // if (thisXVal >= xVal && thisXVal <= (Number(xVal) + Number(extraCells))) {
+                    // $(this).css('background-color', 'yellow');
+                    // $(this).css('border', '2px dashed black');
+                    console.log(cell);
+                    $(this).addClass('wb-over');
+                    // console.log($(this).attr('class').split(/\s+/));
+                  // }
+                });
+                // return destCells;
+            };
+            destCellsLeave = function (destCells) {
+              $.each(destCells,function (index, cell) {
+                // var thisXVal = $(this).attr('data-x');
+                // if (thisXVal >= xVal && thisXVal <= (Number(xVal) + Number(extraCells))) {
+                  // $(this).css('background-color', 'white');
+                  //   $(this).css('border', '2px solid black');
+                  $(this).removeClass('wb-over');
+                  // console.log($(this).attr('class').split(/\s+/));
+                // }
+              });
+              // return destCells;
             };
             var id = getAttr("id");
             var xVal = getAttr("data-x");
@@ -65,12 +90,22 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
             });
 
             element.bind("dragenter", function (e) {
+              console.log(e.originalEvent.dataTransfer.types[3]);
+              var extraCells = Number(e.originalEvent.dataTransfer.types[3]) - 1;
                 // this / e.target is the current hover target.
-                angular.element(e.target).addClass('wb-over');
+                // var el = angular.element(e.target);
+                // var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
+                var hoverCells = getDestCells(extraCells, xVal, yVal);
+                // var hoverCells = getDestCells(el.attr("data-x"));
+                destCellsHover(hoverCells);
+                // el.addClass('wb-over');
             });
 
             element.bind("dragleave", function (e) {
-                angular.element(e.target).removeClass('wb-over');  // this / e.target is previous target element.
+                // angular.element(e.target).removeClass('wb-over');  // this / e.target is previous target element.
+                var extraCells = Number(e.originalEvent.dataTransfer.types[3]) - 1;
+                var hoverCells = getDestCells(extraCells, xVal, yVal);
+                destCellsLeave(hoverCells);
             });
 
             element.bind("drop", function (e) {
@@ -82,6 +117,7 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
                     e.stopPropagation(); // Necessary. Allows us to drop.
                 }
                 var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
+                var extraCells = data.size - 1;
                 // var extraCells = data.size - 1;
                 // var destCells = [];
                 // // Populate array of destination cells (all drop cells) and send as data transfer
@@ -94,7 +130,7 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
                 //     }
                 //   });
 
-                scope.onDrop({dragEl: data, dropEls: getDestCells(data, xVal)});
+                scope.onDrop({dragEl: data, dropEls: getDestCells(extraCells, xVal, yVal)});
                 // scope.onDrop({dragEl: data, dropEl: id});
             });
 
