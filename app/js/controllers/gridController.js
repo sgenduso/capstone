@@ -43,10 +43,10 @@ $scope.dropped = function(dragEl, dropEls) {
       // this is your application logic, do whatever makes sense
       var drag = angular.element(dragEl);
       var drop = angular.element(dropEls);
+      console.log(drop);
       // console.log(drag[0]);
       // console.log(drag[0].size);
       // console.log(drag[0].imgSrc);
-      console.log(drop);
 
       // console.log("Ship with size " + drag.attr('data-size') + " has been dropped on cell " + drop.attr("data-x") + ", " + drop.attr("data-y") + "!");
     };

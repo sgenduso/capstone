@@ -71,16 +71,15 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
                 var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
                 var extraCells = data.size - 1;
                 var destCells = [];
-                destCells.push($('#' + id));
-
-                var dropRowCells = $('#player1-board[data-y="' + yVal + '"]');
-                console.log(dropRowCells);
-                  // dropRowCells.forEach(function (cell) {
-                  //   if (cell.dataset.x > xVal && cell.dataset.x <= xVal + extraCells) {
-                  //     destCells.push(cell);
-                  //   }
-                  // });
-                // extraCells = data.size;
+                // Populate array of destination cells (all drop cells) and send as data transfer
+                var dropRowCells = $('#player1-board [data-y="' + yVal + '"]');
+                console.log(dropRowCells.length);
+                  $.each(dropRowCells,function (index, cell) {
+                    var thisXVal = $(this).attr('data-x');
+                    if (thisXVal >= xVal && thisXVal <= (Number(xVal) + Number(extraCells))) {
+                      destCells.push(cell);
+                    }
+                  });
 
                 scope.onDrop({dragEl: data, dropEls: [destCells]});
                 // scope.onDrop({dragEl: data, dropEl: id});
