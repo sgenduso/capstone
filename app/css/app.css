@@ -8106,7 +8106,16 @@ button.close {
   .board-table tr {
     vertical-align: middle; }
 
-.ships {
+#fleet table tr td {
+  vertical-align: middle; }
+
+#fleet table tr td:first-child {
+  width: 30%; }
+
+#fleet table tr td:last-child {
+  width: 70%; }
+
+.fleet {
   z-index: 1; }
 
 .carrier-cell {
@@ -8173,3 +8182,18 @@ button.close {
 
 [draggable] {
   cursor: move; }
+
+img.carrier {
+  width: 70%; }
+
+img.battleship {
+  width: 55%; }
+
+img.destroyer {
+  width: 55%; }
+
+img.submarine {
+  width: 40%; }
+
+img.patrol {
+  width: 25%; }

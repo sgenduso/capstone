@@ -8,17 +8,16 @@ app.directive('wbDraggable', ['$rootScope', function ($rootScope) {
 
             var size = angular.element(element).attr("data-size");
             var imgSrc = angular.element(element).attr("src");
-            var data = {size: size, imgSrc: imgSrc};
+            var ship = angular.element(element).attr("ship");
+            var data = {size: size, imgSrc: imgSrc, ship:ship};
             var dataToSend = JSON.stringify(data);
 
             element.bind("dragstart", function (e) {
                 e.originalEvent.dataTransfer.setData('text', dataToSend);
-                console.log('dragging');
                 $rootScope.$emit("WB-DRAG-START");
             });
 
             element.bind("dragend", function (e) {
-              console.log('drag ended');
                 $rootScope.$emit("WB-DRAG-END");
             });
         }
@@ -36,7 +35,6 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
             getAttr = function (attr) {
               return angular.element(element).attr(attr);
             };
-          // return scope.$evalAsync(function(){
             var id = getAttr("id");
             var xVal = getAttr("data-x");
             var yVal = getAttr("data-y");
@@ -91,7 +89,6 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
             });
 
             $rootScope.$on("WB-DRAG-END", function () {
-              // console.log(extraCells);
                 var element = document.getElementById(id);
                 angular.element(element).removeClass("wb-target");
                 angular.element(element).removeClass("wb-over");

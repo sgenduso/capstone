@@ -58,3 +58,15 @@
   // width: 500px;
   // height: 250px;
 }
+
+#fleet table tr td{
+  vertical-align: middle;
+}
+
+#fleet table tr td:first-child{
+  width: 30%;
+}
+
+#fleet table tr td:last-child{
+  width: 70%;
+}

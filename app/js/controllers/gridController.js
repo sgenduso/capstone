@@ -12,7 +12,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.boardMapping = gameService.boardMapping;
 
   $scope.populateBoard = function (size) {
-    $scope.p1Board.$loaded().then(function () {
+    // $scope.p1Board.$loaded().then(function () {
       for (var i = 0; i < size; i++) {
         $scope.boardRows.push(gameService.boardMapping[i+1]);
         for (var j = 0; j < size; j++) {
@@ -31,7 +31,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
           });
          }
       }
-    });
+    // });
   };
 
 
@@ -39,16 +39,11 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
 
 $scope.dropped = function(dragEl, dropEls) {
-
-      // this is your application logic, do whatever makes sense
-      var drag = angular.element(dragEl);
-      var drop = angular.element(dropEls);
-      console.log(drop);
-      // console.log(drag[0]);
-      // console.log(drag[0].size);
-      // console.log(drag[0].imgSrc);
-
-      // console.log("Ship with size " + drag.attr('data-size') + " has been dropped on cell " + drop.attr("data-x") + ", " + drop.attr("data-y") + "!");
+      //set drag equal to ship info, drop equal to cells ship is being dropped into
+      var drag = angular.element(dragEl)[0];
+      var drop = angular.element(dropEls)[0];
+      console.log(drag);
+      console.log(drop[0].id);
     };
 
 }]);
