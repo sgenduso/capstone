@@ -40,33 +40,24 @@
 }
 
 
-
-#player1-board, #opponent-board{
-  // width: 40%;
-}
-
-#player1-board{
-  // float: left;
-}
-
-#opponent-board{
-  // float: right;
-}
-
-
 .grid {
   // width: 500px;
   // height: 250px;
 }
 
-#fleet table tr td{
+#your-fleet table tr td{
   vertical-align: middle;
 }
 
-#fleet table tr td:first-child{
+#your-fleet table tr td:first-child{
   width: 30%;
 }
 
-#fleet table tr td:last-child{
+#your-fleet table tr td:last-child{
   width: 70%;
+}
+
+
+#enemy-fleet{
+  text-align: center;
 }

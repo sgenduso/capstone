@@ -53,9 +53,9 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 $scope.dropped = function(dragEl, dropEls) {
       //set drag equal to ship info, drop equal to cells ship is being dropped into
       var drag = angular.element(dragEl)[0];
-      var drop = angular.element(dropEls)[0];
-      console.log(drag);
-      console.log(drop[0].id);
+      var drop = angular.element(dropEls);
+      // console.log(drag);
+      console.log(drop);
     };
 
 }]);
@@ -122,11 +122,13 @@ app.directive('wbDraggable', ['$rootScope', function ($rootScope) {
             var dataToSend = JSON.stringify(data);
 
             element.bind("dragstart", function (e) {
+                this.style.opacity = '.2';
                 e.originalEvent.dataTransfer.setData('text', dataToSend);
                 $rootScope.$emit("WB-DRAG-START");
             });
 
             element.bind("dragend", function (e) {
+                this.style.opacity = '1';
                 $rootScope.$emit("WB-DRAG-END");
             });
         }
@@ -143,6 +145,19 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
           $timeout(function () {
             getAttr = function (attr) {
               return angular.element(element).attr(attr);
+            };
+            getDestCells = function (data, xVal) {
+              var extraCells = data.size - 1;
+              var destCells = [];
+              // Populate array of destination cells (all drop cells) and send as data transfer
+              var dropRowCells = $('#player1-board [data-y="' + yVal + '"]');
+                $.each(dropRowCells,function (index, cell) {
+                  var thisXVal = $(this).attr('data-x');
+                  if (thisXVal >= xVal && thisXVal <= (Number(xVal) + Number(extraCells))) {
+                    destCells.push(cell);
+                  }
+                });
+                return destCells;
             };
             var id = getAttr("id");
             var xVal = getAttr("data-x");
@@ -176,19 +191,19 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
                     e.stopPropagation(); // Necessary. Allows us to drop.
                 }
                 var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
-                var extraCells = data.size - 1;
-                var destCells = [];
-                // Populate array of destination cells (all drop cells) and send as data transfer
-                var dropRowCells = $('#player1-board [data-y="' + yVal + '"]');
-                console.log(dropRowCells.length);
-                  $.each(dropRowCells,function (index, cell) {
-                    var thisXVal = $(this).attr('data-x');
-                    if (thisXVal >= xVal && thisXVal <= (Number(xVal) + Number(extraCells))) {
-                      destCells.push(cell);
-                    }
-                  });
+                // var extraCells = data.size - 1;
+                // var destCells = [];
+                // // Populate array of destination cells (all drop cells) and send as data transfer
+                // var dropRowCells = $('#player1-board [data-y="' + yVal + '"]');
+                // console.log(dropRowCells.length);
+                //   $.each(dropRowCells,function (index, cell) {
+                //     var thisXVal = $(this).attr('data-x');
+                //     if (thisXVal >= xVal && thisXVal <= (Number(xVal) + Number(extraCells))) {
+                //       destCells.push(cell);
+                //     }
+                //   });
 
-                scope.onDrop({dragEl: data, dropEls: [destCells]});
+                scope.onDrop({dragEl: data, dropEls: getDestCells(data, xVal)});
                 // scope.onDrop({dragEl: data, dropEl: id});
             });
 

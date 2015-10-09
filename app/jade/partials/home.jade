@@ -1,35 +1,56 @@
+#fleets.col-md-3
+  .row#your-fleet
+    h4 Your Fleet - drag to place on board
+    table.table.fleet
+      tr.fleet.carrier
+        td Carrier
+        td
+          img.ship.carrier(wb-draggable='true' src='../img/ships/carrier.png' data-size="5" data-ship='carrier')
+      tr.fleet.battleship
+        td.col-md-4 Battleship
+        //- td.col-md-8
+        td.col-md-6
+          img.ship.battleship(wb-draggable='true' src='../img/ships/battleship.png' data-size="4" data-ship='battleship')
+      tr.fleet.destroyer
+        td.col-md-4 Destroyer
+        //- td.col-md-8
+        td.col-md-6
+          img.ship.destroyer(wb-draggable='true' src='../img/ships/destroyer.png' data-size="3" data-ship='destroyer')
+      tr.fleet.submarine
+        td.col-md-4 Submarine
+        //- td.col-md-8
+        td.col-md-4
+          img.ship.submarine(wb-draggable='true' src='../img/ships/submarine.png' data-size="3" data-ship='submarine')
+      tr.fleet.patrol
+        td.col-md-4 Patrol
+        //- td.col-md-8
+        td.col-md-2
+          img.ship.patrol(wb-draggable='true' src='../img/ships/patrol.png' data-size="2" data-ship='patrol')
 #player1-board.col-md-4(ng-controller='gridController')
-  h4 Player 1 Board
+  h4 Your Board
   table.board-table
     tr.board-row(ng-repeat='row in boardRows track by $index')
       td.board-cell.snap-to-me(wb-drop-target='true' on-drop='dropped(dragEl, dropEls)' ng-repeat='col in boardCols track by $index' id="{{row}}{{col}}" data-x="{{$index + 1}}", data-y='{{$parent.$index + 1}}')
-        .content {{boardMapping[$parent.$index + 1]}}{{$index + 1}}
-#fleet.col-md-4
-  h4 Your Fleet
-  table.table.fleet
-    tr.fleet.carrier
-      td Aircraft Carrier
-      td
-        img.ship.carrier(wb-draggable='true' src='../img/ships/carrier.png' data-size="5" data-ship='carrier')
-    tr.fleet.battleship
-      td.col-md-4 Battleship
-      td.col-md-8
-        img.ship.battleship(wb-draggable='true' src='../img/ships/battleship.png' data-size="4" data-ship='battleship')
-    tr.fleet.destroyer
-      td.col-md-4 Destroyer
-      td.col-md-8
-        img.ship.destroyer(wb-draggable='true' src='../img/ships/destroyer.png' data-size="3" data-ship='destroyer')
-    tr.fleet.submarine
-      td.col-md-4 Submarine
-      td.col-md-8
-        img.ship.submarine(wb-draggable='true' src='../img/ships/submarine.png' data-size="3" data-ship='submarine')
-    tr.fleet.patrol
-      td.col-md-4 Patrol Boat
-      td.col-md-8
-        img.ship.patrol(wb-draggable='true' src='../img/ships/patrol.png' data-size="2" data-ship='patrol')
-#opponent-board.col-md-4(ng-controller='gridController')
-  h4 Opponent Board
+        .content {{row}}{{col}}
+#enemy-board.col-md-4(ng-controller='gridController')
+  h4 Enemy Board
   table.board-table
     tr.board-row(ng-repeat='row in gridSize(10) track by $index')
       td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index + 1}}", data-y='{{$index + 1}}' ng-click='pushCoordinates($parent.$index + 1, $index + 1)') 
         .content {{boardMapping[$parent.$index + 1]}}{{$index + 1}}
+  .row#enemy-fleet
+    table.table.fleet
+      tr.fleet.carrier
+        td 
+          h5 Enemy Fleet
+        td
+          img.ship.carrier(src='../img/ships/carrier.png' data-size="5" data-ship='carrier')
+        td
+          img.ship.battleship(src='../img/ships/battleship.png' data-size="4" data-ship='battleship')
+      tr.fleet.battleship
+        td
+          img.ship.destroyer(src='../img/ships/destroyer.png' data-size="3" data-ship='destroyer')
+        td
+          img.ship.submarine(src='../img/ships/submarine.png' data-size="3" data-ship='submarine')
+        td
+          img.ship.patrol(src='../img/ships/patrol.png' data-size="2" data-ship='patrol')

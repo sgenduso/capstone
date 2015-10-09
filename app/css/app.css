@@ -8106,69 +8106,20 @@ button.close {
   .board-table tr {
     vertical-align: middle; }
 
-#fleet table tr td {
+#your-fleet table tr td {
   vertical-align: middle; }
 
-#fleet table tr td:first-child {
+#your-fleet table tr td:first-child {
   width: 30%; }
 
-#fleet table tr td:last-child {
+#your-fleet table tr td:last-child {
   width: 70%; }
 
-.fleet {
+#enemy-fleet {
+  text-align: center; }
+
+.fleets {
   z-index: 1; }
-
-.carrier-cell {
-  border: 1px solid red;
-  position: relative;
-  width: 20%;
-  overflow: hidden; }
-  .carrier-cell:hover {
-    cursor: pointer; }
-  .carrier-cell img {
-    width: 100%; }
-
-.carrier-table {
-  width: 50%; }
-
-.battleship-cell {
-  position: relative;
-  width: 25%;
-  margin: 1.66%;
-  overflow: hidden; }
-  .battleship-cell:hover {
-    cursor: pointer; }
-  .battleship-cell img {
-    width: 100%; }
-
-.battleship-table {
-  width: 35%; }
-
-.destroyer-cell, .submarine-cell {
-  position: relative;
-  width: 30%;
-  margin: 1.66%;
-  overflow: hidden; }
-  .destroyer-cell:hover, .submarine-cell:hover {
-    cursor: pointer; }
-  .destroyer-cell img, .submarine-cell img {
-    width: 100%; }
-
-.destroyer-table, .submarine-table {
-  width: 27%; }
-
-.patrol-cell {
-  position: relative;
-  width: 50%;
-  margin: 1.66%;
-  overflow: hidden; }
-  .patrol-cell:hover {
-    cursor: pointer; }
-  .patrol-cell img {
-    width: 100%; }
-
-.patrol-table {
-  width: 17%; }
 
 #draggable {
   z-index: 2; }
@@ -8183,17 +8134,32 @@ button.close {
 [draggable] {
   cursor: move; }
 
-img.carrier {
-  width: 70%; }
+#your-fleet img.carrier {
+  width: 80%; }
 
-img.battleship {
-  width: 55%; }
+#your-fleet img.battleship {
+  width: 65%; }
 
-img.destroyer {
-  width: 55%; }
+#your-fleet img.destroyer {
+  width: 65%; }
 
-img.submarine {
-  width: 40%; }
+#your-fleet img.submarine {
+  width: 50%; }
 
-img.patrol {
-  width: 25%; }
+#your-fleet img.patrol {
+  width: 32%; }
+
+#enemy-fleet img.carrier {
+  width: 80%; }
+
+#enemy-fleet img.battleship {
+  width: 65%; }
+
+#enemy-fleet img.destroyer {
+  width: 65%; }
+
+#enemy-fleet img.submarine {
+  width: 50%; }
+
+#enemy-fleet img.patrol {
+  width: 43%; }

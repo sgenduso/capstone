@@ -41,9 +41,9 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 $scope.dropped = function(dragEl, dropEls) {
       //set drag equal to ship info, drop equal to cells ship is being dropped into
       var drag = angular.element(dragEl)[0];
-      var drop = angular.element(dropEls)[0];
-      console.log(drag);
-      console.log(drop[0].id);
+      var drop = angular.element(dropEls);
+      // console.log(drag);
+      console.log(drop);
     };
 
 }]);
