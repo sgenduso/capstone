@@ -19,6 +19,10 @@
 
   [draggable] {
     cursor: move;
+    -khtml-user-drag: element;
+    -webkit-user-drag: element;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
   }
 
 #your-fleet img.carrier{
@@ -59,4 +63,12 @@
 
 #enemy-fleet img.patrol{
   width: 43%;
+}
+
+.drag-image{
+  width: 30px;
+}
+
+.child-element{
+  pointer-events: none;
 }

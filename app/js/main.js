@@ -4,7 +4,8 @@ app.config(function ($stateProvider, $locationProvider) {
   $stateProvider
   .state('home', {
       url: '/',
-      templateUrl: './partials/home.html'
+      templateUrl: './partials/home.html',
+      controller: 'gridController'
     });
 
   $locationProvider.html5Mode(true);
@@ -49,6 +50,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
   $scope.populateBoard(10);
 
+$scope.previousCells = gameService.previousCells;
 
 $scope.dropped = function(dragEl, dropEls) {
       //set drag equal to ship info, drop equal to cells ship is being dropped into
@@ -96,12 +98,15 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       26:'Z'
     };
 
+    var previousCells = [];
+
     // this uses AngularFire to create the synchronized array
     return {
       boardMapping: boardMapping,
       // gameId: randomId,
       gameObject: $firebaseObject(ref),
       gameRef: ref,
+      previousCells: previousCells
     };
   }
 ]);
@@ -122,9 +127,12 @@ app.directive('wbDraggable', ['$rootScope', function ($rootScope) {
             var dataToSend = JSON.stringify(data);
 
             element.bind("dragstart", function (e) {
-                this.style.opacity = '.2';
+              var dragImg = element.css('opacity', 1);
                 e.originalEvent.dataTransfer.setData('text', dataToSend);
                 e.originalEvent.dataTransfer.setData(size, '');
+
+                e.originalEvent.dataTransfer.setDragImage(dragImg[0], 0, 10);
+                this.style.opacity = '.2';
                 $rootScope.$emit("WB-DRAG-START");
             });
 
@@ -136,14 +144,17 @@ app.directive('wbDraggable', ['$rootScope', function ($rootScope) {
     };
 }]);
 
-app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $timeout) {
+app.directive('wbDropTarget', ['$rootScope', '$timeout', 'gameService', function ($rootScope, $timeout, gameService) {
     return {
         restrict: 'A',
         scope: {
-            onDrop: '&'
+            onDrop: '&',
+            // previousCells: '='
         },
         link: function (scope, element, attrs) {
           $timeout(function () {
+          console.log(scope);
+            // var previousCells = [];
             getAttr = function (attr) {
               return angular.element(element).attr(attr);
             };
@@ -159,35 +170,29 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
                 });
                 return destCells;
             };
-            destCellsHover = function (destCells) {
-                $.each(destCells,function (index, cell) {
-                  // var thisXVal = $(this).attr('data-x');
-                  // if (thisXVal >= xVal && thisXVal <= (Number(xVal) + Number(extraCells))) {
-                    // $(this).css('background-color', 'yellow');
-                    // $(this).css('border', '2px dashed black');
-                    console.log(cell);
-                    $(this).addClass('wb-over');
-                    // console.log($(this).attr('class').split(/\s+/));
-                  // }
+            destCellsEnter = function (destCells) {
+              console.log('left these cells: ');
+              console.log(gameService.previousCells);
+
+              console.log('entered these cells: ');
+              console.log(destCells);
+
+                $.each(gameService.previousCells,function (index, cell) {
+                    $(this).children().removeClass('wb-over');
                 });
-                // return destCells;
+                $.each(destCells,function (index, cell) {
+                    $(this).children().addClass('wb-over');
+                });
             };
             destCellsLeave = function (destCells) {
               $.each(destCells,function (index, cell) {
-                // var thisXVal = $(this).attr('data-x');
-                // if (thisXVal >= xVal && thisXVal <= (Number(xVal) + Number(extraCells))) {
-                  // $(this).css('background-color', 'white');
-                  //   $(this).css('border', '2px solid black');
-                  $(this).removeClass('wb-over');
-                  // console.log($(this).attr('class').split(/\s+/));
-                // }
+                  $(this).children().removeClass('wb-over');
               });
-              // return destCells;
             };
             var id = getAttr("id");
-            var xVal = getAttr("data-x");
-            var yVal = getAttr("data-y");
-            var extraCells;
+            var xVal = Number(getAttr("data-x"));
+            var yVal = Number(getAttr("data-y"));
+            // var extraCells;
 
             element.bind("dragover", function (e) {
                 if (e.preventDefault) {
@@ -199,22 +204,28 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
             });
 
             element.bind("dragenter", function (e) {
-              console.log(e.originalEvent.dataTransfer.types[3]);
-              var extraCells = Number(e.originalEvent.dataTransfer.types[3]) - 1;
+              //next dragenter fires before prev dragleave, so need to force dragleave first
                 // this / e.target is the current hover target.
-                // var el = angular.element(e.target);
-                // var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
+
+                var extraCells = Number(e.originalEvent.dataTransfer.types[3]) - 1;
                 var hoverCells = getDestCells(extraCells, xVal, yVal);
-                // var hoverCells = getDestCells(el.attr("data-x"));
-                destCellsHover(hoverCells);
-                // el.addClass('wb-over');
+
+                destCellsEnter(hoverCells);
+                scope.$apply(function () {
+                  gameService.previousCells = hoverCells;
+                });
+                // console.log(previousCells);
             });
 
             element.bind("dragleave", function (e) {
-                // angular.element(e.target).removeClass('wb-over');  // this / e.target is previous target element.
+                // this / e.target is previous target element.
                 var extraCells = Number(e.originalEvent.dataTransfer.types[3]) - 1;
                 var hoverCells = getDestCells(extraCells, xVal, yVal);
-                destCellsLeave(hoverCells);
+              // console.log('leaving these cells: ');
+              // console.log(hoverCells);
+                // destCellsLeave(hoverCells);
+                // previousCells = hoverCells;
+                // console.log(previousCells);
             });
 
             element.bind("drop", function (e) {
@@ -227,17 +238,6 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', function ($rootScope, $
                 }
                 var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
                 var extraCells = data.size - 1;
-                // var extraCells = data.size - 1;
-                // var destCells = [];
-                // // Populate array of destination cells (all drop cells) and send as data transfer
-                // var dropRowCells = $('#player1-board [data-y="' + yVal + '"]');
-                // console.log(dropRowCells.length);
-                //   $.each(dropRowCells,function (index, cell) {
-                //     var thisXVal = $(this).attr('data-x');
-                //     if (thisXVal >= xVal && thisXVal <= (Number(xVal) + Number(extraCells))) {
-                //       destCells.push(cell);
-                //     }
-                //   });
 
                 scope.onDrop({dragEl: data, dropEls: getDestCells(extraCells, xVal, yVal)});
                 // scope.onDrop({dragEl: data, dropEl: id});

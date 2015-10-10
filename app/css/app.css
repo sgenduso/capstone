@@ -8132,7 +8132,11 @@ button.close {
   background-color: #ddd; }
 
 [draggable] {
-  cursor: move; }
+  cursor: move;
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+  -khtml-user-select: none;
+  -webkit-user-select: none; }
 
 #your-fleet img.carrier {
   width: 80%; }
@@ -8163,3 +8167,9 @@ button.close {
 
 #enemy-fleet img.patrol {
   width: 43%; }
+
+.drag-image {
+  width: 30px; }
+
+.child-element {
+  pointer-events: none; }

@@ -8,31 +8,27 @@
           img.ship.carrier(wb-draggable='true' src='../img/ships/carrier.png' data-size="5" data-ship='carrier')
       tr.fleet.battleship
         td.col-md-4 Battleship
-        //- td.col-md-8
         td.col-md-6
           img.ship.battleship(wb-draggable='true' src='../img/ships/battleship.png' data-size="4" data-ship='battleship')
       tr.fleet.destroyer
         td.col-md-4 Destroyer
-        //- td.col-md-8
         td.col-md-6
           img.ship.destroyer(wb-draggable='true' src='../img/ships/destroyer.png' data-size="3" data-ship='destroyer')
       tr.fleet.submarine
         td.col-md-4 Submarine
-        //- td.col-md-8
         td.col-md-4
           img.ship.submarine(wb-draggable='true' src='../img/ships/submarine.png' data-size="3" data-ship='submarine')
       tr.fleet.patrol
         td.col-md-4 Patrol
-        //- td.col-md-8
         td.col-md-2
           img.ship.patrol(wb-draggable='true' src='../img/ships/patrol.png' data-size="2" data-ship='patrol')
-#player1-board.col-md-4(ng-controller='gridController')
-  h4 Your Board
+#player1-board.col-md-4
+  h4 Your Board -- previous cells: {{previousCells}}
   table.board-table
     tr.board-row(ng-repeat='row in boardRows track by $index')
       td.board-cell.snap-to-me(wb-drop-target='true' on-drop='dropped(dragEl, dropEls)' ng-repeat='col in boardCols track by $index' id="{{row}}{{col}}" data-x="{{$index + 1}}", data-y='{{$parent.$index + 1}}')
-        .content {{row}}{{col}}
-#enemy-board.col-md-4(ng-controller='gridController')
+        .content.child-element {{row}}{{col}}
+#enemy-board.col-md-4
   h4 Enemy Board
   table.board-table
     tr.board-row(ng-repeat='row in gridSize(10) track by $index')
@@ -49,7 +45,7 @@
           img.ship.battleship(src='../img/ships/battleship.png' data-size="4" data-ship='battleship')
       tr.fleet.battleship
         td
-          img.ship.destroyer(src='../img/ships/destroyer.png' data-size="3" data-ship='destroyer')
+          img.ship.destroyer(src='../img/ships/destroyer.png' data-size="4" data-ship='destroyer')
         td
           img.ship.submarine(src='../img/ships/submarine.png' data-size="3" data-ship='submarine')
         td

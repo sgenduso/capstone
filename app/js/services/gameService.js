@@ -34,12 +34,15 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       26:'Z'
     };
 
+    var previousCells = [];
+
     // this uses AngularFire to create the synchronized array
     return {
       boardMapping: boardMapping,
       // gameId: randomId,
       gameObject: $firebaseObject(ref),
       gameRef: ref,
+      previousCells: previousCells
     };
   }
 ]);

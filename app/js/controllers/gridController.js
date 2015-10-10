@@ -37,6 +37,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
   $scope.populateBoard(10);
 
+$scope.previousCells = gameService.previousCells;
 
 $scope.dropped = function(dragEl, dropEls) {
       //set drag equal to ship info, drop equal to cells ship is being dropped into
