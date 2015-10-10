@@ -35,6 +35,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     };
 
     var previousCells = [];
+    var currentShip;
+    var previousShip;
 
     // this uses AngularFire to create the synchronized array
     return {
@@ -42,7 +44,9 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       // gameId: randomId,
       gameObject: $firebaseObject(ref),
       gameRef: ref,
-      previousCells: previousCells
+      previousCells: previousCells,
+      currentShip: currentShip,
+      previousShip: previousShip
     };
   }
 ]);

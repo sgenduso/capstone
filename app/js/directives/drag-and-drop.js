@@ -1,6 +1,6 @@
 
 //CREDIT: ADAPTED FROM JASON TURIM'S lvlDragDrop DIRECTIVES: https://github.com/logicbomb/lvlDragDrop
-app.directive('wbDraggable', ['$rootScope', function ($rootScope) {
+app.directive('wbDraggable', ['$rootScope', 'gameService', function ($rootScope, gameService) {
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
@@ -8,11 +8,12 @@ app.directive('wbDraggable', ['$rootScope', function ($rootScope) {
 
             var size = angular.element(element).attr("data-size");
             var imgSrc = angular.element(element).attr("src");
-            var ship = angular.element(element).attr("ship");
+            var ship = angular.element(element).attr("data-ship");
             var data = {size: size, imgSrc: imgSrc, ship:ship};
             var dataToSend = JSON.stringify(data);
 
             element.bind("dragstart", function (e) {
+              gameService.currentShip = ship;
               var dragImg = element.css('opacity', 1);
                 e.originalEvent.dataTransfer.setData('text', dataToSend);
                 e.originalEvent.dataTransfer.setData(size, '');
@@ -39,7 +40,6 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', 'gameService', function
         },
         link: function (scope, element, attrs) {
           $timeout(function () {
-          console.log(scope);
             // var previousCells = [];
             getAttr = function (attr) {
               return angular.element(element).attr(attr);
@@ -63,9 +63,17 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', 'gameService', function
               console.log('entered these cells: ');
               console.log(destCells);
 
+              console.log('previous ship: ');
+              console.log(gameService.previousShip);
+
+              console.log('current ship: ');
+              console.log(gameService.currentShip);
+
+              // if (gameService.previousShip === gameService.currentShip) {
                 $.each(gameService.previousCells,function (index, cell) {
                     $(this).children().removeClass('wb-over');
                 });
+              // }
                 $.each(destCells,function (index, cell) {
                     $(this).children().addClass('wb-over');
                 });
@@ -124,6 +132,10 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', 'gameService', function
                 }
                 var data = JSON.parse(e.originalEvent.dataTransfer.getData("text"));
                 var extraCells = data.size - 1;
+
+                gameService.previousShip = gameService.currentShip;
+                gameService.currentShip = '';
+                gameService.previousCells = [];
 
                 scope.onDrop({dragEl: data, dropEls: getDestCells(extraCells, xVal, yVal)});
                 // scope.onDrop({dragEl: data, dropEl: id});

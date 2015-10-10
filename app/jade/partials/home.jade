@@ -23,7 +23,7 @@
         td.col-md-2
           img.ship.patrol(wb-draggable='true' src='../img/ships/patrol.png' data-size="2" data-ship='patrol')
 #player1-board.col-md-4
-  h4 Your Board -- previous cells: {{previousCells}}
+  h4 Your Board
   table.board-table
     tr.board-row(ng-repeat='row in boardRows track by $index')
       td.board-cell.snap-to-me(wb-drop-target='true' on-drop='dropped(dragEl, dropEls)' ng-repeat='col in boardCols track by $index' id="{{row}}{{col}}" data-x="{{$index + 1}}", data-y='{{$parent.$index + 1}}')
