@@ -68,7 +68,7 @@ $scope.dropped = function(dragEl, dropEls) {
       //   boat: drag.ship,
       //   });
       $.each(drop,function (index, cell) {
-        $scope.p1Board[$(this).attr('id')].boat = drag.ship;
+        $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
         $scope.p1Board.$save();
       });
       console.log($scope.p1Board[$(drop[0]).attr('id')]);
