@@ -53,31 +53,24 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
 $scope.previousCells = gameService.previousCells;
 
+
 $scope.dropped = function(dragEl, dropEls) {
       //set drag equal to ship info, drop equal to cells ship is being dropped into
       var drag = angular.element(dragEl)[0];
       var drop = angular.element(dropEls);
       // console.log(drag);
-      console.log('DRAG INFO: ');
-      console.log(drag);
-      console.log('DROP INFO: ');
-      console.log(drop);
+      // console.log('DRAG INFO: ');
+      // console.log(drag);
+      // console.log('DROP INFO: ');
+      // console.log(drop);
 
-      // gameService.gameRef.child($(drop[0]).attr('id'))
-      //   .set({
-      //   boat: drag.ship,
-      //   });
-      $.each(drop,function (index, cell) {
-        $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
-        $scope.p1Board.$save();
-      });
-      console.log($scope.p1Board[$(drop[0]).attr('id')]);
 
-      // $(drop[0]).attr('colspan', drag.size);
-      // $(drop[0]).css('background-image', 'url(' + drag.imgSrc + ')');
-      // $(drop[0]).css('background-size', 'contain');
-      // $(drop[0]).css('background-repeat', 'no-repeat');
-      // $(drop[0]).append("<img src='" + drag.imgSrc + "' width='100%'>");
+      if(gameService.allSpacesFree(drop)){
+        $.each(drop,function (index, cell) {
+          $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
+          $scope.p1Board.$save();
+        });
+      }
     };
 
 }]);
@@ -118,6 +111,18 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       26:'Z'
     };
 
+    var allSpacesFree = function (destCells) {
+      for (var i = 0; i < destCells.length; i++) {
+        console.log(this.gameObject[destCells[i].id]);
+        if (this.gameObject[destCells[i].id].boat) {
+          console.log('not all spaces free');
+          return false;
+        }
+        console.log('all spaces free');
+        return true;
+      }
+    };
+
     var previousCells = [];
     var currentShip;
     var previousShip;
@@ -130,7 +135,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       gameRef: ref,
       previousCells: previousCells,
       currentShip: currentShip,
-      previousShip: previousShip
+      previousShip: previousShip,
+      allSpacesFree: allSpacesFree,
     };
   }
 ]);

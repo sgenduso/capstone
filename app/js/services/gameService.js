@@ -34,6 +34,18 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       26:'Z'
     };
 
+    var allSpacesFree = function (destCells) {
+      for (var i = 0; i < destCells.length; i++) {
+        console.log(this.gameObject[destCells[i].id]);
+        if (this.gameObject[destCells[i].id].boat) {
+          console.log('not all spaces free');
+          return false;
+        }
+        console.log('all spaces free');
+        return true;
+      }
+    };
+
     var previousCells = [];
     var currentShip;
     var previousShip;
@@ -46,7 +58,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       gameRef: ref,
       previousCells: previousCells,
       currentShip: currentShip,
-      previousShip: previousShip
+      previousShip: previousShip,
+      allSpacesFree: allSpacesFree,
     };
   }
 ]);
