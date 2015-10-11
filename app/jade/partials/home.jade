@@ -1,3 +1,4 @@
+//your ships -- draggable onto your board
 #fleets.col-md-3
   .row#your-fleet
     h4 Your Fleet - drag to place on board
@@ -13,7 +14,7 @@
       tr.fleet.destroyer
         td.col-md-4 Destroyer
         td.col-md-6
-          img.ship.destroyer(wb-draggable='true' src='../img/ships/destroyer.png' data-size="3" data-ship='destroyer')
+          img.ship.destroyer(wb-draggable='true' src='../img/ships/destroyer.png' data-size="4" data-ship='destroyer')
       tr.fleet.submarine
         td.col-md-4 Submarine
         td.col-md-4
@@ -22,17 +23,21 @@
         td.col-md-4 Patrol
         td.col-md-2
           img.ship.patrol(wb-draggable='true' src='../img/ships/patrol.png' data-size="2" data-ship='patrol')
+
+//your board -- shows where you've placed your ships and where enemy has hit and missed
 #player1-board.col-md-4
   h4 Your Board
   table.board-table
     tr.board-row(ng-repeat='row in boardRows track by $index')
       td.board-cell.snap-to-me(wb-drop-target='true' on-drop='dropped(dragEl, dropEls)' ng-repeat='col in boardCols track by $index' id="{{row}}{{col}}" data-x="{{$index + 1}}", data-y='{{$parent.$index + 1}}')
         .content.child-element {{row}}{{col}}
+        
+//enemy board -- shows which ships enemy has left and where you've hit and missed
 #enemy-board.col-md-4
   h4 Enemy Board
   table.board-table
     tr.board-row(ng-repeat='row in gridSize(10) track by $index')
-      td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index + 1}}", data-y='{{$index + 1}}' ng-click='pushCoordinates($parent.$index + 1, $index + 1)') 
+      td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index + 1}}", data-y='{{$index + 1}}') 
         .content {{boardMapping[$parent.$index + 1]}}{{$index + 1}}
   .row#enemy-fleet
     table.table.fleet

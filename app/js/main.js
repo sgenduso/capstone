@@ -20,6 +20,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   };
 
   $scope.p1Board = gameService.gameObject;
+  // gameService.gameObject.$bindTo($scope, p1Board);
   $scope.boardRows = [];
   $scope.boardCols = [];
   $scope.boardMapping = gameService.boardMapping;
@@ -57,7 +58,26 @@ $scope.dropped = function(dragEl, dropEls) {
       var drag = angular.element(dragEl)[0];
       var drop = angular.element(dropEls);
       // console.log(drag);
+      console.log('DRAG INFO: ');
+      console.log(drag);
+      console.log('DROP INFO: ');
       console.log(drop);
+
+      // gameService.gameRef.child($(drop[0]).attr('id'))
+      //   .set({
+      //   boat: drag.ship,
+      //   });
+      $.each(drop,function (index, cell) {
+        $scope.p1Board[$(this).attr('id')].boat = drag.ship;
+        $scope.p1Board.$save();
+      });
+      console.log($scope.p1Board[$(drop[0]).attr('id')]);
+
+      // $(drop[0]).attr('colspan', drag.size);
+      // $(drop[0]).css('background-image', 'url(' + drag.imgSrc + ')');
+      // $(drop[0]).css('background-size', 'contain');
+      // $(drop[0]).css('background-repeat', 'no-repeat');
+      // $(drop[0]).append("<img src='" + drag.imgSrc + "' width='100%'>");
     };
 
 }]);
@@ -175,17 +195,17 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', 'gameService', function
                 return destCells;
             };
             destCellsEnter = function (destCells) {
-              console.log('left these cells: ');
-              console.log(gameService.previousCells);
-
-              console.log('entered these cells: ');
-              console.log(destCells);
-
-              console.log('previous ship: ');
-              console.log(gameService.previousShip);
-
-              console.log('current ship: ');
-              console.log(gameService.currentShip);
+              // console.log('left these cells: ');
+              // console.log(gameService.previousCells);
+              //
+              // console.log('entered these cells: ');
+              // console.log(destCells);
+              //
+              // console.log('previous ship: ');
+              // console.log(gameService.previousShip);
+              //
+              // console.log('current ship: ');
+              // console.log(gameService.currentShip);
 
               // if (gameService.previousShip === gameService.currentShip) {
                 $.each(gameService.previousCells,function (index, cell) {
@@ -233,11 +253,6 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', 'gameService', function
                 // this / e.target is previous target element.
                 var extraCells = Number(e.originalEvent.dataTransfer.types[3]) - 1;
                 var hoverCells = getDestCells(extraCells, xVal, yVal);
-              // console.log('leaving these cells: ');
-              // console.log(hoverCells);
-                // destCellsLeave(hoverCells);
-                // previousCells = hoverCells;
-                // console.log(previousCells);
             });
 
             element.bind("drop", function (e) {
@@ -265,6 +280,7 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', 'gameService', function
             });
 
             $rootScope.$on("WB-DRAG-END", function () {
+              destCellsLeave(gameService.previousCells);
                 var element = document.getElementById(id);
                 angular.element(element).removeClass("wb-target");
                 angular.element(element).removeClass("wb-over");

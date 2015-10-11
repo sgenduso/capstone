@@ -57,17 +57,17 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', 'gameService', function
                 return destCells;
             };
             destCellsEnter = function (destCells) {
-              console.log('left these cells: ');
-              console.log(gameService.previousCells);
-
-              console.log('entered these cells: ');
-              console.log(destCells);
-
-              console.log('previous ship: ');
-              console.log(gameService.previousShip);
-
-              console.log('current ship: ');
-              console.log(gameService.currentShip);
+              // console.log('left these cells: ');
+              // console.log(gameService.previousCells);
+              //
+              // console.log('entered these cells: ');
+              // console.log(destCells);
+              //
+              // console.log('previous ship: ');
+              // console.log(gameService.previousShip);
+              //
+              // console.log('current ship: ');
+              // console.log(gameService.currentShip);
 
               // if (gameService.previousShip === gameService.currentShip) {
                 $.each(gameService.previousCells,function (index, cell) {
@@ -115,11 +115,6 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', 'gameService', function
                 // this / e.target is previous target element.
                 var extraCells = Number(e.originalEvent.dataTransfer.types[3]) - 1;
                 var hoverCells = getDestCells(extraCells, xVal, yVal);
-              // console.log('leaving these cells: ');
-              // console.log(hoverCells);
-                // destCellsLeave(hoverCells);
-                // previousCells = hoverCells;
-                // console.log(previousCells);
             });
 
             element.bind("drop", function (e) {
@@ -147,6 +142,7 @@ app.directive('wbDropTarget', ['$rootScope', '$timeout', 'gameService', function
             });
 
             $rootScope.$on("WB-DRAG-END", function () {
+              destCellsLeave(gameService.previousCells);
                 var element = document.getElementById(id);
                 angular.element(element).removeClass("wb-target");
                 angular.element(element).removeClass("wb-over");
