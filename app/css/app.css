@@ -8118,6 +8118,9 @@ button.close {
 #enemy-fleet {
   text-align: center; }
 
+.boat-on-cell {
+  background-color: black; }
+
 .fleets {
   z-index: 1; }
 
