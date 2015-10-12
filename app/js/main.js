@@ -25,6 +25,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.cellHasBoat = function (cellId) {
       return gameService.cellHasBoat(cellId);
   };
+
   $scope.boardRows = [];
   $scope.boardCols = [];
   $scope.boardMapping = gameService.boardMapping;
@@ -70,15 +71,6 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
     });
     $scope.p1Board.$save();
     $scope.shipsOnBoard.$save();
-    // $scope.p1Board.forEach(function (cell) {
-    //   cell.boat = false;
-    // // $scope.p1Board.$save(cell);
-    // });
-    // $scope.shipsOnBoard.forEach(function (ship) {
-    //   ship = false;
-    // // $scope.shipsOnBoard.$save(ship);
-    // });
-    // console.log($scope.shipsOnBoard);
   };
 
 
@@ -96,7 +88,7 @@ $scope.dropped = function(dragEl, dropEls) {
       console.log(drop);
 
 
-      if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship)){
+      if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship) && gameService.roomOnBoard(drop.length, drag.size)){
         $.each(drop,function (index, cell) {
           $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
           $scope.shipsOnBoard[drag.ship] = true;
@@ -173,26 +165,10 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       return this.boardObject[cellId].boat !== false;
     };
 
-
-    var clearBoard = function () {
-
-      shipsRef.once('value', function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-          var key = childSnapshot.key();
-          var childData = childSnapshot.val();
-          childData.set(false);
-        });
-        // this.shipsObject.$save();
-      });
-      boardRef.once('value', function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-          var key = childSnapshot.key();
-          var childData = childSnapshot.val();
-          childData.boat.set(false);
-        });
-        // this.boardObject.$save();
-      });
+    var roomOnBoard = function (destinationLength, shipLength) {
+      return destinationLength == shipLength;
     };
+
 
     var getCellIds = function () {
       var cellIds = [];
@@ -225,8 +201,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       allSpacesFree: allSpacesFree,
       cellHasBoat: cellHasBoat,
       shipOnBoard: shipOnBoard,
-      clearBoard: clearBoard,
-      getCellIds: getCellIds
+      getCellIds: getCellIds,
+      roomOnBoard: roomOnBoard
     };
   }
 ]);

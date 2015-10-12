@@ -63,26 +63,10 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       return this.boardObject[cellId].boat !== false;
     };
 
-
-    var clearBoard = function () {
-
-      shipsRef.once('value', function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-          var key = childSnapshot.key();
-          var childData = childSnapshot.val();
-          childData.set(false);
-        });
-        // this.shipsObject.$save();
-      });
-      boardRef.once('value', function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-          var key = childSnapshot.key();
-          var childData = childSnapshot.val();
-          childData.boat.set(false);
-        });
-        // this.boardObject.$save();
-      });
+    var roomOnBoard = function (destinationLength, shipLength) {
+      return destinationLength == shipLength;
     };
+
 
     var getCellIds = function () {
       var cellIds = [];
@@ -115,8 +99,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       allSpacesFree: allSpacesFree,
       cellHasBoat: cellHasBoat,
       shipOnBoard: shipOnBoard,
-      clearBoard: clearBoard,
-      getCellIds: getCellIds
+      getCellIds: getCellIds,
+      roomOnBoard: roomOnBoard
     };
   }
 ]);

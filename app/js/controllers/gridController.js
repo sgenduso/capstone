@@ -12,6 +12,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.cellHasBoat = function (cellId) {
       return gameService.cellHasBoat(cellId);
   };
+
   $scope.boardRows = [];
   $scope.boardCols = [];
   $scope.boardMapping = gameService.boardMapping;
@@ -57,15 +58,6 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
     });
     $scope.p1Board.$save();
     $scope.shipsOnBoard.$save();
-    // $scope.p1Board.forEach(function (cell) {
-    //   cell.boat = false;
-    // // $scope.p1Board.$save(cell);
-    // });
-    // $scope.shipsOnBoard.forEach(function (ship) {
-    //   ship = false;
-    // // $scope.shipsOnBoard.$save(ship);
-    // });
-    // console.log($scope.shipsOnBoard);
   };
 
 
@@ -83,7 +75,7 @@ $scope.dropped = function(dragEl, dropEls) {
       console.log(drop);
 
 
-      if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship)){
+      if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship) && gameService.roomOnBoard(drop.length, drag.size)){
         $.each(drop,function (index, cell) {
           $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
           $scope.shipsOnBoard[drag.ship] = true;
