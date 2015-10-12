@@ -3,8 +3,11 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     // create a reference to the database location where data is stored
     // var randomId = Math.round(Math.random() * 100000000);
     // var ref = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId);
-    var gameRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game");
-    var shipsRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/board");
+    var boardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/board");
+    var shipsRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/ships");
+    var boardObject = $firebaseObject(boardRef);
+    var shipsObject = $firebaseObject(shipsRef);
+
 
     var boardMapping = {
       1:'A',
@@ -35,27 +38,62 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       26:'Z'
     };
 
+    var ships = ['carrier', 'battleship', 'destroyer', 'submarine', 'patrol'];
+
     var allSpacesFree = function (destCells) {
       for (var i = 0; i < destCells.length; i++) {
-        console.log(this.gameObject[destCells[i].id]);
-        if (this.gameObject[destCells[i].id].boat) {
+        if (this.boardObject[destCells[i].id].boat) {
           console.log('not all spaces free');
           return false;
         }
+      }
         console.log('all spaces free');
         return true;
-      }
     };
 
     var shipOnBoard = function (ship) {
+      console.log(this.shipsObject[ship]);
       return this.shipsObject[ship];
     };
 
     var cellHasBoat = function (cellId) {
       console.log(cellId);
-      // console.log(this.gameObject);
-      console.log(this.gameObject[cellId]);
-      return this.gameObject[cellId].boat !== false;
+      // console.log(this.boardObj);
+      console.log(this.boardObject[cellId]);
+      return this.boardObject[cellId].boat !== false;
+    };
+
+
+    var clearBoard = function () {
+
+      shipsRef.once('value', function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
+          var key = childSnapshot.key();
+          var childData = childSnapshot.val();
+          childData.set(false);
+        });
+        // this.shipsObject.$save();
+      });
+      boardRef.once('value', function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
+          var key = childSnapshot.key();
+          var childData = childSnapshot.val();
+          childData.boat.set(false);
+        });
+        // this.boardObject.$save();
+      });
+    };
+
+    var getCellIds = function () {
+      var cellIds = [];
+      boardRef.once('value', function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
+          cellIds.push(childSnapshot.key());
+        });
+      })
+      .then(function () {
+        return cellIds;
+      });
     };
 
     var previousCells = [];
@@ -66,16 +104,19 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     return {
       boardMapping: boardMapping,
       // gameId: randomId,
-      gameObject: $firebaseObject(gameRef),
-      gameRef: gameRef,
-      shipsObject: $firebaseObject(shipsRef),
+      ships: ships,
+      boardObject: boardObject,
+      boardRef: boardRef,
+      shipsObject: shipsObject,
       shipsRef: shipsRef,
       previousCells: previousCells,
       currentShip: currentShip,
       previousShip: previousShip,
       allSpacesFree: allSpacesFree,
       cellHasBoat: cellHasBoat,
-      shipOnBoard: shipOnBoard
+      shipOnBoard: shipOnBoard,
+      clearBoard: clearBoard,
+      getCellIds: getCellIds
     };
   }
 ]);
