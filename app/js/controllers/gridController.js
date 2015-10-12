@@ -7,7 +7,11 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   };
 
   $scope.p1Board = gameService.gameObject;
+  $scope.shipsOnBoard = gameService.shipsObject;
   // gameService.gameObject.$bindTo($scope, p1Board);
+  $scope.cellHasBoat = function (cellId) {
+      return gameService.cellHasBoat(cellId);
+  };
   $scope.boardRows = [];
   $scope.boardCols = [];
   $scope.boardMapping = gameService.boardMapping;
@@ -33,10 +37,12 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
          }
       }
     // });
+
   };
 
 
   $scope.populateBoard(10);
+
 
 $scope.previousCells = gameService.previousCells;
 
@@ -45,17 +51,19 @@ $scope.dropped = function(dragEl, dropEls) {
       //set drag equal to ship info, drop equal to cells ship is being dropped into
       var drag = angular.element(dragEl)[0];
       var drop = angular.element(dropEls);
-      // console.log(drag);
-      // console.log('DRAG INFO: ');
+      console.log(drag);
+      console.log('DRAG INFO: ');
       // console.log(drag);
       // console.log('DROP INFO: ');
       // console.log(drop);
 
 
-      if(gameService.allSpacesFree(drop)){
+      if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship)){
         $.each(drop,function (index, cell) {
           $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
+          $scope.shipsOnBoard[drag.ship] = true;
           $scope.p1Board.$save();
+          $scope.shipsOnBoard.$save();
         });
       }
     };

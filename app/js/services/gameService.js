@@ -3,7 +3,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     // create a reference to the database location where data is stored
     // var randomId = Math.round(Math.random() * 100000000);
     // var ref = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId);
-    var ref = new Firebase("https://incandescent-fire-9342.firebaseio.com/game");
+    var gameRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game");
+    var shipsRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/board");
 
     var boardMapping = {
       1:'A',
@@ -46,6 +47,17 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       }
     };
 
+    var shipOnBoard = function (ship) {
+      return this.shipsObject[ship];
+    };
+
+    var cellHasBoat = function (cellId) {
+      console.log(cellId);
+      // console.log(this.gameObject);
+      console.log(this.gameObject[cellId]);
+      return this.gameObject[cellId].boat !== false;
+    };
+
     var previousCells = [];
     var currentShip;
     var previousShip;
@@ -54,12 +66,16 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     return {
       boardMapping: boardMapping,
       // gameId: randomId,
-      gameObject: $firebaseObject(ref),
-      gameRef: ref,
+      gameObject: $firebaseObject(gameRef),
+      gameRef: gameRef,
+      shipsObject: $firebaseObject(shipsRef),
+      shipsRef: shipsRef,
       previousCells: previousCells,
       currentShip: currentShip,
       previousShip: previousShip,
       allSpacesFree: allSpacesFree,
+      cellHasBoat: cellHasBoat,
+      shipOnBoard: shipOnBoard
     };
   }
 ]);
