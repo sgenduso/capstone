@@ -34,10 +34,17 @@
   h4 Your Board 
   table.board-table
     tr.board-row(ng-repeat='row in boardRows track by $index')
-      td.board-cell.snap-to-me(wb-drop-target='true' on-drop='dropped(dragEl, dropEls)' ng-repeat='col in boardCols track by $index' id="{{row}}{{col}}" data-x="{{$index + 1}}", data-y='{{$parent.$index + 1}}' data-boat='{{p1Board[row+col]["boat"]}}')
-        //- .content.child-element  {{p1Board[row+col][\"boat\"]}}
-        //- .content.child-element(ng-class="{'boat-on-cell': '{{p1Board[row+col][\'boat\']}}' !== 'false'}") {{p1Board[row+col]["boat"]}}
-        .content.child-element {{p1Board[row+col]["boat"]}}
+      td.board-cell.snap-to-me(
+        ng-repeat='col in boardCols track by $index' 
+        id="{{row}}{{col}}" 
+        wb-drop-target='true' 
+        on-drop='dropped(dragEl, dropEls)' 
+        data-x="{{$index + 1}}"
+        data-y='{{$parent.$index + 1}}' 
+        data-boat='{{p1Board[row+col]["boat"]}}')
+        //- .content.child-element(ng-class="{'boat-on-cell': '{{p1Board[row+col][\'boat\']}}' != 'false'}") {{p1Board[row+col]["boat"]}}
+        .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('{{row}}{{col}}')}") {{p1Board[row+col]["boat"]}}
+        //- .content.child-element {{p1Board[row+col]["boat"]}}
         
 //enemy board -- shows which ships enemy has left and where you've hit and missed
 #enemy-board.col-md-4
