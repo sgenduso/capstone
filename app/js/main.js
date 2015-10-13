@@ -74,6 +74,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
     });
     $scope.p1Board.$save();
     $scope.shipsOnBoard.$save();
+    // $('.ship').css('opacity', '1');
   };
 
 
@@ -90,15 +91,19 @@ $scope.dropped = function(dragEl, dropEls) {
       console.log('DROP INFO: ');
       console.log(drop);
 
+      $.each(drop, function (index, cell) {
+        $(this).children().removeClass('wb-over');
+      });
+
 
       if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship) && gameService.roomOnBoard(drop.length, drag.size)){
         $.each(drop,function (index, cell) {
           $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
           $scope.shipsOnBoard[drag.ship] = true;
-          $(this).children().removeClass('wb-over');
           $scope.p1Board.$save();
           $scope.shipsOnBoard.$save();
         });
+        $('#'+drag.ship).css('opacity', '.2');
       }
     };
 
@@ -158,6 +163,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     };
 
     var shipOnBoard = function (ship) {
+      $('#'+ship).css('opacity', '');
       return this.shipsObject[ship];
     };
 

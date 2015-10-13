@@ -6,23 +6,23 @@
       tr.fleet.carrier
         td Carrier
         td
-          img.ship.carrier(wb-draggable='true' src='../img/ships/carrier.png' data-size="5" data-ship='carrier' ng-class="{'ship-placed': shipOnBoard('carrier')}")
+          img.ship.carrier#carrier(wb-draggable='true' src='../img/ships/carrier.png' data-size="5" data-ship='carrier' ng-class="{'ship-placed': shipOnBoard('carrier')}")
       tr.fleet.battleship
         td.col-md-4 Battleship
         td.col-md-6
-          img.ship.battleship(wb-draggable='true' src='../img/ships/battleship.png' data-size="4" data-ship='battleship' ng-class="{'ship-placed': shipOnBoard('battleship')}")
+          img.ship.battleship#battleship(wb-draggable='true' src='../img/ships/battleship.png' data-size="4" data-ship='battleship' ng-class="{'ship-placed': shipOnBoard('battleship')}")
       tr.fleet.destroyer
         td.col-md-4 Destroyer
         td.col-md-6
-          img.ship.destroyer(wb-draggable='true' src='../img/ships/destroyer.png' data-size="4" data-ship='destroyer' ng-class="{'ship-placed': shipOnBoard('destroyer')}")
+          img.ship.destroyer#destroyer(wb-draggable='true' src='../img/ships/destroyer.png' data-size="4" data-ship='destroyer' ng-class="{'ship-placed': shipOnBoard('destroyer')}")
       tr.fleet.submarine
         td.col-md-4 Submarine
         td.col-md-4
-          img.ship.submarine(wb-draggable='true' src='../img/ships/submarine.png' data-size="3" data-ship='submarine' ng-class="{'ship-placed': shipOnBoard('submarine')}")
+          img.ship.submarine#submarine(wb-draggable='true' src='../img/ships/submarine.png' data-size="3" data-ship='submarine' ng-class="{'ship-placed': shipOnBoard('submarine')}")
       tr.fleet.patrol
         td.col-md-4 Patrol
         td.col-md-2
-          img.ship.patrol(wb-draggable='true' src='../img/ships/patrol.png' data-size="2" data-ship='patrol' ng-class="{'ship-placed': shipOnBoard('patrol')}")
+          img.ship.patrol#patrol(wb-draggable='true' src='../img/ships/patrol.png' data-size="2" data-ship='patrol' ng-class="{'ship-placed': shipOnBoard('patrol')}")
   .row
     a.btn.btn-default(ng-click='clearBoard()') Clear Board
   .row#messages

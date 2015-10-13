@@ -52,6 +52,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     };
 
     var shipOnBoard = function (ship) {
+      $('#'+ship).css('opacity', '');
       return this.shipsObject[ship];
     };
 
