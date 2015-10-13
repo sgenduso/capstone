@@ -52,20 +52,18 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     };
 
     var shipOnBoard = function (ship) {
-      console.log(this.shipsObject[ship]);
       return this.shipsObject[ship];
     };
 
     var cellHasBoat = function (cellId) {
-      console.log(cellId);
-      // console.log(this.boardObj);
-      console.log(this.boardObject[cellId]);
       return this.boardObject[cellId].boat !== false;
     };
 
     var roomOnBoard = function (destinationLength, shipLength) {
       return destinationLength == shipLength;
     };
+
+
 
 
     var getCellIds = function () {

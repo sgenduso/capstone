@@ -8118,9 +8118,6 @@ button.close {
 #enemy-fleet {
   text-align: center; }
 
-.boat-on-cell {
-  background-color: #222222; }
-
 .fleets {
   z-index: 1; }
 
@@ -8176,3 +8173,10 @@ button.close {
 
 .child-element {
   pointer-events: none; }
+
+.boat-on-cell {
+  border: 2px dashed black !important;
+  background-color: #20b2aa; }
+
+.ship-placed {
+  opacity: .2; }

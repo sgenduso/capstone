@@ -72,3 +72,12 @@
 .child-element{
   pointer-events: none;
 }
+
+.boat-on-cell{
+  border: 2px dashed black !important;
+  background-color: #20b2aa;
+}
+
+.ship-placed{
+  opacity: .2;
+}

@@ -12,6 +12,9 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.cellHasBoat = function (cellId) {
       return gameService.cellHasBoat(cellId);
   };
+  $scope.shipOnBoard = function (ship) {
+    return gameService.shipOnBoard(ship);
+  };
 
   $scope.boardRows = [];
   $scope.boardCols = [];
@@ -22,7 +25,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
 
   $scope.populateBoard = function (size) {
-    // $scope.p1Board.$loaded().then(function () {
+    $scope.p1Board.$loaded().then(function () {
       for (var i = 0; i < size; i++) {
         $scope.boardRows.push(gameService.boardMapping[i+1]);
         for (var j = 0; j < size; j++) {
@@ -34,15 +37,15 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
           cellObj.set({
             x: i+1,
             y: j+1,
-            boat: cellObj.boat || false,
-            hit: cellObj.hit || false,
+            boat: $scope.p1Board[cell].boat || false,
+            hit:  cellObj.hit || false,
             miss: cellObj.miss || false,
             sunk: cellObj.sunk || false
           });
           $scope.cellIds.push(cell);
          }
       }
-    // });
+    });
 
   };
 
@@ -79,6 +82,7 @@ $scope.dropped = function(dragEl, dropEls) {
         $.each(drop,function (index, cell) {
           $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
           $scope.shipsOnBoard[drag.ship] = true;
+          $(this).children().removeClass('wb-over');
           $scope.p1Board.$save();
           $scope.shipsOnBoard.$save();
         });
