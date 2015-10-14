@@ -42,10 +42,8 @@
         data-x="{{$index + 1}}"
         data-y='{{$parent.$index + 1}}' 
         data-boat='{{p1Board[row+col]["boat"]}}')
-        //- .content.child-element(ng-class="{'boat-on-cell': '{{p1Board[row+col][\'boat\']}}' != 'false'}") {{p1Board[row+col]["boat"]}}
-        .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('{{row}}{{col}}')}" ng-show="cellHasBoat('{{row}}{{col}}')") {{p1Board[row+col]["boat"]}}
+        .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('{{row}}{{col}}')}" ng-show="cellHasBoat('{{row}}{{col}}')") {{p1Board[row+col]["boat"][0] | uppercase}}
         .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('{{row}}{{col}}')}" ng-hide="cellHasBoat('{{row}}{{col}}')") {{row}}{{col}}
-        //- .content.child-element {{p1Board[row+col]["boat"]}}
         
 //enemy board -- shows which ships enemy has left and where you've hit and missed
 #enemy-board.col-md-4

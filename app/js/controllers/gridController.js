@@ -67,16 +67,43 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
 $scope.previousCells = gameService.previousCells;
 
+$scope.rotate = function (e) {
+  var dropCells = e.data.dropCells;
+  var count = 1;
+  $.each(dropCells, function (index, cell) {
+    if (index > 0) {
+      console.log('this cell: ');
+      console.log($(this));
+      console.log('swapped cell: ');
+    var swappedCell = $('td[data-x=' + (Number($(this).attr('data-x'))-count) + '][data-y=' + (Number($(this).attr('data-y'))+count) + ']');
+    console.log(swappedCell);
+    $scope.p1Board[swappedCell.attr('id')].boat = e.data.ship;
+    $scope.p1Board[$(this).attr('id')].boat = false;
+    console.log($scope.p1Board[swappedCell.attr('id')]);
+    console.log($scope.p1Board[$(this).attr('id')]);
+    $scope.p1Board.$save();
+    // $(this).attr('data-boat', false);
+    count++;
+
+
+    // console.log('index ' + index);
+    // console.log($(this).attr('data-x'));
+    // console.log($(this).attr('data-y'));
+    }
+  });
+  // console.log(e.data.startDirection);
+  // console.log(e.data.dropCells);
+};
 
 $scope.dropped = function(dragEl, dropEls) {
       //set drag equal to ship info, drop equal to cells ship is being dropped into
       var drag = angular.element(dragEl)[0];
       var drop = angular.element(dropEls);
       // console.log(drag);
-      console.log('DRAG INFO: ');
-      console.log(drag);
-      console.log('DROP INFO: ');
-      console.log(drop);
+      // console.log('DRAG INFO: ');
+      // console.log(drag);
+      // console.log('DROP INFO: ');
+      // console.log(drop);
 
       $.each(drop, function (index, cell) {
         $(this).children().removeClass('wb-over');
@@ -84,6 +111,7 @@ $scope.dropped = function(dragEl, dropEls) {
 
 
       if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship) && gameService.roomOnBoard(drop.length, drag.size)){
+        $(drop[0]).click({dropCells: drop, ship: drag.ship, startDirection: 'horizontal'}, $scope.rotate);
         $.each(drop,function (index, cell) {
           $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
           $scope.shipsOnBoard[drag.ship] = true;
