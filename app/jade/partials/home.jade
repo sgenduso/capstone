@@ -50,9 +50,26 @@
 #enemy-board.col-md-4
   h4 Enemy Board
   table.board-table
-    tr.board-row(ng-repeat='row in gridSize(10) track by $index')
-      td.board-cell(ng-repeat='col in gridSize(10) track by $index' data-x="{{$parent.$index + 1}}", data-y='{{$index + 1}}') 
-        .content {{boardMapping[$parent.$index + 1]}}{{$index + 1}}
+    tr.board-row(ng-repeat='row in boardRows track by $index')
+      td.board-cell.snap-to-me(
+        ng-repeat='col in boardCols track by $index'
+        id="p2-{{row}}{{col}}")
+        .content {{row}}{{col}}
+        //- .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('{{row}}{{col}}')}" ng-show="cellHasBoat('{{row}}{{col}}')") {{p1Board[row+col]["boat"][0] | uppercase}}
+        //- .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('{{row}}{{col}}')}" ng-hide="cellHasBoat('{{row}}{{col}}')") {{row}}{{col}}
+        
+  //- {{boardRows}}
+  //- {{boardCols}}
+  //- table.board-table
+  //- tr.board-row(ng-repeat='row in boardRows track by $index')
+  //-   td.board-cell(
+  //-     ng-repeat='col in boardCols track by $index' 
+  //-     )
+      //- data-x="{{$index + 1}}"
+      //- data-y='{{$parent.$index + 1}}' 
+      //- data-boat='{{p2Board[row+col]["boat"]}}'
+      //- .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('p2-{{row}}{{col}}')}" ng-show="cellHasBoat('p2-{{row}}{{col}}')") {{p2Board[row+col]["boat"][0] | uppercase}}
+      //- .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('p2-{{row}}{{col}}')}" ng-hide="cellHasBoat('p2-{{row}}{{col}}')") {{row}}{{col}}
   .row#enemy-fleet
     table.table.fleet
       tr.fleet.carrier

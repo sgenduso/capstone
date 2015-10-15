@@ -3,9 +3,11 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     // create a reference to the database location where data is stored
     // var randomId = Math.round(Math.random() * 100000000);
     // var ref = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId);
-    var boardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/board");
+    var p1BoardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/p1board");
+    var p2BoardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/p2board");
     var shipsRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/ships");
-    var boardObject = $firebaseObject(boardRef);
+    var p1BoardObject = $firebaseObject(p1BoardRef);
+    var p2BoardObject = $firebaseObject(p2BoardRef);
     var shipsObject = $firebaseObject(shipsRef);
 
 
@@ -42,7 +44,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
     var allSpacesFree = function (destCells) {
       for (var i = 0; i < destCells.length; i++) {
-        if (this.boardObject[destCells[i].id].boat) {
+        if (this.p1BoardObject[destCells[i].id].boat) {
           console.log('not all spaces free');
           return false;
         }
@@ -57,7 +59,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     };
 
     var cellHasBoat = function (cellId) {
-      return this.boardObject[cellId].boat !== false;
+      return this.p1BoardObject[cellId].boat !== false;
     };
 
     var roomOnBoard = function (destinationLength, shipLength) {
@@ -70,7 +72,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
     var getCellIds = function () {
       var cellIds = [];
-      boardRef.once('value', function (snapshot) {
+      p1BoardRef.once('value', function (snapshot) {
         snapshot.forEach(function (childSnapshot) {
           cellIds.push(childSnapshot.key());
         });
@@ -89,8 +91,10 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       boardMapping: boardMapping,
       // gameId: randomId,
       ships: ships,
-      boardObject: boardObject,
-      boardRef: boardRef,
+      p1BoardObject: p1BoardObject,
+      p1BoardRef: p1BoardRef,
+      p2BoardObject: p2BoardObject,
+      p2BoardRef: p2BoardRef,
       shipsObject: shipsObject,
       shipsRef: shipsRef,
       previousCells: previousCells,

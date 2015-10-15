@@ -6,9 +6,10 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
     return new Array(size);
   };
 
-  $scope.p1Board = gameService.boardObject;
+  $scope.p1Board = gameService.p1BoardObject;
+  $scope.p2Board = gameService.p2BoardObject;
   $scope.shipsOnBoard = gameService.shipsObject;
-  // gameService.boardObject.$bindTo($scope, p1Board);
+  // gameService.p1BoardObject.$bindTo($scope, p1Board);
   $scope.cellHasBoat = function (cellId) {
       return gameService.cellHasBoat(cellId);
   };
@@ -33,11 +34,12 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
             $scope.boardCols.push(Number(j+1));
           }
           var cell = gameService.boardMapping[i+1] + Number(j+1);
-          var cellObj = gameService.boardRef.child(cell);
+          var cellObj = gameService.p1BoardRef.child(cell);
+        console.log($scope.p1Board);
           cellObj.set({
             x: i+1,
             y: j+1,
-            boat: $scope.p1Board[cell].boat || false,
+            boat: $scope.p1Board[cell] === undefined ? false : $scope.p1Board[cell].boat,
             hit:  cellObj.hit || false,
             miss: cellObj.miss || false,
             sunk: cellObj.sunk || false
