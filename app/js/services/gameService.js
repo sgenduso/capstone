@@ -61,6 +61,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     };
 
     var roomOnBoard = function (destinationLength, shipLength) {
+      'checking for room on board';
       return destinationLength == shipLength;
     };
 
