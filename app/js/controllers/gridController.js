@@ -33,18 +33,30 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
           if (i === 0) {
             $scope.boardCols.push(Number(j+1));
           }
-          var cell = gameService.boardMapping[i+1] + Number(j+1);
-          var cellObj = gameService.p1BoardRef.child(cell);
-        console.log($scope.p1Board);
-          cellObj.set({
+          //POPULATE PLAYER 1 BOARD
+          var p1Cell = gameService.boardMapping[i+1] + Number(j+1);
+          var p1CellObj = gameService.p1BoardRef.child(p1Cell);
+          p1CellObj.set({
             x: i+1,
             y: j+1,
-            boat: $scope.p1Board[cell] === undefined ? false : $scope.p1Board[cell].boat,
-            hit:  cellObj.hit || false,
-            miss: cellObj.miss || false,
-            sunk: cellObj.sunk || false
+            boat: $scope.p1Board[p1Cell] === undefined ? false : $scope.p1Board[p1Cell].boat,
+            hit:  p1CellObj.hit || false,
+            miss: p1CellObj.miss || false,
+            sunk: p1CellObj.sunk || false
           });
-          $scope.cellIds.push(cell);
+          $scope.cellIds.push(p1Cell);
+
+          //POPULATE ENEMY BOARD
+          var p2Cell = 'p2-' + gameService.boardMapping[i+1] + Number(j+1);
+          var p2CellObj = gameService.p2BoardRef.child(p2Cell);
+          p2CellObj.set({
+            x: i+1,
+            y: j+1,
+            boat: $scope.p2Board[p2Cell] === undefined ? false : $scope.p2Board[p2Cell].boat,
+            hit:  p2CellObj.hit || false,
+            miss: p2CellObj.miss || false,
+            sunk: p2CellObj.sunk || false
+          });
          }
       }
     });
