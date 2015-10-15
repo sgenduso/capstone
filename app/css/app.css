@@ -8179,4 +8179,4 @@ button.close {
   background-color: #20b2aa; }
 
 .ship-placed {
-  opacity: .2; }
+  opacity: .2 !important; }
