@@ -22,6 +22,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.boardMapping = gameService.boardMapping;
   $scope.ships = gameService.ships;
   $scope.cellIds = [];
+  $scope.p2CellIds = [];
 
 
 
@@ -57,6 +58,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
             miss: p2CellObj.miss || false,
             sunk: p2CellObj.sunk || false
           });
+          $scope.p2CellIds.push(p2Cell);
          }
       }
     });
@@ -75,14 +77,18 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
     });
     $scope.p1Board.$save();
     $scope.shipsOnBoard.$save();
-    // $('.ship').css('opacity', '1');
   };
 
+  $scope.popEnemyBoard = function () {
+    return gameService.popEnemyBoard();
+    // var cellIds = $scope.p2CellIds;
+    // var availableCells = $scope.p2CellIds;
+    // console.log(gameService.quad1);
+  };
 
 $scope.previousCells = gameService.previousCells;
 
 $scope.rotateToVert = function (e) {
-  console.log('rotating to vertical');
   var dropCells = e.data.dropCells;
   var ship = e.data.ship;
   var size = e.data.size;
@@ -111,7 +117,6 @@ $(dropCells[0]).click({dropCells: rotatedCells, ship: ship, size: size}, $scope.
 };
 
 $scope.rotateToHor = function (e) {
-  console.log('rotating to horizontal');
   var dropCells = e.data.dropCells;
   var ship = e.data.ship;
   var size = e.data.size;
