@@ -8,7 +8,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
   $scope.p1Board = gameService.p1BoardObject;
   $scope.p2Board = gameService.p2BoardObject;
-  $scope.shipsOnBoard = gameService.shipsObject;
+  $scope.p1ShipsOnBoard = gameService.p1ShipsObject;
   // gameService.p1BoardObject.$bindTo($scope, p1Board);
   $scope.cellHasBoat = function (cellId) {
       return gameService.cellHasBoat(cellId);
@@ -73,10 +73,10 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
       $scope.p1Board[cell].boat = false;
     });
     $scope.ships.forEach(function (ship) {
-      $scope.shipsOnBoard[ship] = false;
+      $scope.p1ShipsOnBoard[ship] = false;
     });
     $scope.p1Board.$save();
-    $scope.shipsOnBoard.$save();
+    $scope.p1ShipsOnBoard.$save();
   };
 
   $scope.popEnemyBoard = function () {
@@ -162,9 +162,9 @@ $scope.dropped = function(dragEl, dropEls) {
         $(drop[0]).click({dropCells: drop, ship: drag.ship, size: drag.size}, $scope.rotateToVert);
         $.each(drop,function (index, cell) {
           $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
-          $scope.shipsOnBoard[drag.ship] = true;
+          $scope.p1ShipsOnBoard[drag.ship] = true;
           $scope.p1Board.$save();
-          $scope.shipsOnBoard.$save();
+          $scope.p1ShipsOnBoard.$save();
         });
         $('#'+drag.ship).css('opacity', '.2');
       }

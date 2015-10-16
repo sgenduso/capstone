@@ -21,7 +21,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
   $scope.p1Board = gameService.p1BoardObject;
   $scope.p2Board = gameService.p2BoardObject;
-  $scope.shipsOnBoard = gameService.shipsObject;
+  $scope.p1ShipsOnBoard = gameService.p1ShipsObject;
   // gameService.p1BoardObject.$bindTo($scope, p1Board);
   $scope.cellHasBoat = function (cellId) {
       return gameService.cellHasBoat(cellId);
@@ -86,10 +86,10 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
       $scope.p1Board[cell].boat = false;
     });
     $scope.ships.forEach(function (ship) {
-      $scope.shipsOnBoard[ship] = false;
+      $scope.p1ShipsOnBoard[ship] = false;
     });
     $scope.p1Board.$save();
-    $scope.shipsOnBoard.$save();
+    $scope.p1ShipsOnBoard.$save();
   };
 
   $scope.popEnemyBoard = function () {
@@ -175,9 +175,9 @@ $scope.dropped = function(dragEl, dropEls) {
         $(drop[0]).click({dropCells: drop, ship: drag.ship, size: drag.size}, $scope.rotateToVert);
         $.each(drop,function (index, cell) {
           $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
-          $scope.shipsOnBoard[drag.ship] = true;
+          $scope.p1ShipsOnBoard[drag.ship] = true;
           $scope.p1Board.$save();
-          $scope.shipsOnBoard.$save();
+          $scope.p1ShipsOnBoard.$save();
         });
         $('#'+drag.ship).css('opacity', '.2');
       }
@@ -188,14 +188,16 @@ $scope.dropped = function(dragEl, dropEls) {
 app.factory("gameService", ["$firebaseArray", "$firebaseObject",
   function($firebaseArray, $firebaseObject) {
     // create a reference to the database location where data is stored
-    // var randomId = Math.round(Math.random() * 100000000);
-    // var ref = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId);
-    var p1BoardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/p1board");
-    var p2BoardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/p2board");
-    var shipsRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/ships");
+    var randomId = Math.round(Math.random() * 1000000000);
+    var ref = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId);
+    var p1BoardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId + "/p1board");
+    var p2BoardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId + "/p2board");
+    var p1ShipsRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId + "/p1ships");
+    var p2ShipsRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId + "/p2ships");
     var p1BoardObject = $firebaseObject(p1BoardRef);
     var p2BoardObject = $firebaseObject(p2BoardRef);
-    var shipsObject = $firebaseObject(shipsRef);
+    var p1ShipsObject = $firebaseObject(p1ShipsRef);
+    var p2ShipsObject = $firebaseObject(p2ShipsRef);
 
 
     var boardMapping = {
@@ -227,7 +229,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       26:'Z'
     };
 
-    var quad1 = ["p2-A1", "p2-A2", "p2-A3", "p2-A4", "p2-A5", "p2-B1", "p2-B5", "p2-C1", "p2-C5", "p2-D1", "p2-D5", "p2-E1", "p2-E2", "p2-E3", "p2-E4", "p2-E5"];
+    var quad1 = ["p2-A1", "p2-A2", "p2-A3", "p2-A4", "p2-A5", "p2-B1", "p2-C1", "p2-D1", "p2-E1"];
 
     var quad2 = ["p2-A6", "p2-A7", "p2-A8", "p2-A9", "p2-A10", "p2-B6", "p2-B10", "p2-C6", "p2-C10", "p2-D6", "p2-D10", "p2-E6", "p2-E7", "p2-E8", "p2-E9", "p2-E10"];
 
@@ -266,12 +268,24 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
     var shipOnBoard = function (ship) {
       $('#'+ship).css('opacity', '');
-      return this.shipsObject[ship];
+      return this.p1ShipsObject[ship];
     };
 
     var cellHasBoat = function (cellId) {
-      return this.p1BoardObject[cellId].boat !== false;
+        return p1BoardObject[cellId].boat !== false;
     };
+    //
+    // var cellHasBoat = function (cellId, player) {
+    //   console.log(p1BoardObject[cellId]);
+    //   console.log(p2BoardObject[cellId]);
+    //   // console.log(cellId);
+    //   // console.log(player);
+    //   if (player === 'p1') {
+    //     return p1BoardObject[cellId].boat !== false;
+    //   } else {
+    //     return p2BoardObject[cellId].boat !== false;
+    //   }
+    // };
 
     var roomOnBoard = function (destinationLength, shipLength) {
       return destinationLength == shipLength;
@@ -284,6 +298,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       var shipDir;
       var randomFirstShip = ships[randBetween(0,1)];
       var randomFirstCell = quad1[randBetween(0, quad1.length-1)];
+
       if (randomFirstCell === 'p2-A1') {
         shipDir = directions[randBetween(0,1)];
       } else if (p2BoardObject[randomFirstCell].y === 1) {
@@ -291,10 +306,14 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       } else {
         shipDir = 'vert';
       }
-      console.log(randomFirstShip);
-      console.log(randomFirstCell);
-      console.log(shipDir);
-      console.log(p2BoardObject[randomFirstCell]);
+
+      console.log('first ship: ', randomFirstShip);
+      console.log('first cell: ', randomFirstCell);
+      console.log('ship direction: ', shipDir);
+      console.log('ship on cell before: ', p2BoardObject[randomFirstCell].boat);
+      p2BoardObject[randomFirstCell].boat = randomFirstShip;
+      p2BoardObject.$save();
+      console.log('ship on cell after: ', p2BoardObject[randomFirstCell].boat);
         // p2BoardObject[$(this).attr('id')].boat = p2BoardObject[$(this).attr('id')].boat || drag.ship;
         // shipsOnBoard[drag.ship] = true;
 
@@ -338,8 +357,10 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       p1BoardRef: p1BoardRef,
       p2BoardObject: p2BoardObject,
       p2BoardRef: p2BoardRef,
-      shipsObject: shipsObject,
-      shipsRef: shipsRef,
+      p1ShipsObject: p1ShipsObject,
+      p2ShipsObject: p2ShipsObject,
+      p1ShipsRef: p1ShipsRef,
+      p2ShipsRef: p2ShipsRef,
       previousCells: previousCells,
       currentShip: currentShip,
       previousShip: previousShip,

@@ -53,10 +53,12 @@
     tr.board-row(ng-repeat='row in boardRows track by $index')
       td.board-cell.snap-to-me(
         ng-repeat='col in boardCols track by $index'
-        id="p2-{{row}}{{col}}")
+        id="p2-{{row}}{{col}}"
+        data-x="{{$index + 1}}"
+        data-y='{{$parent.$index + 1}}')
         .content {{row}}{{col}}
-        //- .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('{{row}}{{col}}')}" ng-show="cellHasBoat('{{row}}{{col}}')") {{p1Board[row+col]["boat"][0] | uppercase}}
-        //- .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('{{row}}{{col}}')}" ng-hide="cellHasBoat('{{row}}{{col}}')") {{row}}{{col}}
+        //- .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('p2-{{row}}{{col}}', 'enemy')}" ng-show="cellHasBoat('p2-{{row}}{{col}}', 'enemy')") {{p2Board["p2-"+row+col]["boat"][0] | uppercase}}
+        //- .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('p2-{{row}}{{col}}', 'enemy')}" ng-hide="cellHasBoat('{{row}}{{col}}', 'enemy')") {{row}}{{col}}
         
   //- {{boardRows}}
   //- {{boardCols}}
