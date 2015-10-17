@@ -93,7 +93,6 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
       for (var key in $scope.p1ShipsOnBoard[ship].cells) {
         $scope.p1ShipsOnBoard[ship].cells[key] = false;
       }
-      // $scope.p1ShipsOnBoard[ship].cells = false;
     });
     $scope.p1Board.$save();
     $scope.p1ShipsOnBoard.$save();
@@ -167,11 +166,6 @@ $scope.dropped = function(dragEl, dropEls) {
       //set drag equal to ship info, drop equal to cells ship is being dropped into
       var drag = angular.element(dragEl)[0];
       var drop = angular.element(dropEls);
-      // console.log(drag);
-      // console.log('DRAG INFO: ');
-      // console.log(drag);
-      // console.log('DROP INFO: ');
-      // console.log(drop);
 
       $.each(drop, function (index, cell) {
         $(this).children().removeClass('wb-over');
@@ -179,32 +173,19 @@ $scope.dropped = function(dragEl, dropEls) {
 
       if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship) && gameService.roomOnBoard(drop.length, drag.size)){
         $(drop[0]).click({dropCells: drop, ship: drag.ship, size: drag.size}, $scope.rotateToVert);
-        // var shipObj = gameService.p1ShipsRef.child(drag.ship);
-        // shipObj.update({placed: true});
-        // $scope['p1'+drag.ship].placed = true;
           $scope.p1ShipsOnBoard[drag.ship].placed = true;
         $.each(drop,function (index, cell) {
-          // $scope['p1'+drag.ship][index] = cell;
-          // console.log(gameService.p1BoardRef.child('p1'+drag.ship).child('cells'));
-          // $scope['p1'+drag.ship].cells = cell;
-          // $scope['p1'+drag.ship].cells[$(this).attr('id')] = cell;
-          // shipObj.update({
-          //   cells['$(this).attr('id')']: cell
-          // });
           $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
-          // console.log($scope.p1ShipsOnBoard);
-          console.log($scope.p1ShipsOnBoard[drag.ship]);
-          console.log($scope.p1ShipsOnBoard[drag.ship].cells[index]);
           $scope.p1ShipsOnBoard[drag.ship].cells[index] = $(this).attr('id');
-          // console.log($scope.p1ShipsOnBoard[drag.ship].cells[$(this).attr('id')]);
-          // console.log($scope.p1ShipsOnBoard);
           $scope.p1Board.$save();
           $scope.p1ShipsOnBoard.$save();
-          // $scope['p1'+drag.ship].cells.$save();
         });
-        // console.log($scope);
         $('#'+drag.ship).css('opacity', '.2');
       }
     };
+
+  $scope.attack = function ($event) {
+    console.log($event.currentTarget.id);
+  };
 
 }]);

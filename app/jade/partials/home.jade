@@ -55,7 +55,8 @@
         ng-repeat='col in boardCols track by $index'
         id="p2-{{row}}{{col}}"
         data-x="{{$index + 1}}"
-        data-y='{{$parent.$index + 1}}')
+        data-y='{{$parent.$index + 1}}'
+        ng-click='attack($event)')
         .content {{row}}{{col}}
         //- .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('p2-{{row}}{{col}}', 'enemy')}" ng-show="cellHasBoat('p2-{{row}}{{col}}', 'enemy')") {{p2Board["p2-"+row+col]["boat"][0] | uppercase}}
         //- .content.child-element(ng-class="{'boat-on-cell': cellHasBoat('p2-{{row}}{{col}}', 'enemy')}" ng-hide="cellHasBoat('{{row}}{{col}}', 'enemy')") {{row}}{{col}}
