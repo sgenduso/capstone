@@ -10,8 +10,8 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.p2Board = gameService.p2BoardObject;
   $scope.p1ShipsOnBoard = gameService.p1ShipsObject;
   // gameService.p1BoardObject.$bindTo($scope, p1Board);
-  $scope.cellHasBoat = function (cellId) {
-      return gameService.cellHasBoat(cellId);
+  $scope.p1CellHasBoat = function (cellId) {
+      return gameService.p1CellHasBoat(cellId);
   };
   $scope.shipOnBoard = function (ship) {
     return gameService.shipOnBoard(ship);
@@ -61,8 +61,15 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
           $scope.p2CellIds.push(p2Cell);
          }
       }
-    });
 
+        //POPULATE PLAYER 1 SHIPS
+        $scope.ships.forEach(function (ship) {
+          var p1ShipObj = gameService.p1ShipsRef.child(ship);
+          p1ShipObj.set({
+            placed: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].placed
+          });
+        });
+    });
   };
 
 
@@ -157,12 +164,14 @@ $scope.dropped = function(dragEl, dropEls) {
         $(this).children().removeClass('wb-over');
       });
 
+      console.log(gameService.shipOnBoard(drag.ship));
 
       if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship) && gameService.roomOnBoard(drop.length, drag.size)){
         $(drop[0]).click({dropCells: drop, ship: drag.ship, size: drag.size}, $scope.rotateToVert);
         $.each(drop,function (index, cell) {
           $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
-          $scope.p1ShipsOnBoard[drag.ship] = true;
+          $scope.p1ShipsOnBoard[drag.ship].placed = true;
+          $scope.p1ShipsOnBoard[drag.ship].cells = drop;
           $scope.p1Board.$save();
           $scope.p1ShipsOnBoard.$save();
         });

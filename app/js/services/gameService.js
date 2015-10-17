@@ -2,6 +2,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
   function($firebaseArray, $firebaseObject) {
     // create a reference to the database location where data is stored
     var randomId = Math.round(Math.random() * 1000000000);
+    randomId = 1;
     var ref = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId);
     var p1BoardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId + "/p1board");
     var p2BoardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId + "/p2board");
@@ -81,10 +82,15 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
     var shipOnBoard = function (ship) {
       $('#'+ship).css('opacity', '');
-      return this.p1ShipsObject[ship];
+      // if (p1ShipsObject[ship]) {
+      //   return p1ShipsObject[ship].placed;
+      // } else {
+      //   return false;
+      // }
+      return p1ShipsObject[ship] === undefined ? false : p1ShipsObject[ship].placed;
     };
 
-    var cellHasBoat = function (cellId) {
+    var p1CellHasBoat = function (cellId) {
         return p1BoardObject[cellId].boat !== false;
     };
     //
@@ -178,7 +184,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       currentShip: currentShip,
       previousShip: previousShip,
       allSpacesFree: allSpacesFree,
-      cellHasBoat: cellHasBoat,
+      p1CellHasBoat: p1CellHasBoat,
       shipOnBoard: shipOnBoard,
       getCellIds: getCellIds,
       getEnemyCellIds: getEnemyCellIds,

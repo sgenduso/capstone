@@ -23,8 +23,8 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.p2Board = gameService.p2BoardObject;
   $scope.p1ShipsOnBoard = gameService.p1ShipsObject;
   // gameService.p1BoardObject.$bindTo($scope, p1Board);
-  $scope.cellHasBoat = function (cellId) {
-      return gameService.cellHasBoat(cellId);
+  $scope.p1CellHasBoat = function (cellId) {
+      return gameService.p1CellHasBoat(cellId);
   };
   $scope.shipOnBoard = function (ship) {
     return gameService.shipOnBoard(ship);
@@ -74,8 +74,15 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
           $scope.p2CellIds.push(p2Cell);
          }
       }
-    });
 
+        //POPULATE PLAYER 1 SHIPS
+        $scope.ships.forEach(function (ship) {
+          var p1ShipObj = gameService.p1ShipsRef.child(ship);
+          p1ShipObj.set({
+            placed: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].placed
+          });
+        });
+    });
   };
 
 
@@ -170,12 +177,14 @@ $scope.dropped = function(dragEl, dropEls) {
         $(this).children().removeClass('wb-over');
       });
 
+      console.log(gameService.shipOnBoard(drag.ship));
 
       if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship) && gameService.roomOnBoard(drop.length, drag.size)){
         $(drop[0]).click({dropCells: drop, ship: drag.ship, size: drag.size}, $scope.rotateToVert);
         $.each(drop,function (index, cell) {
           $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
-          $scope.p1ShipsOnBoard[drag.ship] = true;
+          $scope.p1ShipsOnBoard[drag.ship].placed = true;
+          $scope.p1ShipsOnBoard[drag.ship].cells = drop;
           $scope.p1Board.$save();
           $scope.p1ShipsOnBoard.$save();
         });
@@ -189,6 +198,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
   function($firebaseArray, $firebaseObject) {
     // create a reference to the database location where data is stored
     var randomId = Math.round(Math.random() * 1000000000);
+    randomId = 1;
     var ref = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId);
     var p1BoardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId + "/p1board");
     var p2BoardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId + "/p2board");
@@ -268,10 +278,15 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
     var shipOnBoard = function (ship) {
       $('#'+ship).css('opacity', '');
-      return this.p1ShipsObject[ship];
+      // if (p1ShipsObject[ship]) {
+      //   return p1ShipsObject[ship].placed;
+      // } else {
+      //   return false;
+      // }
+      return p1ShipsObject[ship] === undefined ? false : p1ShipsObject[ship].placed;
     };
 
-    var cellHasBoat = function (cellId) {
+    var p1CellHasBoat = function (cellId) {
         return p1BoardObject[cellId].boat !== false;
     };
     //
@@ -365,7 +380,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       currentShip: currentShip,
       previousShip: previousShip,
       allSpacesFree: allSpacesFree,
-      cellHasBoat: cellHasBoat,
+      p1CellHasBoat: p1CellHasBoat,
       shipOnBoard: shipOnBoard,
       getCellIds: getCellIds,
       getEnemyCellIds: getEnemyCellIds,
