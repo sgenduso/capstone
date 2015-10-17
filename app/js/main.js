@@ -84,11 +84,11 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
           });
           var cellsObj = gameService.p1ShipsRef.child(ship).child('cells');
             cellsObj.set({
-              0: false,
-              1: false,
-              2: false,
-              3: false,
-              4: false,
+              0: $scope.p1ShipsOnBoard[ship].cells[0] || false,
+              1: $scope.p1ShipsOnBoard[ship].cells[1] || false,
+              2: $scope.p1ShipsOnBoard[ship].cells[2] || false,
+              3: $scope.p1ShipsOnBoard[ship].cells[3] || false,
+              4: $scope.p1ShipsOnBoard[ship].cells[4] || false,
             });
         });
     });
@@ -140,6 +140,10 @@ $scope.rotateToVert = function (e) {
         $scope.p1Board[$(this).attr('id')].boat = false;
         $scope.p1Board.$save();
       }
+    });
+    $.each(rotatedCells, function (index, cell) {
+      $scope.p1ShipsOnBoard[ship].cells[index] = $(this).attr('id');
+      $scope.p1ShipsOnBoard.$save();
     });
 }
 $(dropCells[0]).unbind('click');
