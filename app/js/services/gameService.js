@@ -3,11 +3,11 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     // create a reference to the database location where data is stored
     var randomId = Math.round(Math.random() * 1000000000);
     randomId = 1;
-    var ref = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId);
-    var p1BoardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId + "/p1board");
-    var p2BoardRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId + "/p2board");
-    var p1ShipsRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId + "/p1ships");
-    var p2ShipsRef = new Firebase("https://incandescent-fire-9342.firebaseio.com/game/" + randomId + "/p2ships");
+    var ref = "https://incandescent-fire-9342.firebaseio.com/game/" + randomId;
+    var p1BoardRef = new Firebase(ref + "/p1board");
+    var p2BoardRef = new Firebase(ref + "/p2board");
+    var p1ShipsRef = new Firebase(ref + "/p1ships");
+    var p2ShipsRef = new Firebase(ref + "/p2ships");
     var p1BoardObject = $firebaseObject(p1BoardRef);
     var p2BoardObject = $firebaseObject(p2BoardRef);
     var p1ShipsObject = $firebaseObject(p1ShipsRef);
@@ -172,6 +172,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       boardMapping: boardMapping,
       // gameId: randomId,
       ships: ships,
+      ref: ref,
       p1BoardObject: p1BoardObject,
       p1BoardRef: p1BoardRef,
       p2BoardObject: p2BoardObject,
