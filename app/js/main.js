@@ -44,6 +44,8 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.populateBoard = function (size) {
     $scope.game.$loaded().then(function () {
 
+
+
       //POPULATE PLAYER 1 SHIPS
       $scope.ships.forEach(function (ship) {
         if ($scope.game.p1ships === undefined) {
@@ -66,29 +68,41 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
           .then(function () {
             console.log('OBJECT SAVED');
           });
-          });
       });
+
     // });
 
-    $scope.p1Board.$loaded().then(function () {
+    // $scope.p1Board.$loaded().then(function () {
+    //POPULATE BOTH BOARDS
+    if ($scope.game.p1board === undefined) {
+      $scope.game.p1board = {};
+    }
+    if ($scope.game.p2board === undefined) {
+      $scope.game.p2board = {};
+    }
+      //POPULATE ROWS AND COLUMNS
       for (var i = 0; i < size; i++) {
         $scope.boardRows.push(gameService.boardMapping[i+1]);
         for (var j = 0; j < size; j++) {
           if (i === 0) {
             $scope.boardCols.push(Number(j+1));
           }
+
           //POPULATE PLAYER 1 BOARD
           var p1Cell = gameService.boardMapping[i+1] + Number(j+1);
-          var p1CellObj = gameService.p1BoardRef.child(p1Cell);
-          p1CellObj.set({
-            x: i+1,
-            y: j+1,
-            boat: $scope.p1Board[p1Cell] === undefined ? false : $scope.p1Board[p1Cell].boat,
-            hit:  p1CellObj.hit || false,
-            miss: p1CellObj.miss || false,
-            sunk: p1CellObj.sunk || false
-          });
+          if ($scope.game.p1board[p1Cell] === undefined) {
+            $scope.game.p1board[p1Cell] = {
+              x: i+1,
+              y: j+1,
+              boat: false,
+              hit:  false,
+              miss: false,
+              sunk: false
+            };
+            $scope.game.$save();
           $scope.cellIds.push(p1Cell);
+          }
+
 
           //POPULATE ENEMY BOARD
           var p2Cell = 'p2-' + gameService.boardMapping[i+1] + Number(j+1);
@@ -104,7 +118,9 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
           $scope.p2CellIds.push(p2Cell);
          }
       }
-    });
+    // });
+
+        });
 
 
 
