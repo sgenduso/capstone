@@ -72,6 +72,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
 
     var allSpacesFree = function (destCells) {
+      console.log(destCells);
       for (var i = 0; i < destCells.length; i++) {
         if (this.p1BoardObject[destCells[i].id].boat) {
           return false;
