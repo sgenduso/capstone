@@ -6,9 +6,11 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
     return new Array(size);
   };
 
+  $scope.game = gameService.fullGameObject;
   $scope.p1Board = gameService.p1BoardObject;
   $scope.p2Board = gameService.p2BoardObject;
   $scope.p1ShipsOnBoard = gameService.p1ShipsObject;
+  $scope.p2ShipsOnBoard = gameService.p2ShipsObject;
   // gameService.p1BoardObject.$bindTo($scope, p1Board);
   $scope.p1CellHasBoat = function (cellId) {
       return gameService.p1CellHasBoat(cellId);
@@ -27,6 +29,34 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
 
   $scope.populateBoard = function (size) {
+    $scope.game.$loaded().then(function () {
+
+      //POPULATE PLAYER 1 SHIPS
+      $scope.ships.forEach(function (ship) {
+        if ($scope.game.p1ships === undefined) {
+          $scope.game.p1ships = {};
+          $scope.game.$save();
+        }
+        if ($scope.game.p1ships[ship] === undefined) {
+          $scope.game.p1ships[ship] = {
+            placed: false,
+            cells: {
+              0: false,
+              1: false,
+              2: false,
+              3: false,
+              4: false,
+            }
+          };
+        }
+          $scope.game.$save()
+          .then(function () {
+            console.log('OBJECT SAVED');
+          });
+          });
+      });
+    // });
+
     $scope.p1Board.$loaded().then(function () {
       for (var i = 0; i < size; i++) {
         $scope.boardRows.push(gameService.boardMapping[i+1]);
@@ -61,24 +91,60 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
           $scope.p2CellIds.push(p2Cell);
          }
       }
-
-        //POPULATE PLAYER 1 SHIPS
-        $scope.ships.forEach(function (ship) {
-          var p1ShipObj = gameService.p1ShipsRef.child(ship);
-          p1ShipObj.set({
-            placed: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].placed,
-            cells: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].cells,
-          });
-          var cellsObj = gameService.p1ShipsRef.child(ship).child('cells');
-            cellsObj.set({
-              0: $scope.p1ShipsOnBoard[ship].cells[0] || false,
-              1: $scope.p1ShipsOnBoard[ship].cells[1] || false,
-              2: $scope.p1ShipsOnBoard[ship].cells[2] || false,
-              3: $scope.p1ShipsOnBoard[ship].cells[3] || false,
-              4: $scope.p1ShipsOnBoard[ship].cells[4] || false,
-            });
-        });
     });
+
+
+
+          // $scope.game.p1ships[ship]
+          // var p1ShipObj = gameService.p1ShipsRef.child(ship);
+          // p1ShipObj.set({
+          //   placed: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].placed,
+          //   cells: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].cells
+          // });
+          // var cellsObj = p1ShipObj.child('cells');
+          // // console.log(gameService);
+          //   cellsObj.set({
+          //     0: $scope.p1ShipsOnBoard[ship].cells[0] || false,
+          //     1: $scope.p1ShipsOnBoard[ship].cells[1] || false,
+          //     2: $scope.p1ShipsOnBoard[ship].cells[2] || false,
+          //     3: $scope.p1ShipsOnBoard[ship].cells[3] || false,
+          //     4: $scope.p1ShipsOnBoard[ship].cells[4] || false,
+          //   });
+
+
+        // $scope.ships.forEach(function (ship) {
+        //   var p1ShipObj = gameService.p1ShipsRef.child(ship);
+        //   p1ShipObj.set({
+        //     placed: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].placed,
+        //     cells: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].cells
+        //   });
+        //   var cellsObj = p1ShipObj.child('cells');
+        //   // console.log(gameService);
+        //     cellsObj.set({
+        //       0: $scope.p1ShipsOnBoard[ship].cells[0] || false,
+        //       1: $scope.p1ShipsOnBoard[ship].cells[1] || false,
+        //       2: $scope.p1ShipsOnBoard[ship].cells[2] || false,
+        //       3: $scope.p1ShipsOnBoard[ship].cells[3] || false,
+        //       4: $scope.p1ShipsOnBoard[ship].cells[4] || false,
+        //     });
+        // });
+
+        //POPULATE PLAYER 2 SHIPS
+        // var carrier = gameService.p2ShipsRef.child('carrier');
+        // carrier.set({
+        //   placed: $scope.p2ShipsOnBoard.carrier  === undefined ? true : $scope.p2ShipsOnBoard.carrier.placed,
+        //   cells: $scope.p2ShipsOnBoard.carrier === undefined ? false : $scope.p2ShipsOnBoard.carrier.cells,
+        // });
+        // var cellsObj = gameService.p2ShipsRef.child('carrier').child('cells');
+        //   cellsObj.set({
+        //     0: $scope.p2ShipsOnBoard.carrier.cells[0] || "p2-B2",
+        //     1: $scope.p2ShipsOnBoard.carrier.cells[1] || "p2-C2",
+        //     2: $scope.p2ShipsOnBoard.carrier.cells[2] || "p2-D2",
+        //     3: $scope.p2ShipsOnBoard.carrier.cells[3] || "p2-E2",
+        //     4: $scope.p2ShipsOnBoard.carrier.cells[4] || "p2-F2",
+        //   });
+        //   $scope.p2Board['p2-B2'] = 'carrier';
+    // });
   };
 
 
@@ -128,13 +194,13 @@ $scope.rotateToVert = function (e) {
         $scope.p1Board.$save();
       }
     });
+}
+$(dropCells[0]).unbind('click');
+rotatedCells.unshift(dropCells[0]);
     $.each(rotatedCells, function (index, cell) {
       $scope.p1ShipsOnBoard[ship].cells[index] = $(this).attr('id');
       $scope.p1ShipsOnBoard.$save();
     });
-}
-$(dropCells[0]).unbind('click');
-rotatedCells.unshift(dropCells[0]);
 $(dropCells[0]).click({dropCells: rotatedCells, ship: ship, size: size}, $scope.rotateToHor);
 
 };
@@ -163,6 +229,10 @@ $scope.rotateToHor = function (e) {
 }
 $(dropCells[0]).unbind('click');
 rotatedCells.unshift(dropCells[0]);
+$.each(rotatedCells, function (index, cell) {
+  $scope.p1ShipsOnBoard[ship].cells[index] = $(this).attr('id');
+  $scope.p1ShipsOnBoard.$save();
+});
 $(dropCells[0]).click({dropCells: rotatedCells, ship: ship, size: size}, $scope.rotateToVert);
 };
 

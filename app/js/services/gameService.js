@@ -8,6 +8,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     var p2BoardRef = new Firebase(ref + "/p2board");
     var p1ShipsRef = new Firebase(ref + "/p1ships");
     var p2ShipsRef = new Firebase(ref + "/p2ships");
+    var fullGameRef = new Firebase(ref);
+    var fullGameObject = $firebaseObject(fullGameRef);
     var p1BoardObject = $firebaseObject(p1BoardRef);
     var p2BoardObject = $firebaseObject(p2BoardRef);
     var p1ShipsObject = $firebaseObject(p1ShipsRef);
@@ -196,7 +198,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       quad3: quad3,
       quad4: quad4,
       quad5: quad5,
-      popEnemyBoard: popEnemyBoard
+      popEnemyBoard: popEnemyBoard,
+      fullGameObject: fullGameObject
     };
   }
 ]);
