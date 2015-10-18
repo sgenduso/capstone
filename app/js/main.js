@@ -19,13 +19,8 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
     return new Array(size);
   };
 
-  $scope.game = gameService.fullGameObject;
+  $scope.game = gameService.game;
 
-  // $scope.p1Board = gameService.p1BoardObject;
-  // $scope.p2Board = gameService.p2BoardObject;
-  // $scope.p1ShipsOnBoard = gameService.p1ShipsObject;
-  // $scope.p2ShipsOnBoard = gameService.p2ShipsObject;
-  // gameService.p1BoardObject.$bindTo($scope, p1Board);
   $scope.p1CellHasBoat = function (cellId) {
       return gameService.p1CellHasBoat(cellId);
   };
@@ -148,41 +143,6 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
         });
 
 
-
-          // $scope.game.p1Ships[ship]
-          // var p1ShipObj = gameService.p1ShipsRef.child(ship);
-          // p1ShipObj.set({
-          //   placed: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].placed,
-          //   cells: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].cells
-          // });
-          // var cellsObj = p1ShipObj.child('cells');
-          // // console.log(gameService);
-          //   cellsObj.set({
-          //     0: $scope.p1ShipsOnBoard[ship].cells[0] || false,
-          //     1: $scope.p1ShipsOnBoard[ship].cells[1] || false,
-          //     2: $scope.p1ShipsOnBoard[ship].cells[2] || false,
-          //     3: $scope.p1ShipsOnBoard[ship].cells[3] || false,
-          //     4: $scope.p1ShipsOnBoard[ship].cells[4] || false,
-          //   });
-
-
-        // $scope.ships.forEach(function (ship) {
-        //   var p1ShipObj = gameService.p1ShipsRef.child(ship);
-        //   p1ShipObj.set({
-        //     placed: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].placed,
-        //     cells: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].cells
-        //   });
-        //   var cellsObj = p1ShipObj.child('cells');
-        //   // console.log(gameService);
-        //     cellsObj.set({
-        //       0: $scope.p1ShipsOnBoard[ship].cells[0] || false,
-        //       1: $scope.p1ShipsOnBoard[ship].cells[1] || false,
-        //       2: $scope.p1ShipsOnBoard[ship].cells[2] || false,
-        //       3: $scope.p1ShipsOnBoard[ship].cells[3] || false,
-        //       4: $scope.p1ShipsOnBoard[ship].cells[4] || false,
-        //     });
-        // });
-
         //POPULATE PLAYER 2 SHIPS
         // var carrier = gameService.p2ShipsRef.child('carrier');
         // carrier.set({
@@ -204,6 +164,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
   $scope.populateBoard(10);
 
+  //CLEAR ALL SHIPS FROM BOARD
   $scope.clearBoard = function () {
     $scope.cellIds.forEach(function (cell) {
       $scope.game.p1Board[cell].boat = false;
@@ -236,19 +197,19 @@ $scope.rotateToVert = function (e) {
   if(gameService.allSpacesFree(rotatedCells) && gameService.roomOnBoard(rotatedCells.length+1, size)){
     $.each(dropCells, function (index, cell) {
       if (index > 0) {
-        $scope.p1Board[(rotatedCells[index-1]).id].boat = ship;
-        $scope.p1Board[$(this).attr('id')].boat = false;
-        $scope.p1Board.$save();
+        $scope.game.p1Board[(rotatedCells[index-1]).id].boat = ship;
+        $scope.game.p1Board[$(this).attr('id')].boat = false;
+        $scope.game.$save();
       }
     });
-}
-$(dropCells[0]).unbind('click');
-rotatedCells.unshift(dropCells[0]);
-    $.each(rotatedCells, function (index, cell) {
-      $scope.p1ShipsOnBoard[ship].cells[index] = $(this).attr('id');
-      $scope.p1ShipsOnBoard.$save();
-    });
-$(dropCells[0]).click({dropCells: rotatedCells, ship: ship, size: size}, $scope.rotateToHor);
+  }
+  $(dropCells[0]).unbind('click');
+  rotatedCells.unshift(dropCells[0]);
+  $.each(rotatedCells, function (index, cell) {
+    $scope.game.p1Ships[ship].cells[index] = $(this).attr('id');
+    $scope.game.$save();
+  });
+  $(dropCells[0]).click({dropCells: rotatedCells, ship: ship, size: size}, $scope.rotateToHor);
 
 };
 
@@ -268,19 +229,19 @@ $scope.rotateToHor = function (e) {
   if(gameService.allSpacesFree(rotatedCells) && gameService.roomOnBoard(rotatedCells.length+1, size)){
     $.each(dropCells, function (index, cell) {
       if (index > 0) {
-        $scope.p1Board[(rotatedCells[index-1]).id].boat = ship;
-        $scope.p1Board[$(this).attr('id')].boat = false;
-        $scope.p1Board.$save();
+        $scope.game.p1Board[(rotatedCells[index-1]).id].boat = ship;
+        $scope.game.p1Board[$(this).attr('id')].boat = false;
+        $scope.game.$save();
       }
     });
-}
-$(dropCells[0]).unbind('click');
-rotatedCells.unshift(dropCells[0]);
-$.each(rotatedCells, function (index, cell) {
-  $scope.p1ShipsOnBoard[ship].cells[index] = $(this).attr('id');
-  $scope.p1ShipsOnBoard.$save();
-});
-$(dropCells[0]).click({dropCells: rotatedCells, ship: ship, size: size}, $scope.rotateToVert);
+  }
+  $(dropCells[0]).unbind('click');
+  rotatedCells.unshift(dropCells[0]);
+  $.each(rotatedCells, function (index, cell) {
+    $scope.game.p1Ships[ship].cells[index] = $(this).attr('id');
+    $scope.game.$save();
+  });
+  $(dropCells[0]).click({dropCells: rotatedCells, ship: ship, size: size}, $scope.rotateToVert);
 };
 
 $scope.dropped = function(dragEl, dropEls) {
@@ -292,14 +253,14 @@ $scope.dropped = function(dragEl, dropEls) {
         $(this).children().removeClass('wb-over');
       });
 
+      //only drop if there is room on the board and the ship is not already on the board
       if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship) && gameService.roomOnBoard(drop.length, drag.size)){
         $(drop[0]).click({dropCells: drop, ship: drag.ship, size: drag.size}, $scope.rotateToVert);
-          $scope.p1ShipsOnBoard[drag.ship].placed = true;
+          $scope.game.p1Ships[drag.ship].placed = true;
         $.each(drop,function (index, cell) {
-          $scope.p1Board[$(this).attr('id')].boat = $scope.p1Board[$(this).attr('id')].boat || drag.ship;
-          $scope.p1ShipsOnBoard[drag.ship].cells[index] = $(this).attr('id');
-          $scope.p1Board.$save();
-          $scope.p1ShipsOnBoard.$save();
+          $scope.game.p1Board[$(this).attr('id')].boat = $scope.game.p1Board[$(this).attr('id')].boat || drag.ship;
+          $scope.game.p1Ships[drag.ship].cells[index] = $(this).attr('id');
+          $scope.game.$save();
         });
         $('#'+drag.ship).css('opacity', '.2');
       }
@@ -317,16 +278,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     var randomId = Math.round(Math.random() * 1000000000);
     randomId = 1;
     var ref = "https://incandescent-fire-9342.firebaseio.com/game/" + randomId;
-    // var p1BoardRef = new Firebase(ref + "/p1board");
-    // var p2BoardRef = new Firebase(ref + "/p2board");
-    // var p1ShipsRef = new Firebase(ref + "/p1ships");
-    // var p2ShipsRef = new Firebase(ref + "/p2ships");
     var fullGameRef = new Firebase(ref);
-    var fullGameObject = $firebaseObject(fullGameRef);
-    // var p1BoardObject = $firebaseObject(p1BoardRef);
-    // var p2BoardObject = $firebaseObject(p2BoardRef);
-    // var p1ShipsObject = $firebaseObject(p1ShipsRef);
-    // var p2ShipsObject = $firebaseObject(p2ShipsRef);
+    var game = $firebaseObject(fullGameRef);
 
 
     var boardMapping = {
@@ -367,16 +320,6 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     var quad4 = ["p2-F7", "p2-F8", "p2-F9", "p2-F10", "p2-G7", "p2-G8", "p2-G9", "p2-G10", "p2-H7", "p2-H8", "p2-H9", "p2-H10", "p2-I7", "p2-I8", "p2-I9", "p2-I10","p2-J7", "p2-J8", "p2-J9", "p2-J10"];
 
     var quad5 = ["p2-F6","p2-G6", "p2-H6", "p2-I6", "p2-J1", "p2-J2", "p2-J3", "p2-J4", "p2-J5", "p2-J6", "p2-J7", "p2-J8", "p2-J9", "p2-J10"];
-    //
-    // var quad1 = ["p2-A1", "p2-A2", "p2-A3", "p2-A4", "p2-A5", "p2-B1", "p2-B2", "p2-B3", "p2-B4", "p2-B5", "p2-C1", "p2-C2", "p2-C3", "p2-C4", "p2-C5", "p2-D1", "p2-D2", "p2-D3", "p2-D4", "p2-D5", "p2-E1", "p2-E2", "p2-E3", "p2-E4", "p2-E5"];
-    //
-    // var quad2 = ["p2-A6", "p2-A7", "p2-A8", "p2-A9", "p2-A10", "p2-B6", "p2-B7", "p2-B8", "p2-B9", "p2-B10", "p2-C6", "p2-C7", "p2-C8", "p2-C9", "p2-C10", "p2-D6", "p2-D7", "p2-D8", "p2-D9", "p2-D10", "p2-E6", "p2-E7", "p2-E8", "p2-E9", "p2-E10"];
-    //
-    // var quad3 = ["p2-F1", "p2-F2", "p2-F3", "p2-F4", "p2-F5", "p2-G1", "p2-G2", "p2-G3", "p2-G4", "p2-G5", "p2-H1", "p2-H2", "p2-H3", "p2-H4", "p2-H5", "p2-I1", "p2-I2", "p2-I3", "p2-I4", "p2-I5"];
-    //
-    // var quad4 = ["p2-F7", "p2-F8", "p2-F9", "p2-F10", "p2-G7", "p2-G8", "p2-G9", "p2-G10", "p2-H7", "p2-H8", "p2-H9", "p2-H10", "p2-I7", "p2-I8", "p2-I9", "p2-I10","p2-J7", "p2-J8", "p2-J9", "p2-J10"];
-    //
-    // var quad5 = ["p2-F6","p2-G6", "p2-H6", "p2-I6", "p2-J1", "p2-J2", "p2-J3", "p2-J4", "p2-J5", "p2-J6", "p2-J7", "p2-J8", "p2-J9", "p2-J10"];
 
     var ships = ['carrier', 'battleship', 'destroyer', 'submarine', 'patrol'];
 
@@ -385,17 +328,18 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     };
 
 
-
+    //when trying to drop or rotate ship, check if those spaces are free
     var allSpacesFree = function (destCells) {
       console.log(destCells);
       for (var i = 0; i < destCells.length; i++) {
-        if (this.p1BoardObject[destCells[i].id].boat) {
+        if (this.game.p1Board[destCells[i].id].boat) {
           return false;
         }
       }
         return true;
     };
 
+    //check if specified ship is already on the board
     var shipOnBoard = function (ship) {
       $('#'+ship).css('opacity', '');
       // if (p1ShipsObject[ship]) {
@@ -403,25 +347,27 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       // } else {
       //   return false;
       // }
-      return p1ShipsObject[ship] === undefined ? false : p1ShipsObject[ship].placed;
+      return this.game.p1Ships === undefined ? false : this.game.p1Ships[ship].placed;
     };
 
+    //check the specified cell for a boat
     var p1CellHasBoat = function (cellId) {
-        return p1BoardObject[cellId].boat !== false;
+        return this.game.p1Board[cellId].boat !== false;
     };
     //
     // var cellHasBoat = function (cellId, player) {
-    //   console.log(p1BoardObject[cellId]);
-    //   console.log(p2BoardObject[cellId]);
+    //   console.log(this.game.p1Board[cellId]);
+    //   console.log(this.game.p2Board[cellId]);
     //   // console.log(cellId);
     //   // console.log(player);
     //   if (player === 'p1') {
-    //     return p1BoardObject[cellId].boat !== false;
+    //     return this.game.p1Board[cellId].boat !== false;
     //   } else {
-    //     return p2BoardObject[cellId].boat !== false;
+    //     return this.game.p2Board[cellId].boat !== false;
     //   }
     // };
 
+    //before dropping or placing a ship, check whether it would go off the board
     var roomOnBoard = function (destinationLength, shipLength) {
       return destinationLength == shipLength;
     };
@@ -436,7 +382,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
       if (randomFirstCell === 'p2-A1') {
         shipDir = directions[randBetween(0,1)];
-      } else if (p2BoardObject[randomFirstCell].y === 1) {
+      } else if (this.game.p2Board[randomFirstCell].y === 1) {
         shipDir = 'hor';
       } else {
         shipDir = 'vert';
@@ -445,11 +391,11 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       console.log('first ship: ', randomFirstShip);
       console.log('first cell: ', randomFirstCell);
       console.log('ship direction: ', shipDir);
-      console.log('ship on cell before: ', p2BoardObject[randomFirstCell].boat);
-      p2BoardObject[randomFirstCell].boat = randomFirstShip;
-      p2BoardObject.$save();
-      console.log('ship on cell after: ', p2BoardObject[randomFirstCell].boat);
-        // p2BoardObject[$(this).attr('id')].boat = p2BoardObject[$(this).attr('id')].boat || drag.ship;
+      console.log('ship on cell before: ', this.game.p2Board[randomFirstCell].boat);
+      this.game.p2Board[randomFirstCell].boat = randomFirstShip;
+      this.game.p2Board.$save();
+      console.log('ship on cell after: ', this.game.p2Board[randomFirstCell].boat);
+        // this.game.p2Board[$(this).attr('id')].boat = this.game.p2Board[$(this).attr('id')].boat || drag.ship;
         // shipsOnBoard[drag.ship] = true;
 
     };
@@ -489,14 +435,6 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       // gameId: randomId,
       ships: ships,
       ref: ref,
-      // p1BoardObject: p1BoardObject,
-      // p1BoardRef: p1BoardRef,
-      // p2BoardObject: p2BoardObject,
-      // p2BoardRef: p2BoardRef,
-      // p1ShipsObject: p1ShipsObject,
-      // p2ShipsObject: p2ShipsObject,
-      // p1ShipsRef: p1ShipsRef,
-      // p2ShipsRef: p2ShipsRef,
       previousCells: previousCells,
       currentShip: currentShip,
       previousShip: previousShip,
@@ -512,7 +450,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       quad4: quad4,
       quad5: quad5,
       popEnemyBoard: popEnemyBoard,
-      fullGameObject: fullGameObject
+      game: game
     };
   }
 ]);
