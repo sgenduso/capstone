@@ -8,6 +8,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     var game = $firebaseObject(fullGameRef);
 
 
+
     var boardMapping = {
       1:'A',
       2:'B',
@@ -129,26 +130,18 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
     var getCellIds = function () {
       var cellIds = [];
-      return p1BoardRef.once('value', function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-          cellIds.push(childSnapshot.key());
-        });
-      })
-      .then(function () {
+        for (var key in this.game.p1Board) {
+          cellIds.push(key);
+        }
         return cellIds;
-      });
     };
 
     var getEnemyCellIds = function () {
       var cellIds = [];
-      return p2BoardRef.once('value', function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-          cellIds.push(childSnapshot.key());
-        });
-      })
-      .then(function () {
+        for (var key in this.game.p2Board) {
+          cellIds.push(key);
+        }
         return cellIds;
-      });
     };
 
     var previousCells = [];

@@ -40,66 +40,13 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.populateBoard = function (size) {
     $scope.game.$loaded().then(function () {
 
-
-
-      //POPULATE PLAYER 1 SHIPS
-      $scope.ships.forEach(function (ship) {
-        if ($scope.game.p1Ships === undefined) {
-          $scope.game.p1Ships = {};
-          $scope.game.$save();
-        }
-        if ($scope.game.p1Ships[ship] === undefined) {
-          $scope.game.p1Ships[ship] = {
-            placed: false,
-            cells: {
-              0: false,
-              1: false,
-              2: false,
-              3: false,
-              4: false,
-            }
-          };
-        }
-          $scope.game.$save()
-          .then(function () {
-            console.log('OBJECT SAVED');
-          });
-      });
-
-      //POPULATE PLAYER 2 SHIPS
-      $scope.ships.forEach(function (ship) {
-        if ($scope.game.p2Ships === undefined) {
-          $scope.game.p2Ships = {};
-          $scope.game.$save();
-        }
-        if ($scope.game.p2Ships[ship] === undefined) {
-          $scope.game.p2Ships[ship] = {
-            placed: false,
-            cells: {
-              0: false,
-              1: false,
-              2: false,
-              3: false,
-              4: false,
-            }
-          };
-        }
-          $scope.game.$save()
-          .then(function () {
-            console.log('OBJECT SAVED');
-          });
-      });
-
-    // });
-
-    // $scope.p1Board.$loaded().then(function () {
-    //POPULATE BOTH BOARDS
-    if ($scope.game.p1Board === undefined) {
-      $scope.game.p1Board = {};
-    }
-    if ($scope.game.p2Board === undefined) {
-      $scope.game.p2Board = {};
-    }
+      //POPULATE BOTH BOARDS
+      if ($scope.game.p1Board === undefined) {
+        $scope.game.p1Board = {};
+      }
+      if ($scope.game.p2Board === undefined) {
+        $scope.game.p2Board = {};
+      }
       //POPULATE ROWS AND COLUMNS
       for (var i = 0; i < size; i++) {
         $scope.boardRows.push(gameService.boardMapping[i+1]);
@@ -120,7 +67,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
               sunk: false
             };
             $scope.game.$save();
-          $scope.cellIds.push(p1Cell);
+            $scope.cellIds.push(p1Cell);
           }
 
           //POPULATE PLAYER 2 BOARD
@@ -135,31 +82,75 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
               sunk: false
             };
             $scope.game.$save();
-          $scope.cellIds.push(p2Cell);
+            $scope.cellIds.push(p2Cell);
           }
+        }
       }
-    }
 
+
+
+
+      //POPULATE PLAYER 1 SHIPS
+      $scope.ships.forEach(function (ship) {
+        if ($scope.game.p1Ships === undefined) {
+          $scope.game.p1Ships = {};
+          $scope.game.$save();
+        }
+        if ($scope.game.p1Ships[ship] === undefined) {
+          $scope.game.p1Ships[ship] = {
+            placed: false,
+            cells: {
+              0: false,
+              1: false,
+              2: false,
+              3: false,
+              4: false,
+            }
+          };
+        }
+        $scope.game.$save()
+        .then(function () {
+          console.log('OBJECT SAVED');
         });
+      });
 
+      //POPULATE PLAYER 2 SHIPS
+      $scope.ships.forEach(function (ship) {
+        if ($scope.game.p2Ships === undefined) {
+          $scope.game.p2Ships = {};
+          $scope.game.$save();
+        }
+        if ($scope.game.p2Ships[ship] === undefined) {
+          if (ship === 'carrier') {
+            $scope.game.p2Ships[ship] = {
+              placed: true,
+              cells: {
+                0: "p2-B2",
+                1: "p2-C2",
+                2: "p2-D2",
+                3: "p2-E2",
+                4: "p2-F2",
+              }
+            };
+            $scope.game.p2Board['p2-B2'] = 'carrier';
+            $scope.game.p2Board['p2-C2'] = 'carrier';
+            $scope.game.p2Board['p2-D2'] = 'carrier';
+            $scope.game.p2Board['p2-E2'] = 'carrier';
+            $scope.game.p2Board['p2-F2'] = 'carrier';
+          }
 
-        //POPULATE PLAYER 2 SHIPS
-        // var carrier = gameService.p2ShipsRef.child('carrier');
-        // carrier.set({
-        //   placed: $scope.p2ShipsOnBoard.carrier  === undefined ? true : $scope.p2ShipsOnBoard.carrier.placed,
-        //   cells: $scope.p2ShipsOnBoard.carrier === undefined ? false : $scope.p2ShipsOnBoard.carrier.cells,
-        // });
-        // var cellsObj = gameService.p2ShipsRef.child('carrier').child('cells');
-        //   cellsObj.set({
-        //     0: $scope.p2ShipsOnBoard.carrier.cells[0] || "p2-B2",
-        //     1: $scope.p2ShipsOnBoard.carrier.cells[1] || "p2-C2",
-        //     2: $scope.p2ShipsOnBoard.carrier.cells[2] || "p2-D2",
-        //     3: $scope.p2ShipsOnBoard.carrier.cells[3] || "p2-E2",
-        //     4: $scope.p2ShipsOnBoard.carrier.cells[4] || "p2-F2",
-        //   });
-        //   $scope.p2Board['p2-B2'] = 'carrier';
-    // });
+        }
+        $scope.game.$save()
+        .then(function () {
+          console.log($scope.game.p2Ships.carrier);
+          console.log('OBJECT SAVED');
+        });
+      });
+
+    });
   };
+
+
 
 
   $scope.populateBoard(10);
@@ -280,6 +271,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     var ref = "https://incandescent-fire-9342.firebaseio.com/game/" + randomId;
     var fullGameRef = new Firebase(ref);
     var game = $firebaseObject(fullGameRef);
+
 
 
     var boardMapping = {
@@ -403,26 +395,18 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
     var getCellIds = function () {
       var cellIds = [];
-      return p1BoardRef.once('value', function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-          cellIds.push(childSnapshot.key());
-        });
-      })
-      .then(function () {
+        for (var key in this.game.p1Board) {
+          cellIds.push(key);
+        }
         return cellIds;
-      });
     };
 
     var getEnemyCellIds = function () {
       var cellIds = [];
-      return p2BoardRef.once('value', function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-          cellIds.push(childSnapshot.key());
-        });
-      })
-      .then(function () {
+        for (var key in this.game.p2Board) {
+          cellIds.push(key);
+        }
         return cellIds;
-      });
     };
 
     var previousCells = [];

@@ -42,8 +42,8 @@
         on-drop='dropped(dragEl, dropEls)' 
         data-x="{{$index + 1}}"
         data-y='{{$parent.$index + 1}}' 
-        data-boat='{{p1Board[row+col]["boat"]}}')
-        .content.child-element(ng-class="{'boat-on-cell': p1CellHasBoat('{{row}}{{col}}')}" ng-show="p1CellHasBoat('{{row}}{{col}}')") {{p1Board[row+col]["boat"][0] | uppercase}}
+        data-boat='{{game.p1Board[row+col]["boat"]}}')
+        .content.child-element(ng-class="{'boat-on-cell': p1CellHasBoat('{{row}}{{col}}')}" ng-show="p1CellHasBoat('{{row}}{{col}}')") {{game.p1Board[row+col]["boat"][0] | uppercase}}
         .content.child-element(ng-class="{'boat-on-cell': p1CellHasBoat('{{row}}{{col}}')}" ng-hide="p1CellHasBoat('{{row}}{{col}}')") {{row}}{{col}}
         
 //enemy board -- shows which ships enemy has left and where you've hit and missed
