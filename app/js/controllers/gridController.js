@@ -85,6 +85,9 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
       if ($scope.game.p1Ships[ship] === undefined) {
         $scope.game.p1Ships[ship] = {
           placed: false,
+          size: 0,
+          hits: 0,
+          sunk: false,
           cells: {
             0: false,
             1: false,
@@ -109,6 +112,9 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
         if (ship === 'carrier') {
           $scope.game.p2Ships[ship] = {
             placed: true,
+            size: 5,
+            hits: 0,
+            sunk: false,
             cells: {
               0: "p2-B2",
               1: "p2-C2",
@@ -117,15 +123,18 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
               4: "p2-F2",
             }
           };
-          $scope.game.p2Board['p2-B2'] = 'carrier';
-          $scope.game.p2Board['p2-C2'] = 'carrier';
-          $scope.game.p2Board['p2-D2'] = 'carrier';
-          $scope.game.p2Board['p2-E2'] = 'carrier';
-          $scope.game.p2Board['p2-F2'] = 'carrier';
+          $scope.game.p2Board['p2-B2'].boat = 'carrier';
+          $scope.game.p2Board['p2-C2'].boat = 'carrier';
+          $scope.game.p2Board['p2-D2'].boat = 'carrier';
+          $scope.game.p2Board['p2-E2'].boat = 'carrier';
+          $scope.game.p2Board['p2-F2'].boat = 'carrier';
         }
         else if (ship ==='battleship') {
           $scope.game.p2Ships[ship] = {
             placed: true,
+            size: 4,
+            hits: 0,
+            sunk: false,
             cells: {
               0: "p2-J6",
               1: "p2-J7",
@@ -134,14 +143,17 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
               4: false,
             }
           };
-          $scope.game.p2Board['p2-J6'] = 'battleship';
-          $scope.game.p2Board['p2-J7'] = 'battleship';
-          $scope.game.p2Board['p2-J8'] = 'battleship';
-          $scope.game.p2Board['p2-J9'] = 'battleship';
+          $scope.game.p2Board['p2-J6'].boat = 'battleship';
+          $scope.game.p2Board['p2-J7'].boat = 'battleship';
+          $scope.game.p2Board['p2-J8'].boat = 'battleship';
+          $scope.game.p2Board['p2-J9'].boat = 'battleship';
         }
         else if (ship ==='destroyer') {
           $scope.game.p2Ships[ship] = {
             placed: true,
+            size: 4,
+            hits: 0,
+            sunk: false,
             cells: {
               0: "p2-E8",
               1: "p2-F8",
@@ -150,14 +162,17 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
               4: false,
             }
           };
-          $scope.game.p2Board['p2-E8'] = 'destroyer';
-          $scope.game.p2Board['p2-F8'] = 'destroyer';
-          $scope.game.p2Board['p2-G8'] = 'destroyer';
-          $scope.game.p2Board['p2-H8'] = 'destroyer';
+          $scope.game.p2Board['p2-E8'].boat = 'destroyer';
+          $scope.game.p2Board['p2-F8'].boat = 'destroyer';
+          $scope.game.p2Board['p2-G8'].boat = 'destroyer';
+          $scope.game.p2Board['p2-H8'].boat = 'destroyer';
         }
         else if (ship ==='submarine') {
           $scope.game.p2Ships[ship] = {
             placed: true,
+            size: 3,
+            hits: 0,
+            sunk: false,
             cells: {
               0: "p2-A1",
               1: "p2-A2",
@@ -166,13 +181,16 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
               4: false,
             }
           };
-          $scope.game.p2Board['p2-A1'] = 'submarine';
-          $scope.game.p2Board['p2-A2'] = 'submarine';
-          $scope.game.p2Board['p2-A3'] = 'submarine';
+          $scope.game.p2Board['p2-A1'].boat = 'submarine';
+          $scope.game.p2Board['p2-A2'].boat = 'submarine';
+          $scope.game.p2Board['p2-A3'].boat = 'submarine';
         }
         else if (ship ==='patrol') {
           $scope.game.p2Ships[ship] = {
             placed: true,
+            size: 2,
+            hits: 0,
+            sunk: false,
             cells: {
               0: "p2-E5",
               1: "p2-E6",
@@ -181,8 +199,8 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
               4: false,
             }
           };
-          $scope.game.p2Board['p2-E5'] = 'patrol';
-          $scope.game.p2Board['p2-E6'] = 'patrol';
+          $scope.game.p2Board['p2-E5'].boat = 'patrol';
+          $scope.game.p2Board['p2-E6'].boat = 'patrol';
         }
 
       }
@@ -304,7 +322,9 @@ $scope.dropped = function(dragEl, dropEls) {
     };
 
   $scope.attack = function ($event) {
+    var cellId = $event.currentTarget.id;
     console.log($event.currentTarget.id);
+    console.log($scope.game.p2Board[$event.currentTarget.id]);
   };
 
 }]);
