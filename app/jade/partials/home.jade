@@ -55,10 +55,11 @@
         ng-repeat='col in boardCols track by $index'
         id="p2-{{row}}{{col}}"
         data-x="{{$index + 1}}"
-        data-y='{{$parent.$index + 1}}'
+        data-y='{{$parent.$index + 1}}',
+        data-boat='{{game.p2Board["p2-"+row+col]["boat"]}}'
         ng-click='attack($event)')
         //- .content {{row}}{{col}}
-        .content.child-element(ng-class="{'boat-on-cell': p2CellHasBoat('p2-{{row}}{{col}}'), 'hit': p2CellHit('p2-{{row}}{{col}}')}" ng-show="p2CellHasBoat('p2-{{row}}{{col}}')") {{game.p2Board["p2-"+row+col]["boat"][0] | uppercase}}
+        .content.child-element(ng-class="{'boat-on-cell': p2CellHasBoat('p2-{{row}}{{col}}'), 'hit': p2CellHit('p2-{{row}}{{col}}'), 'sunk': p2ShipSunk(game.p2Board['p2-'+row+col]['boat'])}" ng-show="p2CellHasBoat('p2-{{row}}{{col}}')") {{game.p2Board["p2-"+row+col]["boat"][0] | uppercase}}
         .content.child-element(ng-class="{'boat-on-cell': p2CellHasBoat('p2-{{row}}{{col}}'), 'miss': p2CellMiss('p2-{{row}}{{col}}')}" ng-hide="p2CellHasBoat('p2-{{row}}{{col}}')") {{row}}{{col}}
         
   //- {{boardRows}}

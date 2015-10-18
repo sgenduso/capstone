@@ -96,6 +96,12 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
         return this.game.p2Board[cellId].miss;
     };
 
+    //check the specified cell on p2 board for a miss
+    var p2ShipSunk = function (ship) {
+      console.log(ship);
+        return this.game.p2Ships[ship].sunk;
+    };
+
     //before dropping or placing a ship, check whether it would go off the board
     var roomOnBoard = function (destinationLength, shipLength) {
       return destinationLength == shipLength;
@@ -172,6 +178,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       p2CellHasBoat: p2CellHasBoat,
       p2CellHit: p2CellHit,
       p2CellMiss: p2CellMiss,
+      p2ShipSunk: p2ShipSunk,
       shipOnBoard: shipOnBoard,
       getCellIds: getCellIds,
       getEnemyCellIds: getEnemyCellIds,
