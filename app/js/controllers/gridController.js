@@ -196,22 +196,6 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
         });
 
 
-        //POPULATE PLAYER 2 SHIPS
-        // var carrier = gameService.p2ShipsRef.child('carrier');
-        // carrier.set({
-        //   placed: $scope.p2ShipsOnBoard.carrier  === undefined ? true : $scope.p2ShipsOnBoard.carrier.placed,
-        //   cells: $scope.p2ShipsOnBoard.carrier === undefined ? false : $scope.p2ShipsOnBoard.carrier.cells,
-        // });
-        // var cellsObj = gameService.p2ShipsRef.child('carrier').child('cells');
-        //   cellsObj.set({
-        //     0: $scope.p2ShipsOnBoard.carrier.cells[0] || "p2-B2",
-        //     1: $scope.p2ShipsOnBoard.carrier.cells[1] || "p2-C2",
-        //     2: $scope.p2ShipsOnBoard.carrier.cells[2] || "p2-D2",
-        //     3: $scope.p2ShipsOnBoard.carrier.cells[3] || "p2-E2",
-        //     4: $scope.p2ShipsOnBoard.carrier.cells[4] || "p2-F2",
-        //   });
-        //   $scope.p2Board['p2-B2'] = 'carrier';
-    // });
   };
 
 
@@ -219,9 +203,9 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
   //CLEAR ALL SHIPS FROM BOARD
   $scope.clearBoard = function () {
-    $scope.cellIds.forEach(function (cell) {
-      $scope.game.p1Board[cell].boat = false;
-    });
+    for (var key in $scope.game.p1Board) {
+      $scope.game.p1Board[key].boat = false;
+    }
     $scope.ships.forEach(function (ship) {
       $scope.game.p1Ships[ship].placed = false;
       for (var key in $scope.game.p1Ships[ship].cells) {
