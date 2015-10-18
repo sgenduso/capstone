@@ -11,6 +11,10 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.p1CellHasBoat = function (cellId) {
       return gameService.p1CellHasBoat(cellId);
   };
+
+  $scope.p2CellHasBoat = function (cellId) {
+      return gameService.p2CellHasBoat(cellId);
+  };
   $scope.shipOnBoard = function (ship) {
     return gameService.shipOnBoard(ship);
   };
@@ -323,8 +327,11 @@ $scope.dropped = function(dragEl, dropEls) {
 
   $scope.attack = function ($event) {
     var cellId = $event.currentTarget.id;
-    console.log($event.currentTarget.id);
-    console.log($scope.game.p2Board[$event.currentTarget.id]);
+    if ($scope.game.p2Board[cellId].boat) {
+      console.log('HIT');
+    } else {
+      console.log('MISS');
+    }
   };
 
 }]);
