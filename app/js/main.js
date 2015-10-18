@@ -19,177 +19,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
     return new Array(size);
   };
 
-  // $scope.game = gameService.game;
-  (gameService.game).$bindTo($scope, 'game')
-    .then(function () {
-      //POPULATE BOTH BOARDS
-      if ($scope.game.p1Board === undefined) {
-        $scope.game.p1Board = {};
-      }
-      if ($scope.game.p2Board === undefined) {
-        $scope.game.p2Board = {};
-      }
-      //POPULATE ROWS AND COLUMNS
-      for (var i = 0; i < 10; i++) {
-        $scope.boardRows.push(gameService.boardMapping[i+1]);
-        for (var j = 0; j < 10; j++) {
-          if (i === 0) {
-            $scope.boardCols.push(Number(j+1));
-          }
-
-          //POPULATE PLAYER 1 BOARD
-          var p1Cell = gameService.boardMapping[i+1] + Number(j+1);
-          if ($scope.game.p1Board[p1Cell] === undefined) {
-            $scope.game.p1Board[p1Cell] = {
-              x: i+1,
-              y: j+1,
-              boat: false,
-              hit:  false,
-              miss: false,
-              sunk: false
-            };
-            // $scope.game.$save();
-            $scope.cellIds.push(p1Cell);
-          }
-
-          //POPULATE PLAYER 2 BOARD
-          var p2Cell = 'p2-' + gameService.boardMapping[i+1] + Number(j+1);
-          if ($scope.game.p2Board[p2Cell] === undefined) {
-            $scope.game.p2Board[p2Cell] = {
-              x: i+1,
-              y: j+1,
-              boat: false,
-              hit:  false,
-              miss: false,
-              sunk: false
-            };
-            // $scope.game.$save();
-            $scope.cellIds.push(p2Cell);
-          }
-        }
-      }
-
-
-      //POPULATE PLAYER 1 SHIPS
-      $scope.ships.forEach(function (ship) {
-        if ($scope.game.p1Ships === undefined) {
-          $scope.game.p1Ships = {};
-          // $scope.game.$save();
-        }
-        if ($scope.game.p1Ships[ship] === undefined) {
-          $scope.game.p1Ships[ship] = {
-            placed: false,
-            cells: {
-              0: false,
-              1: false,
-              2: false,
-              3: false,
-              4: false,
-            }
-          };
-        }
-        // $scope.game.$save()
-        // .then(function () {
-        //   console.log('OBJECT SAVED');
-        // });
-      });
-
-      //POPULATE PLAYER 2 SHIPS
-      $scope.ships.forEach(function (ship) {
-        if ($scope.game.p2Ships === undefined) {
-          $scope.game.p2Ships = {};
-          // $scope.game.$save();
-        }
-        if ($scope.game.p2Ships[ship] === undefined) {
-          if (ship === 'carrier') {
-            $scope.game.p2Ships[ship] = {
-              placed: true,
-              cells: {
-                0: "p2-B2",
-                1: "p2-C2",
-                2: "p2-D2",
-                3: "p2-E2",
-                4: "p2-F2",
-              }
-            };
-            $scope.game.p2Board['p2-B2'] = 'carrier';
-            $scope.game.p2Board['p2-C2'] = 'carrier';
-            $scope.game.p2Board['p2-D2'] = 'carrier';
-            $scope.game.p2Board['p2-E2'] = 'carrier';
-            $scope.game.p2Board['p2-F2'] = 'carrier';
-          }
-          else if (ship ==='battleship') {
-            $scope.game.p2Ships[ship] = {
-              placed: true,
-              cells: {
-                0: "p2-J6",
-                1: "p2-J7",
-                2: "p2-J8",
-                3: "p2-J9",
-                4: false,
-              }
-            };
-            $scope.game.p2Board['p2-J6'] = 'battleship';
-            $scope.game.p2Board['p2-J7'] = 'battleship';
-            $scope.game.p2Board['p2-J8'] = 'battleship';
-            $scope.game.p2Board['p2-J9'] = 'battleship';
-          }
-          else if (ship ==='destroyer') {
-            $scope.game.p2Ships[ship] = {
-              placed: true,
-              cells: {
-                0: "p2-E8",
-                1: "p2-F8",
-                2: "p2-G8",
-                3: "p2-H8",
-                4: false,
-              }
-            };
-            $scope.game.p2Board['p2-E8'] = 'destroyer';
-            $scope.game.p2Board['p2-F8'] = 'destroyer';
-            $scope.game.p2Board['p2-G8'] = 'destroyer';
-            $scope.game.p2Board['p2-H8'] = 'destroyer';
-          }
-          else if (ship ==='submarine') {
-            $scope.game.p2Ships[ship] = {
-              placed: true,
-              cells: {
-                0: "p2-A1",
-                1: "p2-A2",
-                2: "p2-A3",
-                3: false,
-                4: false,
-              }
-            };
-            $scope.game.p2Board['p2-A1'] = 'submarine';
-            $scope.game.p2Board['p2-A2'] = 'submarine';
-            $scope.game.p2Board['p2-A3'] = 'submarine';
-          }
-          else if (ship ==='patrol') {
-            $scope.game.p2Ships[ship] = {
-              placed: true,
-              cells: {
-                0: "p2-E5",
-                1: "p2-E6",
-                2: false,
-                3: false,
-                4: false,
-              }
-            };
-            $scope.game.p2Board['p2-E5'] = 'patrol';
-            $scope.game.p2Board['p2-E6'] = 'patrol';
-          }
-
-        }
-        // $scope.game.$save()
-        // .then(function () {
-        //   console.log($scope.game.p2Ships.carrier);
-        //   console.log('OBJECT SAVED');
-        // });
-      });
-    });
-  console.log($scope);
-  console.log($scope.game);
+  $scope.game = gameService.game;
 
   $scope.p1CellHasBoat = function (cellId) {
       return gameService.p1CellHasBoat(cellId);
@@ -207,17 +37,198 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
 
 
-  // $scope.populateBoard = function (size) {
-    // $scope.game.$loaded().then(function () {
+  $scope.populateBoard = function (size) {
+    $scope.game.$loaded().then(function () {
 
 
+    // $scope.p1Board.$loaded().then(function () {
+    //POPULATE BOTH BOARDS
+    if ($scope.game.p1Board === undefined) {
+      $scope.game.p1Board = {};
+    }
+    if ($scope.game.p2Board === undefined) {
+      $scope.game.p2Board = {};
+    }
+      //POPULATE ROWS AND COLUMNS
+      for (var i = 0; i < size; i++) {
+        $scope.boardRows.push(gameService.boardMapping[i+1]);
+        for (var j = 0; j < size; j++) {
+          if (i === 0) {
+            $scope.boardCols.push(Number(j+1));
+          }
 
-  // };
+          //POPULATE PLAYER 1 BOARD
+          var p1Cell = gameService.boardMapping[i+1] + Number(j+1);
+          if ($scope.game.p1Board[p1Cell] === undefined) {
+            $scope.game.p1Board[p1Cell] = {
+              x: i+1,
+              y: j+1,
+              boat: false,
+              hit:  false,
+              miss: false,
+              sunk: false
+            };
+            $scope.game.$save();
+          $scope.cellIds.push(p1Cell);
+          }
+
+          //POPULATE PLAYER 2 BOARD
+          var p2Cell = 'p2-' + gameService.boardMapping[i+1] + Number(j+1);
+          if ($scope.game.p2Board[p2Cell] === undefined) {
+            $scope.game.p2Board[p2Cell] = {
+              x: i+1,
+              y: j+1,
+              boat: false,
+              hit:  false,
+              miss: false,
+              sunk: false
+            };
+            $scope.game.$save();
+          $scope.cellIds.push(p2Cell);
+          }
+      }
+    }
+
+    //POPULATE PLAYER 1 SHIPS
+    $scope.ships.forEach(function (ship) {
+      if ($scope.game.p1Ships === undefined) {
+        $scope.game.p1Ships = {};
+        $scope.game.$save();
+      }
+      if ($scope.game.p1Ships[ship] === undefined) {
+        $scope.game.p1Ships[ship] = {
+          placed: false,
+          cells: {
+            0: false,
+            1: false,
+            2: false,
+            3: false,
+            4: false,
+          }
+        };
+      }
+        $scope.game.$save()
+        .then(function () {
+          console.log('OBJECT SAVED');
+        });
+    });
+
+    $scope.ships.forEach(function (ship) {
+      if ($scope.game.p2Ships === undefined) {
+        $scope.game.p2Ships = {};
+        // $scope.game.$save();
+      }
+      if ($scope.game.p2Ships[ship] === undefined) {
+        if (ship === 'carrier') {
+          $scope.game.p2Ships[ship] = {
+            placed: true,
+            cells: {
+              0: "p2-B2",
+              1: "p2-C2",
+              2: "p2-D2",
+              3: "p2-E2",
+              4: "p2-F2",
+            }
+          };
+          $scope.game.p2Board['p2-B2'] = 'carrier';
+          $scope.game.p2Board['p2-C2'] = 'carrier';
+          $scope.game.p2Board['p2-D2'] = 'carrier';
+          $scope.game.p2Board['p2-E2'] = 'carrier';
+          $scope.game.p2Board['p2-F2'] = 'carrier';
+        }
+        else if (ship ==='battleship') {
+          $scope.game.p2Ships[ship] = {
+            placed: true,
+            cells: {
+              0: "p2-J6",
+              1: "p2-J7",
+              2: "p2-J8",
+              3: "p2-J9",
+              4: false,
+            }
+          };
+          $scope.game.p2Board['p2-J6'] = 'battleship';
+          $scope.game.p2Board['p2-J7'] = 'battleship';
+          $scope.game.p2Board['p2-J8'] = 'battleship';
+          $scope.game.p2Board['p2-J9'] = 'battleship';
+        }
+        else if (ship ==='destroyer') {
+          $scope.game.p2Ships[ship] = {
+            placed: true,
+            cells: {
+              0: "p2-E8",
+              1: "p2-F8",
+              2: "p2-G8",
+              3: "p2-H8",
+              4: false,
+            }
+          };
+          $scope.game.p2Board['p2-E8'] = 'destroyer';
+          $scope.game.p2Board['p2-F8'] = 'destroyer';
+          $scope.game.p2Board['p2-G8'] = 'destroyer';
+          $scope.game.p2Board['p2-H8'] = 'destroyer';
+        }
+        else if (ship ==='submarine') {
+          $scope.game.p2Ships[ship] = {
+            placed: true,
+            cells: {
+              0: "p2-A1",
+              1: "p2-A2",
+              2: "p2-A3",
+              3: false,
+              4: false,
+            }
+          };
+          $scope.game.p2Board['p2-A1'] = 'submarine';
+          $scope.game.p2Board['p2-A2'] = 'submarine';
+          $scope.game.p2Board['p2-A3'] = 'submarine';
+        }
+        else if (ship ==='patrol') {
+          $scope.game.p2Ships[ship] = {
+            placed: true,
+            cells: {
+              0: "p2-E5",
+              1: "p2-E6",
+              2: false,
+              3: false,
+              4: false,
+            }
+          };
+          $scope.game.p2Board['p2-E5'] = 'patrol';
+          $scope.game.p2Board['p2-E6'] = 'patrol';
+        }
+
+      }
+      $scope.game.$save()
+      .then(function () {
+        console.log($scope.game.p2Ships);
+        console.log(ship + ' SAVED');
+      });
+    });
+
+        });
 
 
+        //POPULATE PLAYER 2 SHIPS
+        // var carrier = gameService.p2ShipsRef.child('carrier');
+        // carrier.set({
+        //   placed: $scope.p2ShipsOnBoard.carrier  === undefined ? true : $scope.p2ShipsOnBoard.carrier.placed,
+        //   cells: $scope.p2ShipsOnBoard.carrier === undefined ? false : $scope.p2ShipsOnBoard.carrier.cells,
+        // });
+        // var cellsObj = gameService.p2ShipsRef.child('carrier').child('cells');
+        //   cellsObj.set({
+        //     0: $scope.p2ShipsOnBoard.carrier.cells[0] || "p2-B2",
+        //     1: $scope.p2ShipsOnBoard.carrier.cells[1] || "p2-C2",
+        //     2: $scope.p2ShipsOnBoard.carrier.cells[2] || "p2-D2",
+        //     3: $scope.p2ShipsOnBoard.carrier.cells[3] || "p2-E2",
+        //     4: $scope.p2ShipsOnBoard.carrier.cells[4] || "p2-F2",
+        //   });
+        //   $scope.p2Board['p2-B2'] = 'carrier';
+    // });
+  };
 
 
-  // $scope.populateBoard(10);
+  $scope.populateBoard(10);
 
   //CLEAR ALL SHIPS FROM BOARD
   $scope.clearBoard = function () {
@@ -230,7 +241,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
         $scope.game.p1Ships[ship].cells[key] = false;
       }
     });
-    // $scope.game.$save();
+    $scope.game.$save();
   };
 
 
@@ -254,7 +265,7 @@ $scope.rotateToVert = function (e) {
       if (index > 0) {
         $scope.game.p1Board[(rotatedCells[index-1]).id].boat = ship;
         $scope.game.p1Board[$(this).attr('id')].boat = false;
-        // $scope.game.$save();
+        $scope.game.$save();
       }
     });
   }
@@ -262,7 +273,7 @@ $scope.rotateToVert = function (e) {
   rotatedCells.unshift(dropCells[0]);
   $.each(rotatedCells, function (index, cell) {
     $scope.game.p1Ships[ship].cells[index] = $(this).attr('id');
-    // $scope.game.$save();
+    $scope.game.$save();
   });
   $(dropCells[0]).click({dropCells: rotatedCells, ship: ship, size: size}, $scope.rotateToHor);
 
@@ -286,7 +297,7 @@ $scope.rotateToHor = function (e) {
       if (index > 0) {
         $scope.game.p1Board[(rotatedCells[index-1]).id].boat = ship;
         $scope.game.p1Board[$(this).attr('id')].boat = false;
-        // $scope.game.$save();
+        $scope.game.$save();
       }
     });
   }
@@ -294,7 +305,7 @@ $scope.rotateToHor = function (e) {
   rotatedCells.unshift(dropCells[0]);
   $.each(rotatedCells, function (index, cell) {
     $scope.game.p1Ships[ship].cells[index] = $(this).attr('id');
-    // $scope.game.$save();
+    $scope.game.$save();
   });
   $(dropCells[0]).click({dropCells: rotatedCells, ship: ship, size: size}, $scope.rotateToVert);
 };
@@ -315,9 +326,7 @@ $scope.dropped = function(dragEl, dropEls) {
         $.each(drop,function (index, cell) {
           $scope.game.p1Board[$(this).attr('id')].boat = $scope.game.p1Board[$(this).attr('id')].boat || drag.ship;
           $scope.game.p1Ships[drag.ship].cells[index] = $(this).attr('id');
-          $scope.game.p1Board.$save();
-          $scope.game.p1Ships.$save();
-          // $scope.game.$save();
+          $scope.game.$save();
         });
         $('#'+drag.ship).css('opacity', '.2');
       }
@@ -337,7 +346,6 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     var ref = "https://incandescent-fire-9342.firebaseio.com/game/" + randomId;
     var fullGameRef = new Firebase(ref);
     var game = $firebaseObject(fullGameRef);
-
 
 
     var boardMapping = {
@@ -461,18 +469,26 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
     var getCellIds = function () {
       var cellIds = [];
-        for (var key in this.game.p1Board) {
-          cellIds.push(key);
-        }
+      return p1BoardRef.once('value', function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
+          cellIds.push(childSnapshot.key());
+        });
+      })
+      .then(function () {
         return cellIds;
+      });
     };
 
     var getEnemyCellIds = function () {
       var cellIds = [];
-        for (var key in this.game.p2Board) {
-          cellIds.push(key);
-        }
+      return p2BoardRef.once('value', function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
+          cellIds.push(childSnapshot.key());
+        });
+      })
+      .then(function () {
         return cellIds;
+      });
     };
 
     var previousCells = [];
