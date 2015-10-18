@@ -28,6 +28,10 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.p2CellHasBoat = function (cellId) {
       return gameService.p2CellHasBoat(cellId);
   };
+
+  $scope.p2CellHit = function (cellId) {
+      return gameService.p2CellHit(cellId);
+  };
   $scope.shipOnBoard = function (ship) {
     return gameService.shipOnBoard(ship);
   };
@@ -341,7 +345,11 @@ $scope.dropped = function(dragEl, dropEls) {
   $scope.attack = function ($event) {
     var cellId = $event.currentTarget.id;
     if ($scope.game.p2Board[cellId].boat) {
+      console.log($scope.game.p2Board[cellId]);
       console.log('HIT');
+      $scope.game.p2Board[cellId].hit = true;
+      $scope.game.$save();
+      console.log($scope.game.p2Board[cellId]);
     } else {
       console.log('MISS');
     }
@@ -437,6 +445,11 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
         return this.game.p2Board[cellId].boat !== false;
     };
 
+    //check the specified cell on p2 board for a boat
+    var p2CellHit = function (cellId) {
+        return this.game.p2Board[cellId].hit;
+    };
+
     //
     // var cellHasBoat = function (cellId, player) {
     //   console.log(this.game.p1Board[cellId]);
@@ -524,6 +537,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       allSpacesFree: allSpacesFree,
       p1CellHasBoat: p1CellHasBoat,
       p2CellHasBoat: p2CellHasBoat,
+      p2CellHit: p2CellHit,
       shipOnBoard: shipOnBoard,
       getCellIds: getCellIds,
       getEnemyCellIds: getEnemyCellIds,

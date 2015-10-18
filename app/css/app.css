@@ -8180,3 +8180,6 @@ button.close {
 
 .ship-placed {
   opacity: .2 !important; }
+
+.hit {
+  background-color: #cc0000; }
