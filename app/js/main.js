@@ -32,6 +32,10 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.p2CellHit = function (cellId) {
       return gameService.p2CellHit(cellId);
   };
+
+  $scope.p2CellMiss = function (cellId) {
+      return gameService.p2CellMiss(cellId);
+  };
   $scope.shipOnBoard = function (ship) {
     return gameService.shipOnBoard(ship);
   };
@@ -48,8 +52,6 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.populateBoard = function (size) {
     $scope.game.$loaded().then(function () {
 
-
-    // $scope.p1Board.$loaded().then(function () {
     //POPULATE BOTH BOARDS
     if ($scope.game.p1Board === undefined) {
       $scope.game.p1Board = {};
@@ -124,6 +126,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
         });
     });
 
+    //POPULATE PLAYER 2 SHIPS
     $scope.ships.forEach(function (ship) {
       if ($scope.game.p2Ships === undefined) {
         $scope.game.p2Ships = {};
@@ -240,23 +243,24 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
   $scope.populateBoard(10);
 
-  //CLEAR ALL SHIPS FROM BOARD
-  $scope.clearBoard = function () {
-    for (var key in $scope.game.p1Board) {
-      $scope.game.p1Board[key].boat = false;
+//CLEAR ALL SHIPS FROM BOARD
+$scope.clearBoard = function () {
+  for (var key in $scope.game.p1Board) {
+    $scope.game.p1Board[key].boat = false;
+  }
+  $scope.ships.forEach(function (ship) {
+    $scope.game.p1Ships[ship].placed = false;
+    for (var key in $scope.game.p1Ships[ship].cells) {
+      $scope.game.p1Ships[ship].cells[key] = false;
     }
-    $scope.ships.forEach(function (ship) {
-      $scope.game.p1Ships[ship].placed = false;
-      for (var key in $scope.game.p1Ships[ship].cells) {
-        $scope.game.p1Ships[ship].cells[key] = false;
-      }
-    });
-    $scope.game.$save();
-  };
+  });
+  $scope.game.$save();
+};
 
 
 $scope.previousCells = gameService.previousCells;
 
+//ROTATE HORIZONTAL TO VERTICAL
 $scope.rotateToVert = function (e) {
   var dropCells = e.data.dropCells;
   var ship = e.data.ship;
@@ -289,6 +293,7 @@ $scope.rotateToVert = function (e) {
 
 };
 
+//ROTATE VERTICAL TO HORIZONTAL
 $scope.rotateToHor = function (e) {
   var dropCells = e.data.dropCells;
   var ship = e.data.ship;
@@ -320,6 +325,7 @@ $scope.rotateToHor = function (e) {
   $(dropCells[0]).click({dropCells: rotatedCells, ship: ship, size: size}, $scope.rotateToVert);
 };
 
+//DO ALL THE THINGS!
 $scope.dropped = function(dragEl, dropEls) {
       //set drag equal to ship info, drop equal to cells ship is being dropped into
       var drag = angular.element(dragEl)[0];
@@ -345,13 +351,11 @@ $scope.dropped = function(dragEl, dropEls) {
   $scope.attack = function ($event) {
     var cellId = $event.currentTarget.id;
     if ($scope.game.p2Board[cellId].boat) {
-      console.log($scope.game.p2Board[cellId]);
-      console.log('HIT');
       $scope.game.p2Board[cellId].hit = true;
       $scope.game.$save();
-      console.log($scope.game.p2Board[cellId]);
     } else {
-      console.log('MISS');
+      $scope.game.p2Board[cellId].miss = true;
+      $scope.game.$save();
     }
   };
 
@@ -445,23 +449,15 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
         return this.game.p2Board[cellId].boat !== false;
     };
 
-    //check the specified cell on p2 board for a boat
+    //check the specified cell on p2 board for a hit
     var p2CellHit = function (cellId) {
         return this.game.p2Board[cellId].hit;
     };
 
-    //
-    // var cellHasBoat = function (cellId, player) {
-    //   console.log(this.game.p1Board[cellId]);
-    //   console.log(this.game.p2Board[cellId]);
-    //   // console.log(cellId);
-    //   // console.log(player);
-    //   if (player === 'p1') {
-    //     return this.game.p1Board[cellId].boat !== false;
-    //   } else {
-    //     return this.game.p2Board[cellId].boat !== false;
-    //   }
-    // };
+    //check the specified cell on p2 board for a miss
+    var p2CellMiss = function (cellId) {
+        return this.game.p2Board[cellId].miss;
+    };
 
     //before dropping or placing a ship, check whether it would go off the board
     var roomOnBoard = function (destinationLength, shipLength) {
@@ -538,6 +534,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       p1CellHasBoat: p1CellHasBoat,
       p2CellHasBoat: p2CellHasBoat,
       p2CellHit: p2CellHit,
+      p2CellMiss: p2CellMiss,
       shipOnBoard: shipOnBoard,
       getCellIds: getCellIds,
       getEnemyCellIds: getEnemyCellIds,

@@ -8183,3 +8183,9 @@ button.close {
 
 .hit {
   background-color: #cc0000; }
+
+.miss {
+  background-color: #808080 !important; }
+
+.sunk {
+  background-color: #191919; }

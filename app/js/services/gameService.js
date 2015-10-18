@@ -86,23 +86,15 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
         return this.game.p2Board[cellId].boat !== false;
     };
 
-    //check the specified cell on p2 board for a boat
+    //check the specified cell on p2 board for a hit
     var p2CellHit = function (cellId) {
         return this.game.p2Board[cellId].hit;
     };
 
-    //
-    // var cellHasBoat = function (cellId, player) {
-    //   console.log(this.game.p1Board[cellId]);
-    //   console.log(this.game.p2Board[cellId]);
-    //   // console.log(cellId);
-    //   // console.log(player);
-    //   if (player === 'p1') {
-    //     return this.game.p1Board[cellId].boat !== false;
-    //   } else {
-    //     return this.game.p2Board[cellId].boat !== false;
-    //   }
-    // };
+    //check the specified cell on p2 board for a miss
+    var p2CellMiss = function (cellId) {
+        return this.game.p2Board[cellId].miss;
+    };
 
     //before dropping or placing a ship, check whether it would go off the board
     var roomOnBoard = function (destinationLength, shipLength) {
@@ -179,6 +171,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       p1CellHasBoat: p1CellHasBoat,
       p2CellHasBoat: p2CellHasBoat,
       p2CellHit: p2CellHit,
+      p2CellMiss: p2CellMiss,
       shipOnBoard: shipOnBoard,
       getCellIds: getCellIds,
       getEnemyCellIds: getEnemyCellIds,
