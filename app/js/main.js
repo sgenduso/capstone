@@ -103,22 +103,22 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
           $scope.cellIds.push(p1Cell);
           }
 
-
-          //POPULATE ENEMY BOARD
+          //POPULATE PLAYER 2 BOARD
           var p2Cell = 'p2-' + gameService.boardMapping[i+1] + Number(j+1);
-          var p2CellObj = gameService.p2BoardRef.child(p2Cell);
-          p2CellObj.set({
-            x: i+1,
-            y: j+1,
-            boat: $scope.p2Board[p2Cell] === undefined ? false : $scope.p2Board[p2Cell].boat,
-            hit:  p2CellObj.hit || false,
-            miss: p2CellObj.miss || false,
-            sunk: p2CellObj.sunk || false
-          });
-          $scope.p2CellIds.push(p2Cell);
-         }
+          if ($scope.game.p1board[p2Cell] === undefined) {
+            $scope.game.p1board[p2Cell] = {
+              x: i+1,
+              y: j+1,
+              boat: false,
+              hit:  false,
+              miss: false,
+              sunk: false
+            };
+            $scope.game.$save();
+          $scope.cellIds.push(p2Cell);
+          }
       }
-    // });
+    }
 
         });
 
