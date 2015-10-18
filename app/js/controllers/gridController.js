@@ -7,10 +7,11 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   };
 
   $scope.game = gameService.fullGameObject;
-  $scope.p1Board = gameService.p1BoardObject;
-  $scope.p2Board = gameService.p2BoardObject;
-  $scope.p1ShipsOnBoard = gameService.p1ShipsObject;
-  $scope.p2ShipsOnBoard = gameService.p2ShipsObject;
+
+  // $scope.p1Board = gameService.p1BoardObject;
+  // $scope.p2Board = gameService.p2BoardObject;
+  // $scope.p1ShipsOnBoard = gameService.p1ShipsObject;
+  // $scope.p2ShipsOnBoard = gameService.p2ShipsObject;
   // gameService.p1BoardObject.$bindTo($scope, p1Board);
   $scope.p1CellHasBoat = function (cellId) {
       return gameService.p1CellHasBoat(cellId);
@@ -35,12 +36,36 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
       //POPULATE PLAYER 1 SHIPS
       $scope.ships.forEach(function (ship) {
-        if ($scope.game.p1ships === undefined) {
-          $scope.game.p1ships = {};
+        if ($scope.game.p1Ships === undefined) {
+          $scope.game.p1Ships = {};
           $scope.game.$save();
         }
-        if ($scope.game.p1ships[ship] === undefined) {
-          $scope.game.p1ships[ship] = {
+        if ($scope.game.p1Ships[ship] === undefined) {
+          $scope.game.p1Ships[ship] = {
+            placed: false,
+            cells: {
+              0: false,
+              1: false,
+              2: false,
+              3: false,
+              4: false,
+            }
+          };
+        }
+          $scope.game.$save()
+          .then(function () {
+            console.log('OBJECT SAVED');
+          });
+      });
+
+      //POPULATE PLAYER 2 SHIPS
+      $scope.ships.forEach(function (ship) {
+        if ($scope.game.p2Ships === undefined) {
+          $scope.game.p2Ships = {};
+          $scope.game.$save();
+        }
+        if ($scope.game.p2Ships[ship] === undefined) {
+          $scope.game.p2Ships[ship] = {
             placed: false,
             cells: {
               0: false,
@@ -61,11 +86,11 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
     // $scope.p1Board.$loaded().then(function () {
     //POPULATE BOTH BOARDS
-    if ($scope.game.p1board === undefined) {
-      $scope.game.p1board = {};
+    if ($scope.game.p1Board === undefined) {
+      $scope.game.p1Board = {};
     }
-    if ($scope.game.p2board === undefined) {
-      $scope.game.p2board = {};
+    if ($scope.game.p2Board === undefined) {
+      $scope.game.p2Board = {};
     }
       //POPULATE ROWS AND COLUMNS
       for (var i = 0; i < size; i++) {
@@ -77,8 +102,8 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
           //POPULATE PLAYER 1 BOARD
           var p1Cell = gameService.boardMapping[i+1] + Number(j+1);
-          if ($scope.game.p1board[p1Cell] === undefined) {
-            $scope.game.p1board[p1Cell] = {
+          if ($scope.game.p1Board[p1Cell] === undefined) {
+            $scope.game.p1Board[p1Cell] = {
               x: i+1,
               y: j+1,
               boat: false,
@@ -92,8 +117,8 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
           //POPULATE PLAYER 2 BOARD
           var p2Cell = 'p2-' + gameService.boardMapping[i+1] + Number(j+1);
-          if ($scope.game.p1board[p2Cell] === undefined) {
-            $scope.game.p1board[p2Cell] = {
+          if ($scope.game.p2Board[p2Cell] === undefined) {
+            $scope.game.p2Board[p2Cell] = {
               x: i+1,
               y: j+1,
               boat: false,
@@ -111,7 +136,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
 
 
-          // $scope.game.p1ships[ship]
+          // $scope.game.p1Ships[ship]
           // var p1ShipObj = gameService.p1ShipsRef.child(ship);
           // p1ShipObj.set({
           //   placed: $scope.p1ShipsOnBoard[ship] === undefined ? false : $scope.p1ShipsOnBoard[ship].placed,
@@ -168,24 +193,17 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
   $scope.clearBoard = function () {
     $scope.cellIds.forEach(function (cell) {
-      $scope.p1Board[cell].boat = false;
+      $scope.game.p1Board[cell].boat = false;
     });
     $scope.ships.forEach(function (ship) {
-      $scope.p1ShipsOnBoard[ship].placed = false;
-      for (var key in $scope.p1ShipsOnBoard[ship].cells) {
-        $scope.p1ShipsOnBoard[ship].cells[key] = false;
+      $scope.game.p1Ships[ship].placed = false;
+      for (var key in $scope.game.p1Ships[ship].cells) {
+        $scope.game.p1Ships[ship].cells[key] = false;
       }
     });
-    $scope.p1Board.$save();
-    $scope.p1ShipsOnBoard.$save();
+    $scope.game.$save();
   };
 
-  $scope.popEnemyBoard = function () {
-    return gameService.popEnemyBoard();
-    // var cellIds = $scope.p2CellIds;
-    // var availableCells = $scope.p2CellIds;
-    // console.log(gameService.quad1);
-  };
 
 $scope.previousCells = gameService.previousCells;
 

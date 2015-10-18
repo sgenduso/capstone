@@ -4,16 +4,16 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     var randomId = Math.round(Math.random() * 1000000000);
     randomId = 1;
     var ref = "https://incandescent-fire-9342.firebaseio.com/game/" + randomId;
-    var p1BoardRef = new Firebase(ref + "/p1board");
-    var p2BoardRef = new Firebase(ref + "/p2board");
-    var p1ShipsRef = new Firebase(ref + "/p1ships");
-    var p2ShipsRef = new Firebase(ref + "/p2ships");
+    // var p1BoardRef = new Firebase(ref + "/p1board");
+    // var p2BoardRef = new Firebase(ref + "/p2board");
+    // var p1ShipsRef = new Firebase(ref + "/p1ships");
+    // var p2ShipsRef = new Firebase(ref + "/p2ships");
     var fullGameRef = new Firebase(ref);
     var fullGameObject = $firebaseObject(fullGameRef);
-    var p1BoardObject = $firebaseObject(p1BoardRef);
-    var p2BoardObject = $firebaseObject(p2BoardRef);
-    var p1ShipsObject = $firebaseObject(p1ShipsRef);
-    var p2ShipsObject = $firebaseObject(p2ShipsRef);
+    // var p1BoardObject = $firebaseObject(p1BoardRef);
+    // var p2BoardObject = $firebaseObject(p2BoardRef);
+    // var p1ShipsObject = $firebaseObject(p1ShipsRef);
+    // var p2ShipsObject = $firebaseObject(p2ShipsRef);
 
 
     var boardMapping = {
@@ -176,14 +176,14 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       // gameId: randomId,
       ships: ships,
       ref: ref,
-      p1BoardObject: p1BoardObject,
-      p1BoardRef: p1BoardRef,
-      p2BoardObject: p2BoardObject,
-      p2BoardRef: p2BoardRef,
-      p1ShipsObject: p1ShipsObject,
-      p2ShipsObject: p2ShipsObject,
-      p1ShipsRef: p1ShipsRef,
-      p2ShipsRef: p2ShipsRef,
+      // p1BoardObject: p1BoardObject,
+      // p1BoardRef: p1BoardRef,
+      // p2BoardObject: p2BoardObject,
+      // p2BoardRef: p2BoardRef,
+      // p1ShipsObject: p1ShipsObject,
+      // p2ShipsObject: p2ShipsObject,
+      // p1ShipsRef: p1ShipsRef,
+      // p2ShipsRef: p2ShipsRef,
       previousCells: previousCells,
       currentShip: currentShip,
       previousShip: previousShip,
