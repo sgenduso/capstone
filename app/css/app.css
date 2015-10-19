@@ -8087,9 +8087,6 @@ button.close {
 html, body {
   height: 100% !important; }
 
-body {
-  background-size: cover; }
-
 .main-header {
   margin-bottom: 3%;
   width: 100%;
@@ -8118,7 +8115,8 @@ body {
   vertical-align: middle; }
 
 .board-table {
-  width: 100%; }
+  width: 100%;
+  border-radius: 5px; }
   .board-table tr {
     vertical-align: middle; }
 
@@ -8132,10 +8130,22 @@ body {
   width: 70%; }
 
 #enemy-fleet {
+  margin-top: 15px;
   text-align: center; }
 
 #enemy-board .board-cell:hover {
   cursor: url("../img/target.png") 10 10, auto; }
+
+#reset {
+  width: 100%;
+  margin-bottom: 15px; }
+
+#messages {
+  height: 68px;
+  padding: 10px;
+  margin-bottom: 15px;
+  overflow: scroll;
+  border: 2px solid black; }
 
 .fleets {
   z-index: 1; }

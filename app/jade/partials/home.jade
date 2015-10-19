@@ -1,5 +1,13 @@
 //your ships -- draggable onto your board
 #fleets.col-md-3
+  .row.messages
+    h4 Messages
+    #messages
+      p Welcome, new recruit. Position your fleet, and then begin your attack!
+      p(ng-repeat="message in messages track by $index") {{message}}
+  .row
+    a#reset.btn.btn-default(ng-click='reset()') Reset Game
+    //- a.btn.btn-default(ng-click='popEnemyBoard()') Populate Enemy Board
   .row#your-fleet
     h4 drag to place ships on board
     table.table.fleet
@@ -28,12 +36,6 @@
         td.col-md-2
           img.ship.patrol#patrol(wb-draggable='true' src='../img/ships/patrol.png' data-size="2" data-ship='patrol' ng-class="{'ship-placed': shipOnBoard('patrol')}" ng-hide='p1ShipSunk("patrol")')
           span.ship-sunk(ng-show='p1ShipSunk("patrol")') SUNK
-  .row
-    a.btn.btn-default(ng-click='reset()') Reset Game
-    //- a.btn.btn-default(ng-click='popEnemyBoard()') Populate Enemy Board
-  .row#messages
-    h4 Messages
-    {{message}}
 
 //your board -- shows where you've placed your ships and where enemy has hit and missed
 #player1-board.col-md-4
@@ -84,17 +86,17 @@
           h5 Enemy Fleet
         td
           img.ship.carrier(src='../img/ships/carrier.png' data-size="5" data-ship='carrier' ng-hide='p2ShipSunk("carrier")')
-          span.ship-sunk(ng-show='p2ShipSunk("carrier")') SUNK
+          span.ship-sunk(ng-show='p2ShipSunk("carrier")') CARRIER SUNK
         td
           img.ship.battleship(src='../img/ships/battleship.png' data-size="4" data-ship='battleship' ng-hide='p2ShipSunk("battleship")')
-          span.ship-sunk(ng-show='p2ShipSunk("battleship")') SUNK
+          span.ship-sunk(ng-show='p2ShipSunk("battleship")') BATTLESHIP SUNK
       tr.fleet.battleship
         td
           img.ship.destroyer(src='../img/ships/destroyer.png' data-size="4" data-ship='destroyer' ng-hide='p2ShipSunk("destroyer")')
-          span.ship-sunk(ng-show='p2ShipSunk("destroyer")') SUNK
+          span.ship-sunk(ng-show='p2ShipSunk("destroyer")') DESTROYER SUNK
         td
           img.ship.submarine(src='../img/ships/submarine.png' data-size="3" data-ship='submarine' ng-hide='p2ShipSunk("submarine")')
-          span.ship-sunk(ng-show='p2ShipSunk("submarine")') SUNK
+          span.ship-sunk(ng-show='p2ShipSunk("submarine")') SUBMARINE SUNK
         td
           img.ship.patrol(src='../img/ships/patrol.png' data-size="2" data-ship='patrol' ng-hide='p2ShipSunk("patrol")')
-          span.ship-sunk(ng-show='p2ShipSunk("patrol")') SUNK
+          span.ship-sunk(ng-show='p2ShipSunk("patrol")') PATROL SUNK

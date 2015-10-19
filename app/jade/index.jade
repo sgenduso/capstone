@@ -10,6 +10,7 @@ html(ng-app='warboat')
     link(rel='stylesheet', href='bower_components/animate.css/animate.css')
     link(rel="stylesheet" type="text/css" href="bower_components/angular-ui-grid/ui-grid.min.css")
     link(rel='stylesheet', href='css/app.css')
+    link(href="ship.ico" rel="icon" type="image/x-icon")
     script(src='bower_components/jquery/dist/jquery.min.js')
     script(src='bower_components/jquery-ui//jquery-ui.min.js')
     script(src='bower_components/angular/angular.js')
@@ -26,6 +27,8 @@ html(ng-app='warboat')
   body
     .container-fluid
       h1.main-header WARBOAT - BOATS AT WAR
+      audio#bomb(src='./sounds/bomb.mp3')
+      audio#splash(src='./sounds/water.mp3')
       // views
       div(ui-view='')
     // scripts

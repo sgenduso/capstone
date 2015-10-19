@@ -20,6 +20,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
   $scope.populateBoard = function (size) {
     $scope.game.$loaded().then(function () {
+
       $scope.p1CellHasBoat = function (cellId) {
           return gameService.p1CellHasBoat(cellId);
       };
@@ -369,50 +370,104 @@ $scope.dropped = function(dragEl, dropEls) {
 //THINGS THAT HAPPEN WHEN USER CLICKS ENEMY BOARD
 var nextTarget;
 $scope.attack = function ($event) {
+
+  $scope.messages = $scope.messages || [];
+  var messages = $('#messages')[0];
+
+  //scroll to bottom of messages
+  var scrollDown = function () {
+    messages.scrollTop = messages.scrollHeight;
+  };
+
   //ATTACK ENEMY BOARD
   var cellId = $event.currentTarget.id;
   //only do stuff if the cell hasn't already been targeted
   if ($scope.game.p2Board[cellId].hit === false && $scope.game.p2Board[cellId].miss === false && gameService.allShipsPlaced()) {
     if ($scope.game.p2Board[cellId].boat) {
+      // $('#bomb').play();
       var boat = $scope.game.p2Board[cellId].boat;
       $scope.game.p2Board[cellId].hit = true;
       $scope.game.p2Ships[boat].hits++;
+      $scope.messages.push('You hit an enemy ship!');
+      scrollDown();
+
       if ($scope.game.p2Ships[boat].hits == $scope.game.p2Ships[boat].size) {
         $scope.game.p2Ships[boat].sunk = true;
         $scope.game.p2Board[cellId].sunk = true;
         $scope.game.$save();
+        $scope.messages.push('You sunk the enemy\'s ' + boat + '!');
+        scrollDown();
         if (gameService.p1Won()) {
           alert('YOU WON!');
-          $scope.reset();
+
         }
       }
       $scope.game.$save();
     } else {
+      // $('#splash').play();
       $scope.game.p2Board[cellId].miss = true;
       $scope.game.$save();
+      $scope.messages.push('You missed.');
+      scrollDown();
     }
 
     //CPU ATTACKS USER BACK
-    if (gameService.p1Won() === false) {
+    if (gameService.p1Won()) {
+      $scope.reset();
+    } else {
+      console.log('next target from prev move: ', nextTarget);
       var targetCells = gameService.getTargetCells();
-      var target = targetCells[gameService.randBetween(0, targetCells.length-1)];
+      var target;
+      if (nextTarget === null || nextTarget === undefined){
+        target = targetCells[gameService.randBetween(0, targetCells.length-1)];
+      } else {
+        target = nextTarget.cell;
+      }
+      console.log('target for this attack: ', target);
       if ($scope.game.p1Board[target].boat) {
+        // $('#bomb').play();
         var attackBoat = $scope.game.p1Board[target].boat;
         $scope.game.p1Board[target].hit = true;
         $scope.game.p1Ships[attackBoat].hits++;
+
+        // CHOOSE NEXT TARGET
+        var thisX = $scope.game.p1Board[target].x;
+        var thisY = $scope.game.p1Board[target].y;
+        console.log('y value of this target: ', thisY);
+        console.log('next y value: ', (Number(thisY)-1));
+        console.log('next cell up: ', $('td[data-x=' + thisX + '][data-y=' + (Number(thisY)-1) + ']').attr('id'));
+        var nextCellUp = $('td[data-x=' + thisX + '][data-y=' + (Number(thisY)-1) + ']').attr('id');
+
+        nextTarget = {
+          cell: nextCellUp,
+          direction: 'up'
+        };
+
+        // LOG MOVE IN MESSAGES
+        $scope.messages.push('Your ' + attackBoat + ' was hit!');
+        scrollDown();
         if ($scope.game.p1Ships[attackBoat].hits == $scope.game.p1Ships[attackBoat].size) {
           $scope.game.p1Ships[attackBoat].sunk = true;
           $scope.game.p1Board[target].sunk = true;
           $scope.game.$save();
+          nextTarget = null;
+          $scope.messages.push('Your ' + attackBoat + ' was sunk!');
+          scrollDown();
           if (gameService.p2Won()) {
             alert('DOH! YOU LOST \:\(');
             $scope.reset();
           }
+        } else {
+
         }
         $scope.game.$save();
       } else {
+        // $('#splash').play();
         $scope.game.p1Board[target].miss = true;
         $scope.game.$save();
+        $scope.messages.push('Enemy missed.');
+        scrollDown();
+        nextTarget = null;
       }
     }
   }
