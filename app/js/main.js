@@ -259,13 +259,25 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
   $scope.populateBoard(10);
 
-//CLEAR ALL SHIPS FROM BOARD
-$scope.clearBoard = function () {
-  for (var key in $scope.game.p1Board) {
-    $scope.game.p1Board[key].boat = false;
+//CLEAR ALL SHIPS, HITS, AND MISSES FROM BOARD
+$scope.reset = function () {
+  for (var p1Cell in $scope.game.p1Board) {
+    $scope.game.p1Board[p1Cell].boat = false;
+    $scope.game.p1Board[p1Cell].hit = false;
+    $scope.game.p1Board[p1Cell].miss = false;
+    $scope.game.p1Board[p1Cell].sunk = false;
+  }
+  for (var p2Cell in $scope.game.p2Board) {
+    $scope.game.p2Board[p2Cell].hit = false;
+    $scope.game.p2Board[p2Cell].miss = false;
+    $scope.game.p2Board[p2Cell].sunk = false;
   }
   $scope.ships.forEach(function (ship) {
     $scope.game.p1Ships[ship].placed = false;
+    $scope.game.p1Ships[ship].hits = 0;
+    $scope.game.p1Ships[ship].sunk = false;
+    $scope.game.p2Ships[ship].hits = 0;
+    $scope.game.p2Ships[ship].sunk = false;
     for (var key in $scope.game.p1Ships[ship].cells) {
       $scope.game.p1Ships[ship].cells[key] = false;
     }
@@ -342,7 +354,6 @@ $scope.rotateToHor = function (e) {
 };
 
 //DO ALL THE THINGS!
-
 $scope.dropped = function(dragEl, dropEls) {
       //set drag equal to ship info, drop equal to cells ship is being dropped into
       var drag = angular.element(dragEl)[0];
@@ -356,6 +367,7 @@ $scope.dropped = function(dragEl, dropEls) {
       if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship) && gameService.roomOnBoard(drop.length, drag.size)){
         $(drop[0]).click({dropCells: drop, ship: drag.ship, size: drag.size}, $scope.rotateToVert);
           $scope.game.p1Ships[drag.ship].placed = true;
+          $scope.game.p1Ships[drag.ship].size = drag.size;
         $.each(drop,function (index, cell) {
           $scope.game.p1Board[$(this).attr('id')].boat = $scope.game.p1Board[$(this).attr('id')].boat || drag.ship;
           $scope.game.p1Ships[drag.ship].cells[index] = $(this).attr('id');
@@ -365,39 +377,42 @@ $scope.dropped = function(dragEl, dropEls) {
       }
     };
 
-
+//THINGS THAT HAPPEN WHEN USER CLICKS ENEMY BOARD
 $scope.attack = function ($event) {
   //ATTACK ENEMY BOARD
   var cellId = $event.currentTarget.id;
-  if ($scope.game.p2Board[cellId].boat && $scope.game.p2Board[cellId].hit === false) {
-    var boat = $scope.game.p2Board[cellId].boat;
-    $scope.game.p2Board[cellId].hit = true;
-    $scope.game.p2Ships[boat].hits++;
-    if ($scope.game.p2Ships[boat].hits == $scope.game.p2Ships[boat].size) {
-      $scope.game.p2Ships[boat].sunk = true;
+  //only do stuff if the cell hasn't already been targeted
+  if ($scope.game.p2Board[cellId].hit === false && $scope.game.p2Board[cellId].miss === false) {
+    if ($scope.game.p2Board[cellId].boat) {
+      var boat = $scope.game.p2Board[cellId].boat;
+      $scope.game.p2Board[cellId].hit = true;
+      $scope.game.p2Ships[boat].hits++;
+      if ($scope.game.p2Ships[boat].hits == $scope.game.p2Ships[boat].size) {
+        $scope.game.p2Ships[boat].sunk = true;
+        $scope.game.p2Board[cellId].sunk = true;
+      }
+      $scope.game.$save();
+    } else {
+      $scope.game.p2Board[cellId].miss = true;
+      $scope.game.$save();
     }
-    $scope.game.$save();
-  } else {
-    $scope.game.p2Board[cellId].miss = true;
-    $scope.game.$save();
-  }
 
-  //CPU ATTACK BACK
-  var targetCells = gameService.getTargetCells();
-  var target = targetCells[gameService.randBetween(0, targetCells.length-1)];
-  console.log(targetCells);
-  console.log(target);
-  if ($scope.game.p1Board[target].boat && $scope.game.p1Board[target].hit === false) {
-    var attackBoat = $scope.game.p1Board[target].boat;
-    $scope.game.p1Board[target].hit = true;
-    $scope.game.p1Ships[attackBoat].hits++;
-    if ($scope.game.p1Ships[attackBoat].hits == $scope.game.p1Ships[attackBoat].size) {
-      $scope.game.p1Ships[attackBoat].sunk = true;
+    //CPU ATTACKS USER BACK
+    var targetCells = gameService.getTargetCells();
+    var target = targetCells[gameService.randBetween(0, targetCells.length-1)];
+    if ($scope.game.p1Board[target].boat) {
+      var attackBoat = $scope.game.p1Board[target].boat;
+      $scope.game.p1Board[target].hit = true;
+      $scope.game.p1Ships[attackBoat].hits++;
+      if ($scope.game.p1Ships[attackBoat].hits == $scope.game.p1Ships[attackBoat].size) {
+        $scope.game.p1Ships[attackBoat].sunk = true;
+        $scope.game.p1Board[target].sunk = true;
+      }
+      $scope.game.$save();
+    } else {
+      $scope.game.p1Board[target].miss = true;
+      $scope.game.$save();
     }
-    $scope.game.$save();
-  } else {
-    $scope.game.p1Board[target].miss = true;
-    $scope.game.$save();
   }
 };
 

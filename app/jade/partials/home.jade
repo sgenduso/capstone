@@ -24,7 +24,7 @@
         td.col-md-2
           img.ship.patrol#patrol(wb-draggable='true' src='../img/ships/patrol.png' data-size="2" data-ship='patrol' ng-class="{'ship-placed': shipOnBoard('patrol')}")
   .row
-    a.btn.btn-default(ng-click='clearBoard()') Clear Board
+    a.btn.btn-default(ng-click='reset()') Reset Game
     //- a.btn.btn-default(ng-click='popEnemyBoard()') Populate Enemy Board
   .row#messages
     h4 Messages
