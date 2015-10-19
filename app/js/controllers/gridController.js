@@ -76,8 +76,8 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
           var p1Cell = gameService.boardMapping[i+1] + Number(j+1);
           if ($scope.game.p1Board[p1Cell] === undefined) {
             $scope.game.p1Board[p1Cell] = {
-              x: i+1,
-              y: j+1,
+              x: j+1,
+              y: i+1,
               boat: false,
               hit:  false,
               miss: false,
@@ -91,8 +91,8 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
           var p2Cell = 'p2-' + gameService.boardMapping[i+1] + Number(j+1);
           if ($scope.game.p2Board[p2Cell] === undefined) {
             $scope.game.p2Board[p2Cell] = {
-              x: i+1,
-              y: j+1,
+              x: j+1,
+              y: i+1,
               boat: false,
               hit:  false,
               miss: false,
@@ -127,7 +127,6 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
       }
         $scope.game.$save()
         .then(function () {
-          console.log('OBJECT SAVED');
         });
     });
 
@@ -235,8 +234,6 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
       }
       $scope.game.$save()
       .then(function () {
-        console.log($scope.game.p2Ships);
-        console.log(ship + ' SAVED');
       });
     });
 
@@ -379,6 +376,13 @@ $scope.attack = function ($event) {
     messages.scrollTop = messages.scrollHeight;
   };
 
+  //get cell id by x and y coords
+  var getCellIdByCoords = function (x, y) {
+    return $('td[data-x=' + x + '][data-y=' + y + ']').attr('id');
+  };
+
+  var directions = ['up', 'down', 'left', 'right'];
+
   //ATTACK ENEMY BOARD
   var cellId = $event.currentTarget.id;
   //only do stuff if the cell hasn't already been targeted
@@ -433,15 +437,28 @@ $scope.attack = function ($event) {
         // CHOOSE NEXT TARGET
         var thisX = $scope.game.p1Board[target].x;
         var thisY = $scope.game.p1Board[target].y;
-        console.log('y value of this target: ', thisY);
-        console.log('next y value: ', (Number(thisY)-1));
-        console.log('next cell up: ', $('td[data-x=' + thisX + '][data-y=' + (Number(thisY)-1) + ']').attr('id'));
-        var nextCellUp = $('td[data-x=' + thisX + '][data-y=' + (Number(thisY)-1) + ']').attr('id');
+        console.log('this attack\'s x val: ', thisX);
+        console.log('this attack\'s y val: ', thisY);
 
-        nextTarget = {
-          cell: nextCellUp,
-          direction: 'up'
+        var nextCellUp = {cell: getCellIdByCoords(thisX, (Number(thisY)-1)), direction: 'up'};
+        var nextCellDown = {cell: getCellIdByCoords(thisX, (Number(thisY)+1)), direction: 'down'};
+        var nextCellLeft = {cell: getCellIdByCoords((Number(thisX)-1), thisY), direction: 'left'};
+        var nextCellRight = {cell: getCellIdByCoords((Number(thisX)+1), thisY), direction: 'right'};
+
+        var possibleTargets = [nextCellUp, nextCellDown, nextCellLeft, nextCellRight];
+        console.log(possibleTargets);
+        var chooseTarget = function () {
+          for (var i = 0; i < possibleTargets.length; i++) {
+            console.log(possibleTargets[i].cell);
+            console.log($scope.game.p1Board[possibleTargets[i].cell]);
+            if (possibleTargets[i].cell && $scope.game.p1Board[possibleTargets[i].cell].hit === false && $scope.game.p1Board[possibleTargets[i].cell].miss === false) {
+              return possibleTargets[i];
+            }
+          }
         };
+
+        nextTarget = chooseTarget();
+        console.log(nextTarget);
 
         // LOG MOVE IN MESSAGES
         $scope.messages.push('Your ' + attackBoat + ' was hit!');
