@@ -433,7 +433,7 @@ $scope.attack = function ($event) {
       var targetCells = gameService.getTargetCells();
       var target;
       //if there is no target, shoot at random, otherwise shoot at target
-      if (nextTarget === null || nextTarget === undefined){
+      if (nextTarget === null || nextTarget === undefined || $scope.game.p1Board[nextTarget.cell].hit === true || $scope.game.p1Board[nextTarget.cell].miss === true){
         target = targetCells[gameService.randBetween(0, targetCells.length-1)];
       } else {
         target = nextTarget.cell;
