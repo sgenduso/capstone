@@ -40,6 +40,18 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.p2ShipSunk = function (ship) {
       return gameService.p2ShipSunk(ship);
   };
+
+  $scope.p1CellHit = function (cellId) {
+      return gameService.p1CellHit(cellId);
+  };
+
+  $scope.p1CellMiss = function (cellId) {
+      return gameService.p1CellMiss(cellId);
+  };
+
+  $scope.p1ShipSunk = function (ship) {
+      return gameService.p1ShipSunk(ship);
+  };
   $scope.shipOnBoard = function (ship) {
     return gameService.shipOnBoard(ship);
   };
@@ -353,8 +365,9 @@ $scope.dropped = function(dragEl, dropEls) {
     };
 
 $scope.attack = function ($event) {
+  //ATTACK ENEMY BOARD
   var cellId = $event.currentTarget.id;
-  if ($scope.game.p2Board[cellId].boat) {
+  if ($scope.game.p2Board[cellId].boat && $scope.game.p2Board[cellId].hit === false) {
     var boat = $scope.game.p2Board[cellId].boat;
     $scope.game.p2Board[cellId].hit = true;
     $scope.game.p2Ships[boat].hits++;
@@ -364,6 +377,22 @@ $scope.attack = function ($event) {
     $scope.game.$save();
   } else {
     $scope.game.p2Board[cellId].miss = true;
+    $scope.game.$save();
+  }
+
+  //CPU ATTACK BACK
+  var cellIds = gameService.getCellIds();
+  var target = cellIds[gameService.randBetween(0, cellIds.length-1)];
+  if ($scope.game.p1Board[target].boat && $scope.game.p1Board[target].hit === false) {
+    var attackBoat = $scope.game.p1Board[target].boat;
+    $scope.game.p1Board[target].hit = true;
+    $scope.game.p1Ships[attackBoat].hits++;
+    if ($scope.game.p1Ships[attackBoat].hits == $scope.game.p1Ships[attackBoat].size) {
+      $scope.game.p1Ships[attackBoat].sunk = true;
+    }
+    $scope.game.$save();
+  } else {
+    $scope.game.p1Board[target].miss = true;
     $scope.game.$save();
   }
 };
@@ -470,8 +499,26 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
     //check the specified cell on p2 board for a miss
     var p2ShipSunk = function (ship) {
-      console.log(ship);
+      if (ship) {
         return this.game.p2Ships[ship].sunk;
+      }
+    };
+
+    //check the specified cell on p1 board for a hit
+    var p1CellHit = function (cellId) {
+        return this.game.p1Board[cellId].hit;
+    };
+
+    //check the specified cell on p1 board for a miss
+    var p1CellMiss = function (cellId) {
+        return this.game.p1Board[cellId].miss;
+    };
+
+    //check the specified cell on p1 board for a miss
+    var p1ShipSunk = function (ship) {
+      if (ship) {
+        return this.game.p1Ships[ship].sunk;
+      }
     };
 
     //before dropping or placing a ship, check whether it would go off the board
@@ -510,14 +557,10 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
     var getCellIds = function () {
       var cellIds = [];
-      return p1BoardRef.once('value', function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-          cellIds.push(childSnapshot.key());
-        });
-      })
-      .then(function () {
-        return cellIds;
-      });
+      for (var key in this.game.p1Board){
+        cellIds.push(key);
+      }
+      return cellIds;
     };
 
     var getEnemyCellIds = function () {
@@ -551,10 +594,14 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       p2CellHit: p2CellHit,
       p2CellMiss: p2CellMiss,
       p2ShipSunk: p2ShipSunk,
+      p1CellHit: p1CellHit,
+      p1CellMiss: p1CellMiss,
+      p1ShipSunk: p1ShipSunk,
       shipOnBoard: shipOnBoard,
       getCellIds: getCellIds,
       getEnemyCellIds: getEnemyCellIds,
       roomOnBoard: roomOnBoard,
+      randBetween: randBetween,
       quad1: quad1,
       quad2: quad2,
       quad3: quad3,

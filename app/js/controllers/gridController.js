@@ -27,6 +27,18 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
   $scope.p2ShipSunk = function (ship) {
       return gameService.p2ShipSunk(ship);
   };
+
+  $scope.p1CellHit = function (cellId) {
+      return gameService.p1CellHit(cellId);
+  };
+
+  $scope.p1CellMiss = function (cellId) {
+      return gameService.p1CellMiss(cellId);
+  };
+
+  $scope.p1ShipSunk = function (ship) {
+      return gameService.p1ShipSunk(ship);
+  };
   $scope.shipOnBoard = function (ship) {
     return gameService.shipOnBoard(ship);
   };
@@ -340,8 +352,9 @@ $scope.dropped = function(dragEl, dropEls) {
     };
 
 $scope.attack = function ($event) {
+  //ATTACK ENEMY BOARD
   var cellId = $event.currentTarget.id;
-  if ($scope.game.p2Board[cellId].boat) {
+  if ($scope.game.p2Board[cellId].boat && $scope.game.p2Board[cellId].hit === false) {
     var boat = $scope.game.p2Board[cellId].boat;
     $scope.game.p2Board[cellId].hit = true;
     $scope.game.p2Ships[boat].hits++;
@@ -351,6 +364,22 @@ $scope.attack = function ($event) {
     $scope.game.$save();
   } else {
     $scope.game.p2Board[cellId].miss = true;
+    $scope.game.$save();
+  }
+
+  //CPU ATTACK BACK
+  var cellIds = gameService.getCellIds();
+  var target = cellIds[gameService.randBetween(0, cellIds.length-1)];
+  if ($scope.game.p1Board[target].boat && $scope.game.p1Board[target].hit === false) {
+    var attackBoat = $scope.game.p1Board[target].boat;
+    $scope.game.p1Board[target].hit = true;
+    $scope.game.p1Ships[attackBoat].hits++;
+    if ($scope.game.p1Ships[attackBoat].hits == $scope.game.p1Ships[attackBoat].size) {
+      $scope.game.p1Ships[attackBoat].sunk = true;
+    }
+    $scope.game.$save();
+  } else {
+    $scope.game.p1Board[target].miss = true;
     $scope.game.$save();
   }
 };
