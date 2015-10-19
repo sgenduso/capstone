@@ -342,6 +342,7 @@ $scope.rotateToHor = function (e) {
 };
 
 //DO ALL THE THINGS!
+
 $scope.dropped = function(dragEl, dropEls) {
       //set drag equal to ship info, drop equal to cells ship is being dropped into
       var drag = angular.element(dragEl)[0];
@@ -364,6 +365,7 @@ $scope.dropped = function(dragEl, dropEls) {
       }
     };
 
+
 $scope.attack = function ($event) {
   //ATTACK ENEMY BOARD
   var cellId = $event.currentTarget.id;
@@ -381,8 +383,10 @@ $scope.attack = function ($event) {
   }
 
   //CPU ATTACK BACK
-  var cellIds = gameService.getCellIds();
-  var target = cellIds[gameService.randBetween(0, cellIds.length-1)];
+  var targetCells = gameService.getTargetCells();
+  var target = targetCells[gameService.randBetween(0, targetCells.length-1)];
+  console.log(targetCells);
+  console.log(target);
   if ($scope.game.p1Board[target].boat && $scope.game.p1Board[target].hit === false) {
     var attackBoat = $scope.game.p1Board[target].boat;
     $scope.game.p1Board[target].hit = true;
@@ -555,12 +559,15 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     };
 
 
-    var getCellIds = function () {
-      var cellIds = [];
-      for (var key in this.game.p1Board){
-        cellIds.push(key);
-      }
-      return cellIds;
+
+    var getTargetCells = function () {
+      var targetCells = [];
+        for (var key in this.game.p1Board){
+          if (this.game.p1Board[key].hit === false && this.game.p1Board[key].miss === false) {
+            targetCells.push(key);
+          }
+        }
+        return targetCells;
     };
 
     var getEnemyCellIds = function () {
@@ -598,7 +605,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       p1CellMiss: p1CellMiss,
       p1ShipSunk: p1ShipSunk,
       shipOnBoard: shipOnBoard,
-      getCellIds: getCellIds,
+      getTargetCells: getTargetCells,
       getEnemyCellIds: getEnemyCellIds,
       roomOnBoard: roomOnBoard,
       randBetween: randBetween,

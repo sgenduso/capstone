@@ -329,6 +329,7 @@ $scope.rotateToHor = function (e) {
 };
 
 //DO ALL THE THINGS!
+
 $scope.dropped = function(dragEl, dropEls) {
       //set drag equal to ship info, drop equal to cells ship is being dropped into
       var drag = angular.element(dragEl)[0];
@@ -351,6 +352,7 @@ $scope.dropped = function(dragEl, dropEls) {
       }
     };
 
+
 $scope.attack = function ($event) {
   //ATTACK ENEMY BOARD
   var cellId = $event.currentTarget.id;
@@ -368,8 +370,10 @@ $scope.attack = function ($event) {
   }
 
   //CPU ATTACK BACK
-  var cellIds = gameService.getCellIds();
-  var target = cellIds[gameService.randBetween(0, cellIds.length-1)];
+  var targetCells = gameService.getTargetCells();
+  var target = targetCells[gameService.randBetween(0, targetCells.length-1)];
+  console.log(targetCells);
+  console.log(target);
   if ($scope.game.p1Board[target].boat && $scope.game.p1Board[target].hit === false) {
     var attackBoat = $scope.game.p1Board[target].boat;
     $scope.game.p1Board[target].hit = true;

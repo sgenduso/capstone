@@ -154,12 +154,15 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
     };
 
 
-    var getCellIds = function () {
-      var cellIds = [];
-      for (var key in this.game.p1Board){
-        cellIds.push(key);
-      }
-      return cellIds;
+
+    var getTargetCells = function () {
+      var targetCells = [];
+        for (var key in this.game.p1Board){
+          if (this.game.p1Board[key].hit === false && this.game.p1Board[key].miss === false) {
+            targetCells.push(key);
+          }
+        }
+        return targetCells;
     };
 
     var getEnemyCellIds = function () {
@@ -197,7 +200,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       p1CellMiss: p1CellMiss,
       p1ShipSunk: p1ShipSunk,
       shipOnBoard: shipOnBoard,
-      getCellIds: getCellIds,
+      getTargetCells: getTargetCells,
       getEnemyCellIds: getEnemyCellIds,
       roomOnBoard: roomOnBoard,
       randBetween: randBetween,
