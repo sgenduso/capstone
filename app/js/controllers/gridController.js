@@ -365,6 +365,7 @@ $scope.dropped = function(dragEl, dropEls) {
     };
 
 //THINGS THAT HAPPEN WHEN USER CLICKS ENEMY BOARD
+var nextTarget;
 $scope.attack = function ($event) {
   //ATTACK ENEMY BOARD
   var cellId = $event.currentTarget.id;
@@ -377,6 +378,10 @@ $scope.attack = function ($event) {
       if ($scope.game.p2Ships[boat].hits == $scope.game.p2Ships[boat].size) {
         $scope.game.p2Ships[boat].sunk = true;
         $scope.game.p2Board[cellId].sunk = true;
+        if (gameService.p1Won()) {
+          alert('YOU WON!');
+          $scope.reset();
+        }
       }
       $scope.game.$save();
     } else {
@@ -394,6 +399,10 @@ $scope.attack = function ($event) {
       if ($scope.game.p1Ships[attackBoat].hits == $scope.game.p1Ships[attackBoat].size) {
         $scope.game.p1Ships[attackBoat].sunk = true;
         $scope.game.p1Board[target].sunk = true;
+        if (gameService.p2Won()) {
+          alert('DOH! YOU LOST \:\(');
+          $scope.reset();
+        }
       }
       $scope.game.$save();
     } else {

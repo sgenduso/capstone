@@ -378,6 +378,7 @@ $scope.dropped = function(dragEl, dropEls) {
     };
 
 //THINGS THAT HAPPEN WHEN USER CLICKS ENEMY BOARD
+var nextTarget;
 $scope.attack = function ($event) {
   //ATTACK ENEMY BOARD
   var cellId = $event.currentTarget.id;
@@ -390,6 +391,10 @@ $scope.attack = function ($event) {
       if ($scope.game.p2Ships[boat].hits == $scope.game.p2Ships[boat].size) {
         $scope.game.p2Ships[boat].sunk = true;
         $scope.game.p2Board[cellId].sunk = true;
+        if (gameService.p1Won()) {
+          alert('YOU WON!');
+          $scope.reset();
+        }
       }
       $scope.game.$save();
     } else {
@@ -407,6 +412,10 @@ $scope.attack = function ($event) {
       if ($scope.game.p1Ships[attackBoat].hits == $scope.game.p1Ships[attackBoat].size) {
         $scope.game.p1Ships[attackBoat].sunk = true;
         $scope.game.p1Board[target].sunk = true;
+        if (gameService.p2Won()) {
+          alert('DOH! YOU LOST \:\(');
+          $scope.reset();
+        }
       }
       $scope.game.$save();
     } else {
@@ -476,7 +485,6 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
     //when trying to drop or rotate ship, check if those spaces are free
     var allSpacesFree = function (destCells) {
-      console.log(destCells);
       for (var i = 0; i < destCells.length; i++) {
         if (this.game.p1Board[destCells[i].id].boat) {
           return false;
@@ -547,6 +555,32 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       if (ship) {
         return this.game.p1Ships[ship].sunk;
       }
+    };
+
+    //check if player 1 won
+    var p1Won = function () {
+      console.log('checking if player 1 won');
+      for(var ship in this.game.p2Ships){
+        console.log(this.game.p2Ships[ship]);
+        if (this.game.p2Ships[ship].sunk === false) {
+          return false;
+        }
+      }
+      console.log('player 1 wins');
+      return true;
+    };
+
+    //check if player 2 won
+    var p2Won = function () {
+      console.log('checking if player 2 won');
+      for(var ship in this.game.p1Ships){
+        console.log(this.game.p1Ships[ship]);
+        if (this.game.p1Ships[ship].sunk === false) {
+          return false;
+        }
+      }
+      console.log('player 2 wins');
+      return true;
     };
 
     //before dropping or placing a ship, check whether it would go off the board
@@ -629,6 +663,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       p1CellHit: p1CellHit,
       p1CellMiss: p1CellMiss,
       p1ShipSunk: p1ShipSunk,
+      p1Won: p1Won,
+      p2Won: p2Won,
       shipOnBoard: shipOnBoard,
       getTargetCells: getTargetCells,
       getEnemyCellIds: getEnemyCellIds,
