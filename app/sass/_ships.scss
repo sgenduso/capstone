@@ -93,3 +93,9 @@
 .sunk{
   background-color: #2d2d2d !important;
 }
+
+.ship-sunk {
+  z-index: 2;
+  color: #cc0000;
+  margin-top: 15px !important;
+}

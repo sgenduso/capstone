@@ -1,4 +1,9 @@
 @charset "UTF-8";
+@import url("https://fonts.googleapis.com/css?family=Trade+Winds");
+@import url("https://fonts.googleapis.com/css?family=Black+Ops+One");
+html, body {
+  font-family: "Black Ops One" !important; }
+
 /*!
  * Bootstrap v3.3.5 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.
@@ -8079,6 +8084,17 @@ button.close {
 .fa-fonticons:before {
   content: ""; }
 
+html, body {
+  height: 100% !important; }
+
+body {
+  background-size: cover; }
+
+.main-header {
+  margin-bottom: 3%;
+  width: 100%;
+  text-align: center; }
+
 .board-cell {
   border: 2px solid black;
   position: relative;
@@ -8090,7 +8106,7 @@ button.close {
   text-align: center;
   vertical-align: middle; }
   .board-cell:hover {
-    cursor: pointer; }
+    background-color: yellow; }
 
 .content {
   position: absolute;
@@ -8117,6 +8133,9 @@ button.close {
 
 #enemy-fleet {
   text-align: center; }
+
+#enemy-board .board-cell:hover {
+  cursor: url("../img/target.png") 10 10, auto; }
 
 .fleets {
   z-index: 1; }
@@ -8189,3 +8208,8 @@ button.close {
 
 .sunk {
   background-color: #2d2d2d !important; }
+
+.ship-sunk {
+  z-index: 2;
+  color: #cc0000;
+  margin-top: 15px !important; }

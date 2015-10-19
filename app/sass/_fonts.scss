@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Trade+Winds');
+@import url('https://fonts.googleapis.com/css?family=Black+Ops+One');
+
+$pirateFont: 'Trade Winds';
+$blackOpsFont: 'Black Ops One';
+
+html, body {
+  font-family: $blackOpsFont !important;
+}

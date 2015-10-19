@@ -14,10 +14,11 @@
    overflow:hidden;
    text-align:center;
    vertical-align:middle;
+   //
+  &:hover{
+    background-color: yellow;
+  }
 
-   &:hover{
-     cursor: pointer;
-   }
 
 }
 
@@ -60,4 +61,11 @@
 
 #enemy-fleet{
   text-align: center;
+}
+
+#enemy-board .board-cell{
+   &:hover {
+    //  cursor: pointer;
+     cursor: url('../img/target.png') 10 10, auto;
+   }
 }

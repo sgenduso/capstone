@@ -1,28 +1,33 @@
 //your ships -- draggable onto your board
 #fleets.col-md-3
   .row#your-fleet
-    h4 Your Fleet - drag to place on board
+    h4 drag to place ships on board
     table.table.fleet
       tr.fleet.carrier
         td Carrier
         td
-          img.ship.carrier#carrier(wb-draggable='true' src='../img/ships/carrier.png' data-size="5" data-ship='carrier' ng-class="{'ship-placed': shipOnBoard('carrier')}")
+          img.ship.carrier#carrier(wb-draggable='true' src='../img/ships/carrier.png' data-size="5" data-ship='carrier' ng-class="{'ship-placed': shipOnBoard('carrier')}" ng-hide='p1ShipSunk("carrier")')
+          span.ship-sunk(ng-show='p1ShipSunk("carrier")') SUNK
       tr.fleet.battleship
         td.col-md-4 Battleship
         td.col-md-6
-          img.ship.battleship#battleship(wb-draggable='true' src='../img/ships/battleship.png' data-size="4" data-ship='battleship' ng-class="{'ship-placed': shipOnBoard('battleship')}")
+          img.ship.battleship#battleship(wb-draggable='true' src='../img/ships/battleship.png' data-size="4" data-ship='battleship' ng-class="{'ship-placed': shipOnBoard('battleship')}" ng-hide='p1ShipSunk("battleship")')
+          span.ship-sunk(ng-show='p1ShipSunk("battleship")') SUNK
       tr.fleet.destroyer
         td.col-md-4 Destroyer
         td.col-md-6
-          img.ship.destroyer#destroyer(wb-draggable='true' src='../img/ships/destroyer.png' data-size="4" data-ship='destroyer' ng-class="{'ship-placed': shipOnBoard('destroyer')}")
+          img.ship.destroyer#destroyer(wb-draggable='true' src='../img/ships/destroyer.png' data-size="4" data-ship='destroyer' ng-class="{'ship-placed': shipOnBoard('destroyer')}" ng-hide='p1ShipSunk("destroyer")')
+          span.ship-sunk(ng-show='p1ShipSunk("destroyer")') SUNK
       tr.fleet.submarine
         td.col-md-4 Submarine
         td.col-md-4
-          img.ship.submarine#submarine(wb-draggable='true' src='../img/ships/submarine.png' data-size="3" data-ship='submarine' ng-class="{'ship-placed': shipOnBoard('submarine')}")
+          img.ship.submarine#submarine(wb-draggable='true' src='../img/ships/submarine.png' data-size="3" data-ship='submarine' ng-class="{'ship-placed': shipOnBoard('submarine')}" ng-hide='p1ShipSunk("submarine")')
+          span.ship-sunk(ng-show='p1ShipSunk("submarine")') SUNK
       tr.fleet.patrol
         td.col-md-4 Patrol
         td.col-md-2
-          img.ship.patrol#patrol(wb-draggable='true' src='../img/ships/patrol.png' data-size="2" data-ship='patrol' ng-class="{'ship-placed': shipOnBoard('patrol')}")
+          img.ship.patrol#patrol(wb-draggable='true' src='../img/ships/patrol.png' data-size="2" data-ship='patrol' ng-class="{'ship-placed': shipOnBoard('patrol')}" ng-hide='p1ShipSunk("patrol")')
+          span.ship-sunk(ng-show='p1ShipSunk("patrol")') SUNK
   .row
     a.btn.btn-default(ng-click='reset()') Reset Game
     //- a.btn.btn-default(ng-click='popEnemyBoard()') Populate Enemy Board
@@ -32,7 +37,7 @@
 
 //your board -- shows where you've placed your ships and where enemy has hit and missed
 #player1-board.col-md-4
-  h4 Your Board 
+  h4 YOUR FLEET 
   table.board-table
     tr.board-row(ng-repeat='row in boardRows track by $index')
       td.board-cell.snap-to-me(
@@ -44,11 +49,11 @@
         data-y='{{$parent.$index + 1}}' 
         data-boat='{{game.p1Board[row+col]["boat"]}}')
         .content.child-element(ng-class="{'boat-on-cell': p1CellHasBoat('{{row}}{{col}}'), 'hit': p1CellHit('{{row}}{{col}}'), 'sunk': p1ShipSunk(game.p1Board[row+col]['boat'])}" ng-show="p1CellHasBoat('{{row}}{{col}}')") {{game.p1Board[row+col]["boat"][0] | uppercase}}
-        .content.child-element(ng-class="{'boat-on-cell': p1CellHasBoat('{{row}}{{col}}'),  'miss': p1CellMiss('{{row}}{{col}}')}" ng-hide="p1CellHasBoat('{{row}}{{col}}')") {{row}}{{col}}
+        .content.child-element(ng-class="{'boat-on-cell': p1CellHasBoat('{{row}}{{col}}'),  'miss': p1CellMiss('{{row}}{{col}}')}" ng-hide="p1CellHasBoat('{{row}}{{col}}')")
         
 //enemy board -- shows which ships enemy has left and where you've hit and missed
 #enemy-board.col-md-4
-  h4 Enemy Board
+  h4 ENEMY FLEET
   table.board-table
     tr.board-row(ng-repeat='row in boardRows track by $index')
       td.board-cell.snap-to-me(
@@ -58,7 +63,7 @@
         data-y='{{$parent.$index + 1}}',
         data-boat='{{game.p2Board["p2-"+row+col]["boat"]}}'
         ng-click='attack($event)')
-        .content.child-element(ng-class="{'hit': p2CellHit('p2-{{row}}{{col}}'), 'miss': p2CellMiss('p2-{{row}}{{col}}'), 'sunk': p2ShipSunk(game.p2Board['p2-'+row+col]['boat'])}") {{row}}{{col}}
+        .content.child-element(ng-class="{'hit': p2CellHit('p2-{{row}}{{col}}'), 'miss': p2CellMiss('p2-{{row}}{{col}}'), 'sunk': p2ShipSunk(game.p2Board['p2-'+row+col]['boat'])}")
         
   //- {{boardRows}}
   //- {{boardCols}}
@@ -78,13 +83,18 @@
         td 
           h5 Enemy Fleet
         td
-          img.ship.carrier(src='../img/ships/carrier.png' data-size="5" data-ship='carrier')
+          img.ship.carrier(src='../img/ships/carrier.png' data-size="5" data-ship='carrier' ng-hide='p2ShipSunk("carrier")')
+          span.ship-sunk(ng-show='p2ShipSunk("carrier")') SUNK
         td
-          img.ship.battleship(src='../img/ships/battleship.png' data-size="4" data-ship='battleship')
+          img.ship.battleship(src='../img/ships/battleship.png' data-size="4" data-ship='battleship' ng-hide='p2ShipSunk("battleship")')
+          span.ship-sunk(ng-show='p2ShipSunk("battleship")') SUNK
       tr.fleet.battleship
         td
-          img.ship.destroyer(src='../img/ships/destroyer.png' data-size="4" data-ship='destroyer')
+          img.ship.destroyer(src='../img/ships/destroyer.png' data-size="4" data-ship='destroyer' ng-hide='p2ShipSunk("destroyer")')
+          span.ship-sunk(ng-show='p2ShipSunk("destroyer")') SUNK
         td
-          img.ship.submarine(src='../img/ships/submarine.png' data-size="3" data-ship='submarine')
+          img.ship.submarine(src='../img/ships/submarine.png' data-size="3" data-ship='submarine' ng-hide='p2ShipSunk("submarine")')
+          span.ship-sunk(ng-show='p2ShipSunk("submarine")') SUNK
         td
-          img.ship.patrol(src='../img/ships/patrol.png' data-size="2" data-ship='patrol')
+          img.ship.patrol(src='../img/ships/patrol.png' data-size="2" data-ship='patrol' ng-hide='p2ShipSunk("patrol")')
+          span.ship-sunk(ng-show='p2ShipSunk("patrol")') SUNK

@@ -130,27 +130,21 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
 
     //check if player 1 won
     var p1Won = function () {
-      console.log('checking if player 1 won');
       for(var ship in this.game.p2Ships){
-        console.log(this.game.p2Ships[ship]);
         if (this.game.p2Ships[ship].sunk === false) {
           return false;
         }
       }
-      console.log('player 1 wins');
       return true;
     };
 
     //check if player 2 won
     var p2Won = function () {
-      console.log('checking if player 2 won');
       for(var ship in this.game.p1Ships){
-        console.log(this.game.p1Ships[ship]);
         if (this.game.p1Ships[ship].sunk === false) {
           return false;
         }
       }
-      console.log('player 2 wins');
       return true;
     };
 
