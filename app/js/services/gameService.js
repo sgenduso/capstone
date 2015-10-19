@@ -76,6 +76,15 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       return this.game.p1Ships === undefined ? false : this.game.p1Ships[ship].placed;
     };
 
+    var allShipsPlaced = function () {
+      for (var ship in this.game.p1Ships){
+        if (this.game.p1Ships[ship].placed === false) {
+          return false;
+        }
+      }
+      return true;
+    };
+
     //check the specified cell on p1 board for a boat
     var p1CellHasBoat = function (cellId) {
         return this.game.p1Board[cellId].boat !== false;
@@ -191,6 +200,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       currentShip: currentShip,
       previousShip: previousShip,
       allSpacesFree: allSpacesFree,
+      allShipsPlaced: allShipsPlaced,
       p1CellHasBoat: p1CellHasBoat,
       p2CellHasBoat: p2CellHasBoat,
       p2CellHit: p2CellHit,

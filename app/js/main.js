@@ -382,7 +382,7 @@ $scope.attack = function ($event) {
   //ATTACK ENEMY BOARD
   var cellId = $event.currentTarget.id;
   //only do stuff if the cell hasn't already been targeted
-  if ($scope.game.p2Board[cellId].hit === false && $scope.game.p2Board[cellId].miss === false) {
+  if ($scope.game.p2Board[cellId].hit === false && $scope.game.p2Board[cellId].miss === false && gameService.allShipsPlaced()) {
     if ($scope.game.p2Board[cellId].boat) {
       var boat = $scope.game.p2Board[cellId].boat;
       $scope.game.p2Board[cellId].hit = true;
@@ -494,6 +494,15 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       //   return false;
       // }
       return this.game.p1Ships === undefined ? false : this.game.p1Ships[ship].placed;
+    };
+
+    var allShipsPlaced = function () {
+      for (var ship in this.game.p1Ships){
+        if (this.game.p1Ships[ship].placed === false) {
+          return false;
+        }
+      }
+      return true;
     };
 
     //check the specified cell on p1 board for a boat
@@ -611,6 +620,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       currentShip: currentShip,
       previousShip: previousShip,
       allSpacesFree: allSpacesFree,
+      allShipsPlaced: allShipsPlaced,
       p1CellHasBoat: p1CellHasBoat,
       p2CellHasBoat: p2CellHasBoat,
       p2CellHit: p2CellHit,
