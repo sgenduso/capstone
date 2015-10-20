@@ -395,16 +395,63 @@ $scope.attack = function ($event) {
     return $('td[data-x=' + x + '][data-y=' + y + ']').attr('id');
   };
 
+  //get all cells in row
+  var cellsInRowLeftOrRight = function (x, y, leftOrRight) {
+    var ids = [];
+    var row = $('#player1-board [data-y="' + y + '"]');
+
+      $.each(row,function (index, cell) {
+        var thisXVal = $(this).attr('data-x');
+        if (leftOrRight === 'left') {
+          if (thisXVal < x) {
+            ids.push($(this).attr('id'));
+          }
+        } else if (leftOrRight === 'right') {
+          if (thisXVal > x) {
+            ids.push($(this).attr('id'));
+          }
+        }
+      });
+
+    return ids;
+  };
+
+  //get all cells in column
+  var cellsInColAboveOrBelow = function (x, y, aboveOrBelow) {
+    var ids = [];
+    var col = $('#player1-board [data-x="' + x + '"]');
+
+      $.each(col,function (index, cell) {
+        var thisYVal = $(this).attr('data-y');
+        if (aboveOrBelow === 'above') {
+          if (thisYVal < y) {
+            ids.push($(this).attr('id'));
+          }
+        } else if (aboveOrBelow === 'below') {
+          if (thisYVal > y) {
+            ids.push($(this).attr('id'));
+          }
+        }
+      });
+
+    return ids;
+  };
+
+
   var directions = ['up', 'down', 'left', 'right'];
 
   var chooseTarget = function (possibleTargets) {
-    for (var i = 0; i < possibleTargets.length; i++) {
-      console.log(possibleTargets[i].cell);
-      console.log($scope.game.p1Board[possibleTargets[i].cell]);
-      if (possibleTargets[i].cell && $scope.game.p1Board[possibleTargets[i].cell].hit === false && $scope.game.p1Board[possibleTargets[i].cell].miss === false) {
-        return possibleTargets[i];
-      }
-    }
+    possibleTargets = possibleTargets.filter(function (e) {
+      return (e.cell && $scope.game.p1Board[e.cell].hit === false && $scope.game.p1Board[e.cell].miss === false);
+    });
+    return possibleTargets[gameService.randBetween(0, possibleTargets.length-1)];
+    // for (var i = 0; i < possibleTargets.length; i++) {
+    //   console.log(possibleTargets[i].cell);
+    //   console.log($scope.game.p1Board[possibleTargets[i].cell]);
+    //   if (possibleTargets[i].cell && $scope.game.p1Board[possibleTargets[i].cell].hit === false && $scope.game.p1Board[possibleTargets[i].cell].miss === false) {
+    //     return possibleTargets[i];
+    //   }
+    // }
   };
 
   //ATTACK ENEMY BOARD
@@ -446,12 +493,28 @@ $scope.attack = function ($event) {
       var targetCells = gameService.getTargetCells();
       var target;
       //if there is no target, shoot at random, otherwise shoot at target
-      if (nextTarget === null || nextTarget === undefined || $scope.game.p1Board[nextTarget.cell].hit === true || $scope.game.p1Board[nextTarget.cell].miss === true){
-        target = targetCells[gameService.randBetween(0, targetCells.length-1)];
-      } else {
+      if (nextTarget) {
         target = nextTarget.cell;
+      } else {
+        target = targetCells[gameService.randBetween(0, targetCells.length-1)];
       }
       console.log('target for this attack: ', target);
+      console.log('obj on board: ', $scope.game.p1Board[target]);
+      var thisX = $scope.game.p1Board[target].x;
+      var thisY = $scope.game.p1Board[target].y;
+      var nextCellUp = {cell: getCellIdByCoords(thisX, (Number(thisY)-1)), direction: 'up', previous: target};
+      var nextCellDown = {cell: getCellIdByCoords(thisX, (Number(thisY)+1)), direction: 'down', previous: target};
+      var nextCellLeft = {cell: getCellIdByCoords((Number(thisX)-1), thisY), direction: 'left', previous: target};
+      var nextCellRight = {cell: getCellIdByCoords((Number(thisX)+1), thisY), direction: 'right', previous: target};
+      var possibleTargets = [nextCellUp, nextCellDown, nextCellLeft, nextCellRight]
+        .filter(function (e) {
+          return ($scope.game.p1Board[e.cell] && $scope.game.p1Board[e.cell].hit === false && $scope.game.p1Board[e.cell].miss === false);
+        });
+      console.log('cells above: ', cellsInColAboveOrBelow(thisX, thisY, 'above'));
+      console.log('cells below: ', cellsInColAboveOrBelow(thisX, thisY, 'below'));
+      console.log('cells to the left: ', cellsInRowLeftOrRight(thisX, thisY, 'left'));
+      console.log('cells to the right: ', cellsInRowLeftOrRight(thisX, thisY, 'right'));
+      console.log('nextTarget before any attack: ', nextTarget);
       //STUFF THAT HAPPENS WHEN HIT
       if ($scope.game.p1Board[target].boat) {
         var attackBoat = $scope.game.p1Board[target].boat;
@@ -459,27 +522,35 @@ $scope.attack = function ($event) {
         $scope.game.p1Ships[attackBoat].hits++;
 
         // CHOOSE NEXT TARGET
-        var thisX = $scope.game.p1Board[target].x;
-        var thisY = $scope.game.p1Board[target].y;
-        console.log('this attack\'s x val: ', thisX);
-        console.log('this attack\'s y val: ', thisY);
 
-        var nextCellUp = {cell: getCellIdByCoords(thisX, (Number(thisY)-1)), direction: 'up'};
-        var nextCellDown = {cell: getCellIdByCoords(thisX, (Number(thisY)+1)), direction: 'down'};
-        var nextCellLeft = {cell: getCellIdByCoords((Number(thisX)-1), thisY), direction: 'left'};
-        var nextCellRight = {cell: getCellIdByCoords((Number(thisX)+1), thisY), direction: 'right'};
-
-        var possibleTargets = [nextCellUp, nextCellDown, nextCellLeft, nextCellRight];
 
         console.log('possible targets: ', possibleTargets);
-        nextTarget = chooseTarget(possibleTargets);
-        var possibleIfThisMisses = possibleTargets.filter(function (e) {
-          return e !== nextTarget;
-        });
-        console.log('possible targets if this misses: ', possibleIfThisMisses);
-        nextIfThisMisses = chooseTarget(possibleIfThisMisses);
-        console.log('next target: ', nextTarget);
-        console.log('next if target misses: ', nextIfThisMisses);
+
+        if (nextTarget) {
+        console.log('direction to get to current target: ', nextTarget.direction);
+          if (nextTarget.direction === 'up') {
+            nextTarget = nextCellUp;
+            nextIfThisMisses = nextCellDown;
+          } else if (nextTarget.direction === 'down') {
+            nextTarget = nextCellDown;
+            nextIfThisMisses = nextCellUp;
+          } else if (nextTarget.direction === 'left') {
+            nextTarget = nextCellLeft;
+            nextIfThisMisses = nextCellRight;
+          } else if (nextTarget.direction === 'right') {
+            nextTarget = nextCellRight;
+            nextIfThisMisses = nextCellLeft;
+          }
+        } else {
+          nextTarget = chooseTarget(possibleTargets);
+          var possibleIfThisMisses = possibleTargets.filter(function (e) {
+            return e !== nextTarget;
+          });
+          nextIfThisMisses = chooseTarget(possibleIfThisMisses);
+          console.log('possible targets if this misses: ', possibleIfThisMisses);
+        }
+          console.log('next target: ', nextTarget);
+          console.log('next if target misses: ', nextIfThisMisses);
 
         // LOG MOVE IN MESSAGES
         $scope.messages.push('Your ' + attackBoat + ' was hit!');
