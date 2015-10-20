@@ -380,6 +380,7 @@ $scope.dropped = function(dragEl, dropEls) {
 //THINGS THAT HAPPEN WHEN USER CLICKS ENEMY BOARD
 var nextTarget;
 var nextIfThisMisses;
+var previousPossibilities;
 $scope.attack = function ($event) {
 
   $scope.messages = $scope.messages || [];
@@ -413,7 +414,9 @@ $scope.attack = function ($event) {
         }
       });
 
-    return ids;
+    return ids.filter(function (e) {
+      return ($scope.game.p1Board[e].hit === false && $scope.game.p1Board[e].miss === false);
+    });
   };
 
   //get all cells in column
@@ -434,7 +437,9 @@ $scope.attack = function ($event) {
         }
       });
 
-    return ids;
+    return ids.filter(function (e) {
+      return ($scope.game.p1Board[e].hit === false && $scope.game.p1Board[e].miss === false);
+    });
   };
 
 
@@ -491,7 +496,6 @@ $scope.attack = function ($event) {
       $scope.reset();
     } else {
       var targetCells = gameService.getTargetCells();
-      console.log('untouched targets: ', targetCells);
       var target;
       //if there is no target, shoot at random, otherwise shoot at target
       if (nextTarget) {
@@ -512,6 +516,7 @@ $scope.attack = function ($event) {
           return ($scope.game.p1Board[e.cell] && $scope.game.p1Board[e.cell].hit === false && $scope.game.p1Board[e.cell].miss === false);
         });
 
+
       //STUFF THAT HAPPENS WHEN HIT
       if ($scope.game.p1Board[target].boat) {
         var attackBoat = $scope.game.p1Board[target].boat;
@@ -519,7 +524,7 @@ $scope.attack = function ($event) {
         $scope.game.p1Ships[attackBoat].hits++;
 
         // CHOOSE NEXT TARGET
-
+        previousPossibilities = possibleTargets;
 
         console.log('possible targets: ', possibleTargets);
 
@@ -598,14 +603,26 @@ $scope.attack = function ($event) {
         if (nextIfThisMisses === null || nextIfThisMisses === undefined) {
           nextTarget = null;
         } else {
+          // var prevX = $scope.game.p1Board[target.previous].x;
+          // var prevY = $scope.game.p1Board[target.previous].y;
+          // var nextCellUp = {cell: getCellIdByCoords(prevX, (Number(prevY)-1)), direction: 'up', previous: target.previous};
+          // var nextCellDown = {cell: getCellIdByCoords(prevX, (Number(prevY)+1)), direction: 'down', previous: target.previous};
+          // var nextCellLeft = {cell: getCellIdByCoords((Number(prevX)-1), prevY), direction: 'left', previous: target.previous};
+          // var nextCellRight = {cell: getCellIdByCoords((Number(prevX)+1), prevY), direction: 'right', previous: target.previous};
+          // var possibleTargets = [nextCellUp, nextCellDown, nextCellLeft, nextCellRight]
+          //   .filter(function (e) {
+          //     return ($scope.game.p1Board[e.cell] && $scope.game.p1Board[e.cell].hit === false && $scope.game.p1Board[e.cell].miss === false);
+          //   });
           nextTarget = nextIfThisMisses;
-          var possibleIfNextMisses = possibleTargets.filter(function (e) {
-            return e !== nextTarget;
+          var possibleIfNextMisses = previousPossibilities.filter(function (e) {
+            return e !== target;
           });
+          console.log('next target after this miss: ', nextTarget);
+          console.log('possible targets: ', possibleTargets);
+          console.log('possible if next misses: ', possibleIfNextMisses);
           nextIfThisMisses = chooseTarget(possibleIfNextMisses);
+          console.log('next if that misses: ', nextIfThisMisses);
         }
-        console.log('next target after this miss: ', nextTarget);
-        console.log('next if that misses: ', nextIfThisMisses);
       }
     }
   }
