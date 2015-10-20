@@ -404,7 +404,7 @@ $scope.attack = function ($event) {
         var thisXVal = $(this).attr('data-x');
         if (leftOrRight === 'left') {
           if (thisXVal < x) {
-            ids.push($(this).attr('id'));
+            ids.unshift($(this).attr('id'));
           }
         } else if (leftOrRight === 'right') {
           if (thisXVal > x) {
@@ -425,7 +425,7 @@ $scope.attack = function ($event) {
         var thisYVal = $(this).attr('data-y');
         if (aboveOrBelow === 'above') {
           if (thisYVal < y) {
-            ids.push($(this).attr('id'));
+            ids.unshift($(this).attr('id'));
           }
         } else if (aboveOrBelow === 'below') {
           if (thisYVal > y) {
@@ -491,6 +491,7 @@ $scope.attack = function ($event) {
       $scope.reset();
     } else {
       var targetCells = gameService.getTargetCells();
+      console.log('untouched targets: ', targetCells);
       var target;
       //if there is no target, shoot at random, otherwise shoot at target
       if (nextTarget) {
@@ -498,8 +499,8 @@ $scope.attack = function ($event) {
       } else {
         target = targetCells[gameService.randBetween(0, targetCells.length-1)];
       }
+      console.log('nextTarget before any attack: ', nextTarget);
       console.log('target for this attack: ', target);
-      console.log('obj on board: ', $scope.game.p1Board[target]);
       var thisX = $scope.game.p1Board[target].x;
       var thisY = $scope.game.p1Board[target].y;
       var nextCellUp = {cell: getCellIdByCoords(thisX, (Number(thisY)-1)), direction: 'up', previous: target};
@@ -510,11 +511,7 @@ $scope.attack = function ($event) {
         .filter(function (e) {
           return ($scope.game.p1Board[e.cell] && $scope.game.p1Board[e.cell].hit === false && $scope.game.p1Board[e.cell].miss === false);
         });
-      console.log('cells above: ', cellsInColAboveOrBelow(thisX, thisY, 'above'));
-      console.log('cells below: ', cellsInColAboveOrBelow(thisX, thisY, 'below'));
-      console.log('cells to the left: ', cellsInRowLeftOrRight(thisX, thisY, 'left'));
-      console.log('cells to the right: ', cellsInRowLeftOrRight(thisX, thisY, 'right'));
-      console.log('nextTarget before any attack: ', nextTarget);
+
       //STUFF THAT HAPPENS WHEN HIT
       if ($scope.game.p1Board[target].boat) {
         var attackBoat = $scope.game.p1Board[target].boat;
@@ -526,28 +523,47 @@ $scope.attack = function ($event) {
 
         console.log('possible targets: ', possibleTargets);
 
+        //if there was a planned target for this attack and it hit the board
         if (nextTarget) {
         console.log('direction to get to current target: ', nextTarget.direction);
           if (nextTarget.direction === 'up') {
             nextTarget = nextCellUp;
-            nextIfThisMisses = nextCellDown;
+            nextCellIdIfMiss = cellsInColAboveOrBelow(thisX, thisY, 'below')
+              .filter(function (e) {
+                return ($scope.game.p1Board[e].hit === false);
+              })[0];
+            nextIfThisMisses = {cell: nextCellIdIfMiss, direction: 'down'};
           } else if (nextTarget.direction === 'down') {
             nextTarget = nextCellDown;
-            nextIfThisMisses = nextCellUp;
+            nextCellIdIfMiss = cellsInColAboveOrBelow(thisX, thisY, 'above')
+              .filter(function (e) {
+                return ($scope.game.p1Board[e].hit === false);
+              })[0];
+            nextIfThisMisses = {cell: nextCellIdIfMiss, direction: 'up'};
           } else if (nextTarget.direction === 'left') {
             nextTarget = nextCellLeft;
-            nextIfThisMisses = nextCellRight;
+            nextCellIdIfMiss = cellsInRowLeftOrRight(thisX, thisY, 'right')
+              .filter(function (e) {
+                return ($scope.game.p1Board[e].hit === false);
+              })[0];
+            nextIfThisMisses = {cell: nextCellIdIfMiss, direction: 'right'};
           } else if (nextTarget.direction === 'right') {
             nextTarget = nextCellRight;
-            nextIfThisMisses = nextCellLeft;
+            nextCellIdIfMiss = cellsInRowLeftOrRight(thisX, thisY, 'left')
+              .filter(function (e) {
+                return ($scope.game.p1Board[e].hit === false);
+              })[0];
+            nextIfThisMisses = {cell: nextCellIdIfMiss, direction: 'left'};
           }
-        } else {
+        }
+        //if there was NO planned target for this attack but it still hit the board
+        else {
           nextTarget = chooseTarget(possibleTargets);
+
           var possibleIfThisMisses = possibleTargets.filter(function (e) {
             return e !== nextTarget;
           });
           nextIfThisMisses = chooseTarget(possibleIfThisMisses);
-          console.log('possible targets if this misses: ', possibleIfThisMisses);
         }
           console.log('next target: ', nextTarget);
           console.log('next if target misses: ', nextIfThisMisses);
@@ -555,33 +571,41 @@ $scope.attack = function ($event) {
         // LOG MOVE IN MESSAGES
         $scope.messages.push('Your ' + attackBoat + ' was hit!');
         scrollDown();
+        //if this hit sunk a ship
         if ($scope.game.p1Ships[attackBoat].hits == $scope.game.p1Ships[attackBoat].size) {
           $scope.game.p1Ships[attackBoat].sunk = true;
           $scope.game.p1Board[target].sunk = true;
           $scope.game.$save();
           nextTarget = null;
+          nextIfThisMisses = null;
           $scope.messages.push('Your ' + attackBoat + ' was sunk!');
           scrollDown();
           if (gameService.p2Won()) {
             alert('DOH! YOU LOST \:\(');
             $scope.reset();
           }
-        } else {
-
         }
         $scope.game.$save();
       }
+
       //STUFF THAT HAPPENS WHEN MISSED
       else {
         $scope.game.p1Board[target].miss = true;
         $scope.game.$save();
         $scope.messages.push('Enemy missed.');
         scrollDown();
+        //if there was no planned next target then do nothing, otherwise attack the next target
         if (nextIfThisMisses === null || nextIfThisMisses === undefined) {
           nextTarget = null;
         } else {
           nextTarget = nextIfThisMisses;
+          var possibleIfNextMisses = possibleTargets.filter(function (e) {
+            return e !== nextTarget;
+          });
+          nextIfThisMisses = chooseTarget(possibleIfNextMisses);
         }
+        console.log('next target after this miss: ', nextTarget);
+        console.log('next if that misses: ', nextIfThisMisses);
       }
     }
   }
