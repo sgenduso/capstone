@@ -491,7 +491,7 @@ $scope.attack = function ($event) {
       var targetCells = gameService.getTargetCells();
       var target;
       //if there is no target, shoot at random, otherwise shoot at target
-      if (nextTarget) {
+      if (nextTarget && nextTarget.cell) {
         target = nextTarget.cell;
       } else {
         target = targetCells[gameService.randBetween(0, targetCells.length-1)];

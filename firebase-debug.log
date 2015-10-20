@@ -1,0 +1,18 @@
+[debug] ----------------------------------------------------------------------
+[debug] Command:      node /usr/local/bin/firebase deploy
+[debug] Platform:     darwin
+[debug] Node Version: v0.12.2
+[debug] Time:         Tue Oct 20 2015 14:49:40 GMT-0600 (MDT)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/firebase/incandescent-fire-9342/token?token=XXX 
+[debug] <<< HTTP RESPONSE 200
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/firebase/incandescent-fire-9342/token?token=XXX 
+[debug] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'incandescent-fire-9342'...
+[info] 
+[info] i  deploying hosting
+[info] i  preparing app directory for upload...
+[debug] >>> HTTP REQUEST PUT https://deploy.firebase.com/firebase/incandescent-fire-9342/uploads/-K16-w52mHP_8CWBG3h2?token=XXX&fileCount=1267&message= 
+[debug] <<< HTTP RESPONSE 200
