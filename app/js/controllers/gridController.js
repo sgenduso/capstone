@@ -17,11 +17,14 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', '$
   $scope.ships = gameService.ships;
   $scope.cellIds = [];
   $scope.p2CellIds = [];
+  $scope.message = 'Welcome, new recruit. Position your fleet and begin your attack!';
 
 
 
   $scope.populateBoard = function (size) {
     $scope.game.$loaded().then(function () {
+
+
 
       $scope.p1CellHasBoat = function (cellId) {
           return gameService.p1CellHasBoat(cellId);
@@ -249,7 +252,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', '$
 
 //CLEAR ALL SHIPS, HITS, AND MISSES FROM BOARD
 $scope.reset = function () {
-  $scope.messages = [];
+  $scope.message = 'Welcome, new recruit. Position your fleet and begin your attack!';
   for (var p1Cell in $scope.game.p1Board) {
     $scope.game.p1Board[p1Cell].boat = false;
     $scope.game.p1Board[p1Cell].hit = false;
@@ -454,18 +457,18 @@ $scope.attack = function ($event) {
   //only do stuff if the cell hasn't already been targeted
   if ($scope.game.p2Board[cellId].hit === false && $scope.game.p2Board[cellId].miss === false && gameService.allShipsPlaced()) {
     if ($scope.game.p2Board[cellId].boat) {
-      // $('#bomb').play();
+      // $('#bomb').trigger('play');
       var boat = $scope.game.p2Board[cellId].boat;
       $scope.game.p2Board[cellId].hit = true;
       $scope.game.p2Ships[boat].hits++;
-      $scope.messages.push('You hit an enemy ship!');
+      $scope.message = ('You hit an enemy ship!');
       scrollDown();
 
       if ($scope.game.p2Ships[boat].hits == $scope.game.p2Ships[boat].size) {
         $scope.game.p2Ships[boat].sunk = true;
         $scope.game.p2Board[cellId].sunk = true;
         $scope.game.$save();
-        $scope.messages.push('You sunk the enemy\'s ' + boat + '!');
+        $scope.message = ('You sunk the enemy\'s ' + boat + '!');
         scrollDown();
         if (gameService.p1Won()) {
           alert('YOU WON!');
@@ -474,10 +477,10 @@ $scope.attack = function ($event) {
       }
       $scope.game.$save();
     } else {
-      // $('#splash').play();
+      // $('#splash').trigger('play');
       $scope.game.p2Board[cellId].miss = true;
       $scope.game.$save();
-      $scope.messages.push('You missed.');
+      $scope.message = ('You missed.');
       scrollDown();
     }
 
@@ -509,6 +512,7 @@ $scope.attack = function ($event) {
 
       //STUFF THAT HAPPENS WHEN HIT
       if ($scope.game.p1Board[target].boat) {
+        // $('#bomb').trigger('play');
         var attackBoat = $scope.game.p1Board[target].boat;
         $scope.game.p1Board[target].hit = true;
         $scope.game.p1Ships[attackBoat].hits++;
@@ -564,7 +568,7 @@ $scope.attack = function ($event) {
           console.log('next if target misses: ', nextIfThisMisses);
 
         // LOG MOVE IN MESSAGES
-        $scope.messages.push('Your ' + attackBoat + ' was hit!');
+        $scope.message = ('Your ' + attackBoat + ' was hit!');
         scrollDown();
         //if this hit sunk a ship
         if ($scope.game.p1Ships[attackBoat].hits == $scope.game.p1Ships[attackBoat].size) {
@@ -573,7 +577,7 @@ $scope.attack = function ($event) {
           $scope.game.$save();
           nextTarget = null;
           nextIfThisMisses = null;
-          $scope.messages.push('Your ' + attackBoat + ' was sunk!');
+          $scope.message = ('Your ' + attackBoat + ' was sunk!');
           scrollDown();
           if (gameService.p2Won()) {
             alert('DOH! YOU LOST \:\(');
@@ -585,27 +589,18 @@ $scope.attack = function ($event) {
 
       //STUFF THAT HAPPENS WHEN MISSED
       else {
+        // $('#splash').trigger('play');
         $scope.game.p1Board[target].miss = true;
         $scope.game.$save();
-        $scope.messages.push('Enemy missed.');
+        $scope.message = ('Enemy missed.');
         scrollDown();
         //if there was no planned next target then do nothing, otherwise attack the next target
         if (nextIfThisMisses === null || nextIfThisMisses === undefined) {
           nextTarget = null;
         } else {
-          // var prevX = $scope.game.p1Board[target.previous].x;
-          // var prevY = $scope.game.p1Board[target.previous].y;
-          // var nextCellUp = {cell: getCellIdByCoords(prevX, (Number(prevY)-1)), direction: 'up', previous: target.previous};
-          // var nextCellDown = {cell: getCellIdByCoords(prevX, (Number(prevY)+1)), direction: 'down', previous: target.previous};
-          // var nextCellLeft = {cell: getCellIdByCoords((Number(prevX)-1), prevY), direction: 'left', previous: target.previous};
-          // var nextCellRight = {cell: getCellIdByCoords((Number(prevX)+1), prevY), direction: 'right', previous: target.previous};
-          // var possibleTargets = [nextCellUp, nextCellDown, nextCellLeft, nextCellRight]
-          //   .filter(function (e) {
-          //     return ($scope.game.p1Board[e.cell] && $scope.game.p1Board[e.cell].hit === false && $scope.game.p1Board[e.cell].miss === false);
-          //   });
           nextTarget = nextIfThisMisses;
           var possibleIfNextMisses = previousPossibilities.filter(function (e) {
-            return e !== target;
+            return (e !== target && e !== nextTarget);
           });
           console.log('next target after this miss: ', nextTarget);
           console.log('possible targets: ', possibleTargets);

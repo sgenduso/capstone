@@ -2,6 +2,10 @@
 //   display: block;
 // }
 
+// table{
+//   background-color: $white;
+// }
+
 .board-cell{
   // display: inline-block;
   border: 2px solid black;
@@ -16,7 +20,7 @@
    vertical-align:middle;
    //
   &:hover{
-    background-color: yellow;
+    background-color: #CC6A6A;
   }
 
 
@@ -65,8 +69,10 @@
 
 
 #enemy-fleet{
+  margin: 0 auto;
   margin-top: 15px;
   text-align: center;
+  width: 95%;
 }
 
 #enemy-board .board-cell{
@@ -76,15 +82,62 @@
    }
 }
 
+#enemy-board, #player1-board{
+  -webkit-filter: drop-shadow(3px 3px 10px black) !important;
+
+  > table {
+    background-color: $white;
+  }
+}
+
 #reset{
   width: 100%;
   margin-bottom: 15px;
+  border-radius: 0;
+  -webkit-filter: drop-shadow(3px 3px 10px black) !important;
+
+  &:hover{
+    background-color: #cc0000 !important;
+    border: none;
+    color: $white;
+  }
 }
 
 #messages {
   height: 68px;
-  padding: 10px;
+  padding: 20px;
   margin-bottom: 15px;
-  overflow: scroll;
-  border: 2px solid black;
+  text-align: center;
+  // overflow: scroll;
+  // border: 2px solid black;
+  background: url('../img/metal-plate.jpg');
+  background-size: cover;
+  -webkit-filter: drop-shadow(3px 3px 10px black) !important;
+}
+
+#fleets{
+  padding-left: 10px;
+}
+
+#your-fleet h4 {
+  color: #cc0000;
+}
+
+#player1-board{
+  margin-left: 30px;
+}
+
+#your-fleet, #enemy-fleet{
+  background: url('../img/metal-plate.jpg');
+  background-size: cover;
+  -webkit-filter: drop-shadow(3px 3px 10px black) !important;
+
+  h4{
+    text-align: center;
+    font-size: 1em;
+  }
+}
+
+.table.fleet{
+  border-color: 1px solid darkGrey;
 }

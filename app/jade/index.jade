@@ -26,10 +26,12 @@ html(ng-app='warboat')
     //- script(src='js/services/*js')
     base(href='/')
   body
-    .container-fluid
-      h1.main-header WARBOAT - BOATS AT WAR
-      audio#bomb(src='./sounds/bomb.mp3')
-      audio#splash(src='./sounds/water.mp3')
-      // views
-      div(ui-view='')
-    // scripts
+    nav.navbar.navbar-inverse.navbar-fixed-top
+      .main-header.navbar-header WARBOAT - BOATS AT WAR
+    .cover
+      .container-fluid
+        audio#bomb(src='./sounds/bomb.mp3')
+        audio#splash(src='./sounds/water.mp3')
+        // views
+        div(ui-view='')
+      // scripts
