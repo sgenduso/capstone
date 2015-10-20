@@ -1,9 +1,14 @@
-app.factory("gameService", ["$firebaseArray", "$firebaseObject",
-  function($firebaseArray, $firebaseObject) {
+app.factory("gameService", ["$firebaseArray", "$firebaseObject", '$localStorage',
+  function($firebaseArray, $firebaseObject, $localStorage) {
+
+    var storage = $localStorage;
+    storage.gameId = storage.gameId ? storage.gameId : Math.round(Math.random() * 1000000000);
+
+
     // create a reference to the database location where data is stored
-    var randomId = Math.round(Math.random() * 1000000000);
-    randomId = 1;
-    var ref = "https://incandescent-fire-9342.firebaseio.com/game/" + randomId;
+    // var randomId = Math.round(Math.random() * 1000000000);
+    // randomId = 1;
+    var ref = "https://incandescent-fire-9342.firebaseio.com/game/" + storage.gameId;
     var fullGameRef = new Firebase(ref);
     var game = $firebaseObject(fullGameRef);
 
@@ -241,7 +246,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       quad4: quad4,
       quad5: quad5,
       popEnemyBoard: popEnemyBoard,
-      game: game
+      game: game,
+      storage: storage
     };
   }
 ]);

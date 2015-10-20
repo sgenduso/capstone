@@ -1,4 +1,4 @@
-var app = angular.module('warboat', ['ui.router', 'ui.grid', 'firebase']);
+var app = angular.module('warboat', ['ui.router', 'ui.grid', 'ngStorage', 'firebase']);
 
 app.config(function ($stateProvider, $locationProvider) {
   $stateProvider
@@ -11,9 +11,11 @@ app.config(function ($stateProvider, $locationProvider) {
   $locationProvider.html5Mode(true);
 });
 
-app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', function ($scope, gameService, $firebaseObject) {
+app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', '$localStorage', function ($scope, gameService, $firebaseObject, $localStorage) {
 
   $.event.props.push('dataTransfer');
+
+  $scope.storage = gameService.storage;
 
   $scope.gridSize=function (size) {
     return new Array(size);
@@ -260,6 +262,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
 //CLEAR ALL SHIPS, HITS, AND MISSES FROM BOARD
 $scope.reset = function () {
+  $scope.messages = [];
   for (var p1Cell in $scope.game.p1Board) {
     $scope.game.p1Board[p1Cell].boat = false;
     $scope.game.p1Board[p1Cell].hit = false;
@@ -631,12 +634,17 @@ $scope.attack = function ($event) {
 
 }]);
 
-app.factory("gameService", ["$firebaseArray", "$firebaseObject",
-  function($firebaseArray, $firebaseObject) {
+app.factory("gameService", ["$firebaseArray", "$firebaseObject", '$localStorage',
+  function($firebaseArray, $firebaseObject, $localStorage) {
+
+    var storage = $localStorage;
+    storage.gameId = storage.gameId ? storage.gameId : Math.round(Math.random() * 1000000000);
+
+
     // create a reference to the database location where data is stored
-    var randomId = Math.round(Math.random() * 1000000000);
-    randomId = 1;
-    var ref = "https://incandescent-fire-9342.firebaseio.com/game/" + randomId;
+    // var randomId = Math.round(Math.random() * 1000000000);
+    // randomId = 1;
+    var ref = "https://incandescent-fire-9342.firebaseio.com/game/" + storage.gameId;
     var fullGameRef = new Firebase(ref);
     var game = $firebaseObject(fullGameRef);
 
@@ -874,7 +882,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject",
       quad4: quad4,
       quad5: quad5,
       popEnemyBoard: popEnemyBoard,
-      game: game
+      game: game,
+      storage: storage
     };
   }
 ]);

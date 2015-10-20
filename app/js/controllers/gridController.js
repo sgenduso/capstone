@@ -1,6 +1,8 @@
-app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', function ($scope, gameService, $firebaseObject) {
+app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', '$localStorage', function ($scope, gameService, $firebaseObject, $localStorage) {
 
   $.event.props.push('dataTransfer');
+
+  $scope.storage = gameService.storage;
 
   $scope.gridSize=function (size) {
     return new Array(size);
@@ -247,6 +249,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', fu
 
 //CLEAR ALL SHIPS, HITS, AND MISSES FROM BOARD
 $scope.reset = function () {
+  $scope.messages = [];
   for (var p1Cell in $scope.game.p1Board) {
     $scope.game.p1Board[p1Cell].boat = false;
     $scope.game.p1Board[p1Cell].hit = false;

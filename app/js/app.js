@@ -1,4 +1,4 @@
-var app = angular.module('warboat', ['ui.router', 'ui.grid', 'firebase']);
+var app = angular.module('warboat', ['ui.router', 'ui.grid', 'ngStorage', 'firebase']);
 
 app.config(function ($stateProvider, $locationProvider) {
   $stateProvider
