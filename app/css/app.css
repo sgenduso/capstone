@@ -8191,8 +8191,10 @@ body {
 #fleets {
   padding-left: 10px; }
 
-#your-fleet h4 {
-  color: #cc0000; }
+#your-fleet {
+  height: 20%; }
+  #your-fleet h4 {
+    color: #cc0000; }
 
 #player1-board {
   margin-left: 30px; }

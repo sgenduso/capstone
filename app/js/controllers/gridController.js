@@ -17,7 +17,7 @@ app.controller('gridController', ['$scope', 'gameService', '$firebaseObject', '$
   $scope.ships = gameService.ships;
   $scope.cellIds = [];
   $scope.p2CellIds = [];
-  $scope.message = 'Welcome, new recruit. Position your fleet and begin your attack!';
+  $scope.message = $scope.message || 'Welcome, new recruit. Position your fleet and begin your attack!';
 
 
 
@@ -357,6 +357,9 @@ $scope.dropped = function(dragEl, dropEls) {
 
       //only drop if there is room on the board and the ship is not already on the board
       if(gameService.allSpacesFree(drop) && !gameService.shipOnBoard(drag.ship) && gameService.roomOnBoard(drop.length, drag.size)){
+        if(gameService.allShipsPlaced()) {
+          $scope.message = 'BATTLE HAS STARTED! ATTACK THE ENEMY!';
+        }
         $(drop[0]).click({dropCells: drop, ship: drag.ship, size: drag.size}, $scope.rotateToVert);
         $(drop[0]).css('cursor', 'pointer');
           $scope.game.p1Ships[drag.ship].placed = true;
