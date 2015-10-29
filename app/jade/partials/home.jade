@@ -4,11 +4,8 @@
     h4 Messages
     #messages
       p {{message}}
-      //- p Welcome, new recruit. Position your fleet, and then begin your attack!
-      //- p(ng-repeat="message in messages track by $index") {{message}}
   .row
     a#reset.btn.btn-default(ng-click='reset()') Reset Game
-    //- a.btn.btn-default(ng-click='popEnemyBoard()') Populate Enemy Board
   .row#your-fleet
     h4 drag to place ships on board
     table.table.fleet

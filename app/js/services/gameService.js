@@ -4,10 +4,6 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject", '$localStorage'
     var storage = $localStorage;
     storage.gameId = storage.gameId ? storage.gameId : Math.round(Math.random() * 1000000000);
 
-
-    // create a reference to the database location where data is stored
-    // var randomId = Math.round(Math.random() * 1000000000);
-    // randomId = 1;
     var ref = "https://incandescent-fire-9342.firebaseio.com/game/" + storage.gameId;
     var fullGameRef = new Firebase(ref);
     var game = $firebaseObject(fullGameRef);
@@ -72,11 +68,6 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject", '$localStorage'
     //check if specified ship is already on the board
     var shipOnBoard = function (ship) {
       $('#'+ship).css('opacity', '');
-      // if (p1ShipsObject[ship]) {
-      //   return p1ShipsObject[ship].placed;
-      // } else {
-      //   return false;
-      // }
       return this.game.p1Ships === undefined ? false : this.game.p1Ships[ship].placed;
     };
 
@@ -181,8 +172,6 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject", '$localStorage'
       this.game.p2Board[randomFirstCell].boat = randomFirstShip;
       this.game.p2Board.$save();
       console.log('ship on cell after: ', this.game.p2Board[randomFirstCell].boat);
-        // this.game.p2Board[$(this).attr('id')].boat = this.game.p2Board[$(this).attr('id')].boat || drag.ship;
-        // shipsOnBoard[drag.ship] = true;
 
     };
 
@@ -214,10 +203,8 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject", '$localStorage'
     var currentShip;
     var previousShip;
 
-    // this uses AngularFire to create the synchronized array
     return {
       boardMapping: boardMapping,
-      // gameId: randomId,
       ships: ships,
       ref: ref,
       previousCells: previousCells,
