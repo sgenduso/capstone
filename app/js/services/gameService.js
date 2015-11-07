@@ -38,7 +38,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject", '$localStorage'
       26:'Z'
     };
 
-  
+
     var ships = ['carrier', 'battleship', 'destroyer', 'submarine', 'patrol'];
 
     var randBetween = function (min, max) {
@@ -138,6 +138,16 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject", '$localStorage'
     //before dropping or placing a ship, check whether it would go off the board
     var roomOnBoard = function (destinationLength, shipLength) {
       return destinationLength == shipLength;
+    };
+
+    var emptyEnemyCells = function () {
+      var emptyCells = [];
+      for (var key in this.game.p2Board) {
+        if (this.game.p1Board[key].boat === false) {
+          emptyCells.push(key);
+        }
+      }
+      return emptyCells;
     };
 
     var popEnemyBoard = function () {
