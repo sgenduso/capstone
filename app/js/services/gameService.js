@@ -152,7 +152,7 @@ app.factory("gameService", ["$firebaseArray", "$firebaseObject", '$localStorage'
 
     var popEnemyBoard = function () {
       var randCell = randBetween(0, emptyEnemyCells().length);
-      
+      var randShip = this.ships[randBetween(0, this.ships.length-1)];
 
     };
 
